@@ -1,6 +1,0 @@
-id,status,owner,goal,inputs,outputs,acceptance,updated_at
-DMO-001,done,repo-explorer,确认 Qwen3.5 micro bench/replay/Orin 脚本入口,"samples/micro_bench; scripts; tools; CMakeLists.txt","agent_outputs/DMO-001_repo-explorer.md",路径和用途准确,2026-05-27
-DMO-002,done,perf-analyst,确认已有 baseline 报告和关键指标,"analysis/Qwen35_e2e_orin_1_20260526; analysis/Qwen35_micro_bench_20260525","agent_outputs/DMO-002_perf-analyst.md",baseline 路径和主要指标准确,2026-05-27
-DMO-003,done,kernel-dev,生成 quick index 文档,"DMO-001; DMO-002","output/qwen35_micro_bench_quick_index.md",覆盖验收清单且不改源码,2026-05-27
-DMO-004,done,reviewer,审查 quick index 事实准确性和风险,"output/qwen35_micro_bench_quick_index.md; DMO-001; DMO-002","agent_outputs/DMO-004_reviewer.md",无阻塞级事实错误,2026-05-27
-DMO-005,done,main-orchestrator,汇总 demo 结果并更新进度,"DMO-001..DMO-004","progress.md",状态、产物、风险、下一步清晰,2026-05-27

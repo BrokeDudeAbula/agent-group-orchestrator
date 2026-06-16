@@ -1,0 +1,15 @@
+schema: ag_doc_policy_v1
+status_values:
+  - todo
+  - in_progress
+  - blocked
+  - review
+  - done
+  - dropped
+risk_levels:
+  R0: read-only
+  R1: agent-group metadata or documentation writes
+  R2: non-core project docs, scripts, or reports
+  R3: core project behavior changes
+  R4: remote, long-running, destructive, profiling, or cost-incurring work
+

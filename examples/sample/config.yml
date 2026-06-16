@@ -1,0 +1,6 @@
+project_name: example
+default_mode: auto-orchestrate
+task_id_prefix: AUTO
+worker_output_dir: current/agent_outputs
+archive_dir: archive
+
