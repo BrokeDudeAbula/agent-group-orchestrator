@@ -12,17 +12,18 @@ Use this skill for maintaining agent group memory after work completes or before
 1. Locate the target agent group instance, usually `.codex/agent_group/`.
 2. Read `references/directory-contract.md` and confirm the target has the required memory shape.
 3. Read `references/memory-sync-sop.md`.
-4. Read `references/memory-schema.md` when creating files, changing file structure, repairing memory, or doing strict validation.
-5. Read `current/STATE.md`, `current/tasks.csv`, and recent `current/agent_outputs/`.
-6. Update hot state first, durable ledgers second.
-7. If cleaning a completed phase, run:
+4. Read `references/memory-lifecycle.md` before compaction or before deciding whether a task memory belongs in `current/`, `memory/`, or `archive/`.
+5. Read `references/memory-schema.md` when creating files, changing file structure, repairing memory, or doing strict validation.
+6. Read `current/STATE.md`, `current/tasks.csv`, and recent `current/agent_outputs/`.
+7. Update hot state first, durable ledgers second.
+8. If cleaning a completed phase, run:
 
 ```bash
 python3 scripts/compact_memory.py --target <agent-group-path> --archive-name <yyyymmdd_topic> --dry-run
 ```
 
-8. Review the dry run, then run without `--dry-run` only when the user wants the archive applied.
-9. Validate the instance afterward:
+9. Review the dry run, then run without `--dry-run` only when the user wants the archive applied.
+10. Validate the instance afterward:
 
 ```bash
 python3 scripts/validate_agent_group.py --strict <agent-group-path>

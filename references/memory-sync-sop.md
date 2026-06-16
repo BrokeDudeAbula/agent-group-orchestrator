@@ -2,6 +2,8 @@
 
 After a task or milestone, synchronize memory in this order:
 
+For lifecycle boundaries, read `references/memory-lifecycle.md` before compaction. It defines which task memories must be synchronized, which hot memories can be archived, and which durable memories must never be moved by phase compaction.
+
 1. Update `current/STATE.md` with active goal, phase, blockers, latest evidence, and next step.
 2. Update `current/tasks.csv` for active task status changes.
 3. Append durable task changes to `memory/TASK_LEDGER.md`.
@@ -16,4 +18,3 @@ Compaction rules:
 - Keep long-lived project facts, decisions, risks, and roadmap material in `memory/`.
 - Do not hide blockers by deleting them; mark them closed, mitigated, accepted, or superseded.
 - Prefer `compact_memory.py --dry-run` before moving files.
-
