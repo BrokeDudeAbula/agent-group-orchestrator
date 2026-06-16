@@ -1,0 +1,528 @@
+ag_schema: v1
+registry_id: AG-DOC-REGISTRY
+title: Agent Group document registry
+last_updated: "2026-06-05"
+owner: main-orchestrator
+policy_path: ".codex/agent_group/rules/DOC_POLICY.yml"
+
+notes:
+  - "This registry is the transition layer before every Markdown file receives YAML frontmatter."
+  - "Root-level Markdown files are compatibility symlinks unless explicitly marked as root_canonical."
+  - "Writers should resolve canonical_path and edit the canonical file."
+
+documents:
+  - doc_id: AG-ROOT-README
+    title: Agent Group README
+    category: rules
+    doc_type: architecture_doc
+    authority: canonical
+    lifecycle: hot
+    read_policy: always
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator]
+    canonical_path: ".codex/agent_group/README.md"
+    compat_links: []
+    sync_targets:
+      - ".codex/agent_group/memory/DOC_REGISTRY.yml"
+
+  - doc_id: AG-RULE-DOC-POLICY
+    title: Document Policy
+    category: rules
+    doc_type: doc_policy
+    authority: canonical
+    lifecycle: hot
+    read_policy: before_write
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator]
+    canonical_path: ".codex/agent_group/rules/DOC_POLICY.yml"
+    compat_links: []
+    sync_targets:
+      - ".codex/agent_group/memory/DOC_REGISTRY.yml"
+      - ".codex/agent_group/README.md"
+
+  - doc_id: AG-MEM-DOC-REGISTRY
+    title: Document Registry
+    category: memory
+    doc_type: doc_registry
+    authority: canonical
+    lifecycle: hot
+    read_policy: before_write
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator]
+    canonical_path: ".codex/agent_group/memory/DOC_REGISTRY.yml"
+    compat_links: []
+    sync_targets:
+      - ".codex/agent_group/rules/DOC_POLICY.yml"
+    canonical_for:
+      - document_metadata_transition
+      - canonical_paths
+      - compatibility_links
+      - document_sync_targets
+    not_canonical_for:
+      - document_body_truth
+      - task_execution_state
+      - current_hot_state
+    conflict_resolution:
+      - "Schema enum definitions come from rules/DOC_POLICY.yml."
+      - "Document content truth comes from each canonical document, not this registry."
+      - "After frontmatter rollout, frontmatter should supersede matching registry fields for that document."
+
+  - doc_id: AG-RULE-BOOTSTRAP
+    title: Agent Group Bootstrap
+    category: rules
+    doc_type: bootstrap
+    authority: canonical
+    lifecycle: hot
+    read_policy: always
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator]
+    canonical_path: ".codex/agent_group/rules/BOOTSTRAP.md"
+    compat_links:
+      - ".codex/agent_group/BOOTSTRAP.md"
+    sync_targets:
+      - ".codex/agent_group/README.md"
+
+  - doc_id: AG-RULE-ROUTING-POLICY
+    title: Routing Policy
+    category: rules
+    doc_type: routing_policy
+    authority: canonical
+    lifecycle: warm
+    read_policy: on_demand
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator]
+    canonical_path: ".codex/agent_group/rules/ROUTING_POLICY.md"
+    compat_links:
+      - ".codex/agent_group/ROUTING_POLICY.md"
+    sync_targets:
+      - ".codex/agent_group/rules/BOOTSTRAP.md"
+      - ".codex/agent_group/rules/WORKER_REGISTRY.md"
+      - ".codex/agent_group/README.md"
+
+  - doc_id: AG-RULE-WORKER-REGISTRY
+    title: Worker Registry
+    category: rules
+    doc_type: worker_registry
+    authority: canonical
+    lifecycle: warm
+    read_policy: on_demand
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator]
+    canonical_path: ".codex/agent_group/rules/WORKER_REGISTRY.md"
+    compat_links:
+      - ".codex/agent_group/WORKER_REGISTRY.md"
+    sync_targets:
+      - ".codex/agent_group/rules/ROUTING_POLICY.md"
+      - ".codex/agent_group/README.md"
+
+  - doc_id: AG-RULE-MEMORY-SYNC-SOP
+    title: Memory Sync SOP
+    category: rules
+    doc_type: memory_sync_sop
+    authority: canonical
+    lifecycle: warm
+    read_policy: before_write
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator]
+    canonical_path: ".codex/agent_group/rules/MEMORY_SYNC_SOP.md"
+    compat_links:
+      - ".codex/agent_group/MEMORY_SYNC_SOP.md"
+    sync_targets:
+      - ".codex/agent_group/README.md"
+
+  - doc_id: AG-RULE-RUNBOOK-ORIN1
+    title: Orin1 Runbook
+    category: rules
+    doc_type: runbook
+    authority: canonical
+    lifecycle: warm
+    read_policy: on_demand
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator, orin-runner]
+    canonical_path: ".codex/agent_group/rules/RUNBOOK_ORIN1.md"
+    compat_links:
+      - ".codex/agent_group/RUNBOOK_ORIN1.md"
+    sync_targets:
+      - ".codex/agent_group/rules/BOOTSTRAP.md"
+
+  - doc_id: AG-MEM-ROADMAP
+    title: Qwen3.5 MoE Roadmap
+    category: memory
+    doc_type: roadmap
+    authority: canonical
+    lifecycle: warm
+    read_policy: on_demand
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator]
+    canonical_path: ".codex/agent_group/memory/ROADMAP.md"
+    compat_links:
+      - ".codex/agent_group/ROADMAP.md"
+    sync_targets:
+      - ".codex/agent_group/memory/TASK_LEDGER.md"
+      - ".codex/agent_group/current/tasks.csv"
+      - ".codex/agent_group/current/STATE.md"
+      - ".codex/agent_group/memory/PROGRESS_LEDGER.md"
+    canonical_for:
+      - q35_long_term_goal
+      - q35_milestones
+      - route_level_task_index
+      - route_level_gate_summary
+      - closed_route_summary
+    not_canonical_for:
+      - current_hot_state
+      - task_execution_table
+      - q35_gate_threshold_details
+      - append_only_progress_history
+    conflict_resolution:
+      - "Use current/STATE.md and current/tasks.csv for active hot-epic execution state."
+      - "Use memory/TASK_LEDGER.md for cross-stage task status, owner, inputs, outputs, and acceptance summary."
+      - "Use memory/Q35_ROADMAP_SYNC_RULES.md and current/acceptance.md for Q35 SOP-A/B/C/R1 gate details."
+      - "Use memory/PROGRESS_LEDGER.md for chronological history and evidence append records."
+
+  - doc_id: AG-MEM-TASK-LEDGER
+    title: Task Ledger
+    category: memory
+    doc_type: task_ledger
+    authority: canonical
+    lifecycle: warm
+    read_policy: on_demand
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator]
+    canonical_path: ".codex/agent_group/memory/TASK_LEDGER.md"
+    compat_links:
+      - ".codex/agent_group/TASK_LEDGER.md"
+    sync_targets:
+      - ".codex/agent_group/memory/ROADMAP.md"
+      - ".codex/agent_group/current/tasks.csv"
+      - ".codex/agent_group/current/STATE.md"
+      - ".codex/agent_group/memory/PROGRESS_LEDGER.md"
+    canonical_for:
+      - cross_stage_task_state
+      - task_owner
+      - task_inputs_outputs
+      - task_acceptance_summary
+      - task_updated_at
+    not_canonical_for:
+      - long_term_route_priority
+      - current_hot_epic_only_task_table
+      - q35_gate_threshold_details
+      - progress_history
+    conflict_resolution:
+      - "Use current/tasks.csv for the current hot epic task table, then sync durable state back here."
+      - "Use memory/ROADMAP.md for long-term route priority and milestone placement."
+      - "Use current/acceptance.md and memory/Q35_ROADMAP_SYNC_RULES.md for detailed acceptance thresholds."
+      - "Use memory/PROGRESS_LEDGER.md and analysis reports for detailed evidence chronology."
+
+  - doc_id: AG-MEM-PROGRESS-LEDGER
+    title: Progress Ledger
+    category: memory
+    doc_type: progress_ledger
+    authority: canonical
+    lifecycle: warm
+    read_policy: on_demand
+    write_policy: append_only
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator]
+    canonical_path: ".codex/agent_group/memory/PROGRESS_LEDGER.md"
+    compat_links:
+      - ".codex/agent_group/PROGRESS_LEDGER.md"
+    sync_targets: []
+    canonical_for:
+      - append_only_progress_history
+      - evidence_path_chronology
+      - historical_next_steps
+      - historical_blockers
+    not_canonical_for:
+      - current_hot_state
+      - current_next_step
+      - task_execution_state
+      - q35_gate_threshold_details
+    conflict_resolution:
+      - "Use current/STATE.md for current objective, blockers, and next step."
+      - "Use memory/TASK_LEDGER.md and current/tasks.csv for task status."
+      - "Do not rewrite existing entries; append superseding entries when history needs clarification."
+
+  - doc_id: AG-MEM-PROJECT-FACTS
+    title: Project Facts
+    category: memory
+    doc_type: project_facts
+    authority: canonical
+    lifecycle: warm
+    read_policy: on_demand
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator, repo-explorer]
+    canonical_path: ".codex/agent_group/memory/PROJECT_FACTS.md"
+    compat_links:
+      - ".codex/agent_group/PROJECT_FACTS.md"
+    sync_targets:
+      - ".codex/agent_group/current/STATE.md"
+    canonical_for:
+      - repo_root
+      - stable_source_tree_index
+      - model_and_tool_entrypoints
+      - orin_default_environment
+      - production_anchor_semantic_facts
+      - reusable_tool_facts
+    not_canonical_for:
+      - current_head
+      - dirty_worktree_state
+      - latest_checkpoint
+      - task_execution_state
+      - current_next_step
+    conflict_resolution:
+      - "Use current/STATE.md for HEAD, working tree, latest checkpoint, blockers, and next steps."
+      - "Use memory/ROADMAP.md and memory/DECISIONS.md for route closure or mainline changes."
+      - "Refresh or mark volatile facts as snapshots when they drift."
+
+  - doc_id: AG-MEM-DECISIONS
+    title: Decisions
+    category: memory
+    doc_type: decision_log
+    authority: canonical
+    lifecycle: warm
+    read_policy: on_demand
+    write_policy: append_only
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator]
+    canonical_path: ".codex/agent_group/memory/DECISIONS.md"
+    compat_links:
+      - ".codex/agent_group/DECISIONS.md"
+    sync_targets:
+      - ".codex/agent_group/current/STATE.md"
+    canonical_for:
+      - long_term_decisions
+      - route_decisions
+      - process_decisions
+      - decision_rationale
+    not_canonical_for:
+      - current_hot_state
+      - task_execution_state
+      - risk_status
+      - detailed_experiment_logs
+    conflict_resolution:
+      - "Use newer decision rows to supersede older decisions; do not delete old rows."
+      - "Use current/STATE.md for current execution state."
+      - "Use memory/RISKS.md for risk status and mitigation tracking."
+
+  - doc_id: AG-MEM-RISKS
+    title: Risks
+    category: memory
+    doc_type: risk_register
+    authority: canonical
+    lifecycle: warm
+    read_policy: on_demand
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator, reviewer]
+    canonical_path: ".codex/agent_group/memory/RISKS.md"
+    compat_links:
+      - ".codex/agent_group/RISKS.md"
+    sync_targets:
+      - ".codex/agent_group/current/STATE.md"
+    canonical_for:
+      - active_risk_register
+      - risk_triggers
+      - risk_impact
+      - risk_mitigation
+      - risk_owner
+      - risk_status
+    not_canonical_for:
+      - task_execution_state
+      - current_next_step
+      - q35_gate_threshold_details
+      - long_term_route_priority
+    conflict_resolution:
+      - "Use memory/TASK_LEDGER.md and current/tasks.csv for task status."
+      - "Use memory/Q35_ROADMAP_SYNC_RULES.md and current/acceptance.md for Q35 gate thresholds."
+      - "Close or mitigate risks by changing status, not by deleting rows."
+
+  - doc_id: AG-MEM-Q35-ROADMAP-SYNC-RULES
+    title: Q35 Roadmap Sync Rules
+    category: memory
+    doc_type: project_sync_rules
+    authority: canonical
+    lifecycle: warm
+    read_policy: on_demand
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator]
+    canonical_path: ".codex/agent_group/memory/Q35_ROADMAP_SYNC_RULES.md"
+    compat_links: []
+    sync_targets:
+      - ".codex/agent_group/memory/ROADMAP.md"
+      - ".codex/agent_group/memory/TASK_LEDGER.md"
+      - ".codex/agent_group/current/tasks.csv"
+      - ".codex/agent_group/current/STATE.md"
+      - ".codex/agent_group/memory/PROGRESS_LEDGER.md"
+    canonical_for:
+      - q35_project_sync_rules
+      - q35_sop_gate_details
+      - q35_status_update_constraints
+      - q35_sync_targets
+      - q35_false_positive_guards
+    not_canonical_for:
+      - generic_memory_sync_sop
+      - long_term_milestone_order
+      - task_owner_table
+      - progress_history
+      - experiment_report_body
+    conflict_resolution:
+      - "Use rules/MEMORY_SYNC_SOP.md for generic memory sync workflow."
+      - "Use this file to correct Q35 gate details, then sync current/acceptance.md."
+      - "Use memory/TASK_LEDGER.md and current/tasks.csv for actual task state after gate evaluation."
+      - "Use memory/ROADMAP.md for milestone and long-term route placement."
+
+  - doc_id: AG-CUR-STATE
+    title: Current State
+    category: current
+    doc_type: state_summary
+    authority: canonical
+    lifecycle: hot
+    read_policy: always
+    write_policy: rewrite_allowed
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator]
+    canonical_path: ".codex/agent_group/current/STATE.md"
+    compat_links: []
+    sync_targets:
+      - ".codex/agent_group/current/tasks.csv"
+
+  - doc_id: AG-CUR-EPIC
+    title: Current Epic
+    category: current
+    doc_type: epic
+    authority: canonical
+    lifecycle: hot
+    read_policy: on_demand
+    write_policy: rewrite_allowed
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator]
+    canonical_path: ".codex/agent_group/current/epic.md"
+    compat_links: []
+    sync_targets:
+      - ".codex/agent_group/current/STATE.md"
+      - ".codex/agent_group/current/acceptance.md"
+
+  - doc_id: AG-CUR-ACCEPTANCE
+    title: Current Acceptance Criteria
+    category: current
+    doc_type: acceptance
+    authority: canonical
+    lifecycle: hot
+    read_policy: on_demand
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator, reviewer]
+    canonical_path: ".codex/agent_group/current/acceptance.md"
+    compat_links: []
+    sync_targets:
+      - ".codex/agent_group/current/STATE.md"
+      - ".codex/agent_group/current/tasks.csv"
+
+  - doc_id: AG-CUR-TASKS
+    title: Current Tasks
+    category: current
+    doc_type: task_table
+    authority: canonical
+    lifecycle: hot
+    read_policy: on_demand
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator]
+    canonical_path: ".codex/agent_group/current/tasks.csv"
+    metadata_path: ".codex/agent_group/current/tasks.meta.yml"
+    compat_links: []
+    sync_targets:
+      - ".codex/agent_group/current/STATE.md"
+      - ".codex/agent_group/memory/TASK_LEDGER.md"
+
+worker_specs:
+  category: agents
+  doc_type: worker_spec
+  authority: canonical
+  lifecycle: warm
+  read_policy: on_demand
+  write_policy: controlled_update
+  risk_level: R1
+  owner: main-orchestrator
+  allowed_writers: [main-orchestrator]
+  paths:
+    - ".codex/agent_group/agents/main-orchestrator.md"
+    - ".codex/agent_group/agents/repo-explorer.md"
+    - ".codex/agent_group/agents/perf-analyst.md"
+    - ".codex/agent_group/agents/oss-scout.md"
+    - ".codex/agent_group/agents/qwen-architect.md"
+    - ".codex/agent_group/agents/kernel-dev.md"
+    - ".codex/agent_group/agents/orin-runner.md"
+    - ".codex/agent_group/agents/reviewer.md"
+
+evidence_defaults:
+  current_agent_outputs:
+    category: evidence
+    doc_type: worker_output
+    authority: evidence
+    lifecycle: cold
+    read_policy: review_only
+    write_policy: create_only
+    canonical_glob: ".codex/agent_group/current/agent_outputs/*.md"
+  current_tools:
+    category: evidence
+    doc_type: worker_output
+    authority: evidence
+    lifecycle: cold
+    read_policy: on_demand
+    write_policy: controlled_update
+    risk_level: R1
+    owner: main-orchestrator
+    allowed_writers: [main-orchestrator, reviewer]
+    canonical_glob: ".codex/agent_group/current/tools/*"
+  archive:
+    category: archive
+    doc_type: archive_snapshot
+    authority: archived
+    lifecycle: archived
+    read_policy: review_only
+    write_policy: immutable
+    canonical_glob: ".codex/agent_group/archive/**"
+
+demo_defaults:
+  category: demo
+  doc_type: demo_material
+  authority: demo
+  lifecycle: cold
+  read_policy: review_only
+  write_policy: controlled_update
+  risk_level: R1
+  owner: main-orchestrator
+  allowed_writers: [main-orchestrator]
+  canonical_glob: ".codex/agent_group/demo/**"
