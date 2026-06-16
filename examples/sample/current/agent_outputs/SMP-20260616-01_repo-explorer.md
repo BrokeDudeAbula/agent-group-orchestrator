@@ -1,5 +1,13 @@
 # SMP-20260616-01 Repo Explorer
 
+## Task ID
+
+SMP-20260616-01
+
+## Worker Name
+
+repo-explorer
+
 ## Scope
 
 Read-only discovery for the sample API latency audit.
@@ -9,6 +17,10 @@ Read-only discovery for the sample API latency audit.
 - `memory/PROJECT_FACTS.md`
 - `current/epic.md`
 - `current/acceptance.md`
+
+## Commands Run
+
+None.
 
 ## Conclusion
 
@@ -25,4 +37,3 @@ Configuration changes are R3 because they can change runtime behavior.
 ## Recommended Next Step
 
 Ask `perf-analyst` to compare baseline and current latency summaries.
-

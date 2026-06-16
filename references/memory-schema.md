@@ -34,6 +34,12 @@ Required columns:
 id,title,owner,status,risk,inputs,outputs,notes
 ```
 
+Recommended columns for DAG-aware instances:
+
+```text
+id,title,owner,status,risk,depends_on,inputs,outputs,notes
+```
+
 Allowed `status` values:
 
 ```text
@@ -58,6 +64,7 @@ R4
 Rules:
 
 - Keep only the active epic in `current/tasks.csv`.
+- Use `depends_on` for task ids that must complete before the current task. Separate multiple dependencies with semicolons.
 - Move completed phase evidence into `archive/`.
 - Use durable ledgers for cross-epic history.
 
@@ -82,6 +89,20 @@ Each output should include:
 - artifacts
 - risks or blockers
 - recommended next step
+
+Strict validation expects these Markdown headings:
+
+```text
+## Task ID
+## Worker Name
+## Scope
+## Inputs Read
+## Commands Run
+## Conclusion
+## Artifacts
+## Risks or Blockers
+## Recommended Next Step
+```
 
 ## memory/TASK_LEDGER.md
 
@@ -184,4 +205,3 @@ acceptance.md
 tasks.csv
 agent_outputs/
 ```
-

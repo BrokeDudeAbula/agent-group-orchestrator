@@ -1,11 +1,28 @@
 #!/usr/bin/env python3
-"""从 tasks.csv 生成简单 Mermaid DAG。"""
+"""从 tasks.csv 生成 Mermaid 任务 DAG。"""
 
 from __future__ import annotations
 
 import argparse
 import csv
 from pathlib import Path
+
+
+def node_id(task_id: str) -> str:
+    return task_id.replace("-", "_").replace(".", "_")
+
+
+def escape_label(text: str) -> str:
+    return text.replace('"', "'")
+
+
+def parse_depends(raw: str) -> list[str]:
+    deps: list[str] = []
+    for chunk in raw.replace(",", ";").split(";"):
+        dep = chunk.strip()
+        if dep:
+            deps.append(dep)
+    return deps
 
 
 def parse_args() -> argparse.Namespace:
@@ -25,11 +42,17 @@ def main() -> int:
         status = (row.get("status") or "").strip()
         if not task_id:
             continue
-        label = f"{task_id}<br/>{title}<br/>{status}"
-        print(f'  {task_id.replace("-", "_")}["{label}"]')
+        label = escape_label(f"{task_id}<br/>{title}<br/>{status}")
+        print(f'  {node_id(task_id)}["{label}"]')
+
+    for row in rows:
+        task_id = (row.get("id") or row.get("task_id") or "").strip()
+        if not task_id:
+            continue
+        for dep in parse_depends(row.get("depends_on") or ""):
+            print(f"  {node_id(dep)} --> {node_id(task_id)}")
     return 0
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -63,7 +63,7 @@ archive/<yyyymmdd_topic>/
 └── agent_outputs/
 ```
 
-`scripts/compact_memory.py` 当前只移动上述 `current/` 文件和 `current/agent_outputs/` 内容；它不会自动更新长期 ledger，也不会自动重建新的 `current/STATE.md` 或 `current/tasks.csv`。因此执行脚本前后仍需要人工或 agent 按 SOP 完成同步和重建。
+`scripts/compact_memory.py` 当前只移动上述 `current/` 文件和 `current/agent_outputs/` 内容，并在非 dry-run 模式下默认重建空的 `current/STATE.md`、`current/epic.md`、`current/acceptance.md` 和 `current/tasks.csv`，以保持实例可校验。它不会自动更新长期 ledger，因此执行脚本前后仍需要人工或 agent 按 SOP 完成长期记忆同步。只有当另一个工具会立即重建 hot state 时，才使用 `--no-reset-current`。
 
 ## 不应归档的记忆
 

@@ -13,6 +13,12 @@ owner: main-orchestrator
 
 # Memory Sync SOP
 
+Before compaction or epic handoff, apply the memory lifecycle rules:
+
+- Sync reusable conclusions to `memory/` before moving hot state.
+- Keep durable project facts, decisions, risks, and ledgers in `memory/`; do not archive them with phase evidence.
+- Do not delete blockers or risks; close, mitigate, accept, or supersede them.
+
 ## Normal Update
 
 1. Update `current/STATE.md`.
@@ -21,15 +27,17 @@ owner: main-orchestrator
 4. Append to `memory/PROGRESS_LEDGER.md` after meaningful progress.
 5. Append to `memory/DECISIONS.md` for durable decisions.
 6. Update `memory/RISKS.md` for active, mitigated, closed, or accepted risks.
-7. Keep worker evidence in `current/agent_outputs/`.
+7. Update `memory/PROJECT_FACTS.md` for stable facts, important entrypoints, commands, dependencies, and environment assumptions.
+8. Keep worker evidence in `current/agent_outputs/`.
 
 ## Compaction
 
-1. Create `archive/<yyyymmdd_topic>/`.
-2. Move old `current/` files and worker outputs into the archive.
-3. Recreate a concise `current/STATE.md`.
-4. Recreate active `current/tasks.csv` for the new epic.
-5. Append the compaction event to `memory/PROGRESS_LEDGER.md`.
+1. Confirm `current/STATE.md`, `current/tasks.csv`, worker outputs, and durable ledgers are synchronized.
+2. Run `compact_memory.py --target <agent-group-path> --archive-name <yyyymmdd_topic> --dry-run`.
+3. Review the move plan.
+4. Run without `--dry-run` when the archive should be applied.
+5. Confirm the script recreated concise `current/STATE.md`, `current/epic.md`, `current/acceptance.md`, and `current/tasks.csv`.
+6. Append the compaction event and archive path to `memory/PROGRESS_LEDGER.md`.
+7. Run `validate_agent_group.py --strict <agent-group-path>`.
 
-Use `compact_memory.py --dry-run` before applying moves.
-
+Use `--no-reset-current` only when another tool will immediately rebuild the required hot state files.

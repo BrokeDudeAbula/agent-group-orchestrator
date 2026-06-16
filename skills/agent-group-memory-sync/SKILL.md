@@ -23,7 +23,8 @@ python3 scripts/compact_memory.py --target <agent-group-path> --archive-name <yy
 ```
 
 9. Review the dry run, then run without `--dry-run` only when the user wants the archive applied.
-10. Validate the instance afterward:
+10. Expect the compaction helper to recreate concise `current/STATE.md`, `current/epic.md`, `current/acceptance.md`, and `current/tasks.csv` unless `--no-reset-current` is used.
+11. Validate the instance afterward:
 
 ```bash
 python3 scripts/validate_agent_group.py --strict <agent-group-path>
@@ -35,6 +36,7 @@ Required hot memory:
 
 - `current/STATE.md`: concise active state only.
 - `current/tasks.csv`: active epic tasks only.
+- `current/tasks.csv` may include `depends_on` for task DAG edges.
 - `current/agent_outputs/`: raw worker evidence for the current phase.
 
 Required durable memory:

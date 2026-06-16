@@ -46,6 +46,12 @@ worker_output_dir: current/agent_outputs
 archive_dir: archive
 ```
 
+Recommended `current/tasks.csv` header:
+
+```text
+id,title,owner,status,risk,depends_on,inputs,outputs,notes
+```
+
 Rules:
 
 - `rules/` stores durable operating policy.
@@ -54,4 +60,3 @@ Rules:
 - `agents/` stores worker role definitions.
 - `archive/` stores compacted historical evidence.
 - Plugin templates must not contain live user project secrets or one-off local paths.
-

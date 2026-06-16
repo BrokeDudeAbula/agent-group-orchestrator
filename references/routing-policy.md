@@ -31,3 +31,5 @@ Worker outputs should go to:
 ```text
 current/agent_outputs/<task_id>_<worker>.md
 ```
+
+When tasks have ordering requirements, record dependencies in `current/tasks.csv` using a `depends_on` column. Use stable task ids and separate multiple dependencies with semicolons.

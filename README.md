@@ -119,7 +119,7 @@ Review this agent group worker output and memory update.
 
 ### 5. 常用维护命令
 
-从 `current/tasks.csv` 渲染 Mermaid 任务图：
+从 `current/tasks.csv` 渲染 Mermaid 任务图；如果任务表包含 `depends_on` 列，脚本会生成依赖边：
 
 ```bash
 python3 /path/to/agent-group-orchestrator/scripts/render_task_dag.py \
@@ -143,6 +143,8 @@ python3 /path/to/agent-group-orchestrator/scripts/compact_memory.py \
   --archive-name 20260616_example
 ```
 
+归档脚本默认会重建空的 `current/STATE.md`、`current/epic.md`、`current/acceptance.md` 和 `current/tasks.csv`，确保实例仍可通过严格校验。只有在另一个工具会立即重建这些 hot state 文件时，才使用 `--no-reset-current`。
+
 ### 6. 目录约定
 
 项目内的运行时状态应放在目标仓库的 `.codex/agent_group/`，不要写回插件根目录。
@@ -155,3 +157,16 @@ python3 /path/to/agent-group-orchestrator/scripts/compact_memory.py \
 - `memory/DECISIONS.md`：架构与流程决策。
 - `memory/RISKS.md`：风险、缓解和关闭记录。
 - `rules/`：项目本地 worker、路由、同步和 runbook 规则。
+
+
+
+
+
+
+
+
+
+请修改 examples 路径下的 demo ，补充三个 demo , 要求如下：
+1. 补充一个调研类 demo ，假设当前 repo 是一个在端侧部署的 llm 推理引擎，要求组织 agent_group 根据当前引擎的特性，去调研 trt-edge-llm 、vllm 等竞品，调研的范围：
+  a. 推理加速策略，例如 MTP、量化、prefix caching、kv cache 等
+

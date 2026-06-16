@@ -1,5 +1,4 @@
-id,title,owner,status,risk,inputs,outputs,notes
-SMP-20260616-01,Map service entrypoints,repo-explorer,done,R0,service config and routing docs,current/agent_outputs/SMP-20260616-01_repo-explorer.md,Read-only discovery
-SMP-20260616-02,Compare latency evidence,perf-analyst,review,R0,baseline and current latency summaries,current/agent_outputs/SMP-20260616-02_perf-analyst.md,Comparable p95 evidence found
-SMP-20260616-03,Review recommendation,reviewer,done,R0,worker outputs,current/agent_outputs/SMP-20260616-03_reviewer.md,Requires R3 gate before patch
-
+id,title,owner,status,risk,depends_on,inputs,outputs,notes
+SMP-20260616-01,Map service entrypoints,repo-explorer,done,R0,,service config and routing docs,current/agent_outputs/SMP-20260616-01_repo-explorer.md,Read-only discovery
+SMP-20260616-02,Compare latency evidence,perf-analyst,review,R0,SMP-20260616-01,baseline and current latency summaries,current/agent_outputs/SMP-20260616-02_perf-analyst.md,Comparable p95 evidence found
+SMP-20260616-03,Review recommendation,reviewer,done,R0,SMP-20260616-02,worker outputs,current/agent_outputs/SMP-20260616-03_reviewer.md,Requires R3 gate before patch
