@@ -1,0 +1,7 @@
+id,title,owner,status,risk,depends_on,inputs,outputs,notes
+ELLM-20260616-01,Map current edge LLM engine capabilities,repo-explorer,done,R0,,current repo layout and engine assumptions,current/agent_outputs/ELLM-20260616-01_repo-explorer.md,Read-only local discovery scope
+ELLM-20260616-02,Research competitor operator and acceleration strategies,oss-scout,done,R0,ELLM-20260616-01,"trt-edge-llm vLLM TensorRT-LLM SGLang MLC-LLM",current/agent_outputs/ELLM-20260616-02_oss-scout.md,Replace placeholder facts with source-linked evidence in a real run
+ELLM-20260616-03,Design e2e and module benchmark comparison,perf-analyst,done,R0,ELLM-20260616-02,operator list and benchmark requirements,current/agent_outputs/ELLM-20260616-03_perf-analyst.md,Focus on timing semantics and comparable metrics
+ELLM-20260616-04,Convert research into optimization roadmap,architect,done,R0,ELLM-20260616-03,worker outputs and benchmark plan,current/agent_outputs/ELLM-20260616-04_architect.md,Updates roadmap memory
+ELLM-20260616-05,Review research package and gates,reviewer,done,R0,ELLM-20260616-04,all worker outputs,current/agent_outputs/ELLM-20260616-05_reviewer.md,Flags unsupported claims and required gates
+ELLM-20260616-06,Prepare user-facing research prompt,main-orchestrator,review,R1,ELLM-20260616-05,acceptance and roadmap,current/prompt.md,Complete prompt provided for real execution

@@ -1,0 +1,5 @@
+project_name: edge-llm-research-demo
+default_mode: auto-orchestrate
+task_id_prefix: ELLM
+worker_output_dir: current/agent_outputs
+archive_dir: archive

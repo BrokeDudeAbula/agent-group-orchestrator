@@ -1,0 +1,37 @@
+{
+  "name": "agent-group-orchestrator",
+  "version": "0.1.0",
+  "description": "Reusable project-local multi-agent orchestration, task ledger, and memory sync workflows for Codex.",
+  "author": {
+    "name": "Local developer"
+  },
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "agent-group",
+    "multi-agent",
+    "orchestration",
+    "task-ledger",
+    "memory-sync",
+    "workflow"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Agent Group Orchestrator",
+    "shortDescription": "Initialize and operate project-local multi-agent workspaces.",
+    "longDescription": "Agent Group Orchestrator packages reusable Codex workflows for project-local multi-agent routing, worker templates, task ledgers, current-state memory, archival compaction, and review gates. It can initialize a .codex/agent_group-style instance in a target repository and guide Codex through auto-orchestrated work.",
+    "developerName": "Local developer",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Initialize an agent group workspace for this repo.",
+      "Use agent-group auto-orchestrate mode for this goal.",
+      "Validate this repo's agent group memory structure."
+    ],
+    "brandColor": "#1F6FEB"
+  }
+}

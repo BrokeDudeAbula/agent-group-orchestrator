@@ -1,0 +1,27 @@
+name: Public safety
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Scan public content
+        run: python3 scripts/check_public_safety.py --git-history .
+      - name: Run scanner tests
+        run: python3 -m unittest discover -s tests
+      - name: Validate sample instance
+        run: python3 scripts/validate_agent_group.py --strict examples/sample
