@@ -21,7 +21,7 @@ The main orchestrator is a supervisor only. It must not directly perform worker-
 
 Read `rules/SUB_AGENT_EXECUTION.md` and `rules/WORKER_REGISTRY.md` before selecting workers. Use this file for DAG patterns and risk gates.
 
-Each selected non-main worker must be executed by a compatible Codex or Claude Code CLI sub-agent backend. If sub-agents are unavailable, mark the workflow blocked or ask the user to switch backend; do not reassign worker work to the main orchestrator.
+Each selected non-main worker must be executed by a compatible sub-agent backend. If sub-agents are unavailable, mark the workflow blocked or ask the user to switch backend; do not reassign worker work to the main orchestrator.
 
 ## Default DAGs
 

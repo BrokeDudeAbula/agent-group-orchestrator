@@ -1,6 +1,6 @@
 ---
 name: agent-group-memory-sync
-description: Use when Codex should update, compact, archive, or validate an agent group current state, task ledger, progress ledger, decisions, risks, and worker outputs.
+description: Use when the host agent should update, compact, archive, or validate an agent group current state, task ledger, progress ledger, decisions, risks, and worker outputs.
 ---
 
 # Agent Group Memory Sync
@@ -9,7 +9,7 @@ Use this skill for maintaining agent group memory after work completes or before
 
 ## Workflow
 
-1. Locate the target agent group instance, usually `.codex/agent_group/`.
+1. Locate the target agent group instance using explicit path, existing `.claude/agent_group/` or `.codex/agent_group/`, or the host-backend default.
 2. Read `references/directory-contract.md` and confirm the target has the required memory shape.
 3. Read `references/memory-sync-sop.md`.
 4. Read `references/memory-lifecycle.md` before compaction or before deciding whether a task memory belongs in `current/`, `memory/`, or `archive/`.

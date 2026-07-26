@@ -1,10 +1,20 @@
 # Directory Contract
 
-An agent group instance is a project-local coordination workspace. The default target path is:
+An agent group instance is a project-local coordination workspace. Supported standard target paths are:
 
 ```text
-.codex/agent_group/
+.claude/agent_group/    # preferred default for Claude Code
+.codex/agent_group/     # preferred default for Codex
 ```
+
+Resolve the active instance in this order:
+
+1. Explicit path from the user or CLI `--target`.
+2. An existing standard instance under the project root.
+3. Host-backend default when no instance exists yet.
+4. Ask the user if both standard instances exist and no path was specified.
+
+The instance body is backend-neutral. Only the parent directory differs by host.
 
 Required directories:
 
@@ -42,6 +52,7 @@ Recommended instance config:
 ```yaml
 project_name: example
 default_mode: auto-orchestrate
+execution_backend: auto
 task_id_prefix: AUTO
 worker_output_dir: current/agent_outputs
 archive_dir: archive

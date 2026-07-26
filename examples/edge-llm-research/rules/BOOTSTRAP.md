@@ -50,7 +50,7 @@ The main orchestrator should:
 3. Select workers from `WORKER_REGISTRY.md`.
 4. Build a small DAG from `ROUTING_POLICY.md`.
 5. Apply R3/R4 gates before sensitive work.
-6. Dispatch selected non-main workers through the configured Codex or Claude Code CLI sub-agent backend.
+6. Dispatch selected non-main workers through the configured sub-agent backend.
 7. Monitor sub-agent progress and blockers without doing worker-scoped work directly.
 8. Store worker outputs in `current/agent_outputs/`.
 9. Spot-check evidence, synchronize memory using `MEMORY_SYNC_SOP.md`, and report status, sub-agent references, files changed, blockers, and next step.

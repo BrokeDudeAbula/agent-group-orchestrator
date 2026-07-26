@@ -22,7 +22,7 @@ repo-explorer -> perf-analyst? -> user gate -> runner -> perf-analyst -> reviewe
 
 Worker selection should be driven by `rules/WORKER_REGISTRY.md` in the target instance. Skip workers when their contribution is not relevant, but record the reason in the orchestrator output.
 
-Each selected non-main worker must be executed by a compatible sub-agent backend. Codex and Claude Code CLI adapters may expose different launch primitives, but both must receive the same worker role file, task id, scope, risk boundary, expected output path, and output contract. If sub-agents are unavailable, the workflow is blocked rather than reassigned to the main orchestrator.
+Each selected non-main worker must be executed by a compatible sub-agent backend. Backend adapters may expose different launch primitives, but each must receive the same worker role file, task id, scope, risk boundary, expected output path, and output contract. If sub-agents are unavailable, the workflow is blocked rather than reassigned to the main orchestrator.
 
 Task IDs should be stable and sortable:
 

@@ -4,7 +4,7 @@ Every worker output should include:
 
 - task id
 - worker name
-- execution backend, for example `codex` or `claude-code-cli`
+- execution backend, for example `claude-code-cli` or `codex`
 - sub-agent reference, if the backend provides one
 - scope
 - inputs read

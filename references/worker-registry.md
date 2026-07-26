@@ -12,7 +12,7 @@ Each worker entry should define:
 
 Worker names must match both the role file name and role frontmatter when frontmatter is present.
 
-Each non-main worker entry is a sub-agent role. The main orchestrator uses the registry to choose and dispatch workers, but it must not perform the worker task itself. The worker `agent_file` is the role prompt that must be passed to the Codex or Claude Code CLI sub-agent backend.
+Each non-main worker entry is a sub-agent role. The main orchestrator uses the registry to choose and dispatch workers, but it must not perform the worker task itself. The worker `agent_file` is the role prompt that must be passed to the configured sub-agent backend.
 
 Minimum recommended workers:
 

@@ -1,6 +1,6 @@
 # Repo Memory Lifecycle
 
-本文定义项目本地 `.codex/agent_group/` 中 repo 记忆的生命周期，重点说明哪些任务记忆必须同步到长期记忆，哪些热记忆可以归档，以及哪些文件不能通过阶段归档移走。
+本文定义项目本地 agent group 实例（`.claude/agent_group/` 或 `.codex/agent_group/`）中 repo 记忆的生命周期，重点说明哪些任务记忆必须同步到长期记忆，哪些热记忆可以归档，以及哪些文件不能通过阶段归档移走。
 
 ## 核心原则
 

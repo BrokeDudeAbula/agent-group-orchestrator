@@ -25,12 +25,12 @@ If no compatible sub-agent backend is available, report the workflow as blocked 
 
 ## Backend Compatibility
 
-The workflow must support both Codex and Claude Code CLI sub-agent mechanisms.
+The workflow is backend-neutral and must support the host's available sub-agent mechanism.
 
-- Codex: create one sub-agent per selected worker task using the available Codex sub-agent or multi-agent primitive.
 - Claude Code CLI: create one sub-agent per selected worker task using the available Claude Code CLI sub-agent mechanism.
+- Codex: create one sub-agent per selected worker task using the available Codex sub-agent or multi-agent primitive.
 
-Both backends must receive the same worker role file, task id, scope, dependency outputs, risk boundary, expected output path, and output contract.
+Every backend must receive the same worker role file, task id, scope, dependency outputs, risk boundary, expected output path, and output contract.
 
 ## Main Orchestrator Duties
 
@@ -80,7 +80,7 @@ Each sub-agent prompt must include:
 
 Each worker output should identify:
 
-- execution backend, for example `codex` or `claude-code-cli`;
+- execution backend, for example `claude-code-cli` or `codex`;
 - sub-agent reference, if the backend provides one;
 - whether the worker ran concurrently or serially;
 - inputs read, commands run, artifacts produced, blockers, and recommended next step.

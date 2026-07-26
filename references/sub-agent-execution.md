@@ -41,17 +41,17 @@ Small read-only checks are allowed only for routing, progress supervision, memor
 
 The execution model is backend-neutral. Each backend adapter must preserve the same worker contract and output shape.
 
-### Codex
-
-Use the available Codex sub-agent or multi-agent primitive to create one sub-agent per selected worker task. Pass the selected `agents/<worker>.md` role, task id, risk gate, inputs, expected output path, and output contract to the sub-agent.
-
-Record the Codex sub-agent reference, such as a thread id, run id, task id, or other available handle, in the worker output or orchestrator report.
-
 ### Claude Code CLI
 
-Use the available Claude Code CLI sub-agent mechanism to create one sub-agent per selected worker task. Pass the same worker role, task id, risk gate, inputs, expected output path, and output contract.
+Use the available Claude Code CLI sub-agent mechanism to create one sub-agent per selected worker task. Pass the selected `agents/<worker>.md` role, task id, risk gate, inputs, expected output path, and output contract to the sub-agent.
 
-Record the Claude Code CLI sub-agent reference, such as a session id, command log path, transcript path, or other available handle, in the worker output or orchestrator report.
+Record the Claude Code CLI sub-agent reference, such as a session id, agent id, transcript path, command log path, or other available handle, in the worker output or orchestrator report.
+
+### Codex
+
+Use the available Codex sub-agent or multi-agent primitive to create one sub-agent per selected worker task. Pass the same worker role, task id, risk gate, inputs, expected output path, and output contract.
+
+Record the Codex sub-agent reference, such as a thread id, run id, task id, or other available handle, in the worker output or orchestrator report.
 
 ## Scheduling Rules
 
@@ -78,7 +78,7 @@ Each sub-agent prompt must include:
 
 Each worker output should identify:
 
-- execution backend, for example `codex` or `claude-code-cli`;
+- execution backend, for example `claude-code-cli` or `codex`;
 - sub-agent reference, if the backend provides one;
 - whether the worker ran concurrently or serially;
 - inputs read, commands run, artifacts produced, blockers, and recommended next step.

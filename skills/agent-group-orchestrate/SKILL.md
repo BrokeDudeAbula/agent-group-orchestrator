@@ -1,11 +1,11 @@
 ---
 name: agent-group-orchestrate
-description: Use when Codex should run or design a project-local multi-agent workflow with auto-orchestration, worker selection, task DAGs, risk gates, task ledgers, and current-state memory updates.
+description: Use when the host agent should run or design a project-local multi-agent workflow with auto-orchestration, worker selection, task DAGs, risk gates, task ledgers, and current-state memory updates.
 ---
 
 # Agent Group Orchestrate
 
-Use this skill for project-local multi-agent coordination. The target instance is usually `.codex/agent_group/`, but accept an explicit path from the user.
+Use this skill for project-local multi-agent coordination. Resolve the instance path with the same rules as `agent-group-init`: explicit path, existing `.claude/agent_group/` or `.codex/agent_group/`, otherwise the host-backend default.
 
 ## Workflow
 
@@ -32,6 +32,6 @@ Use this skill for project-local multi-agent coordination. The target instance i
 
 - Do not treat plugin examples as live project state.
 - Do not run remote, destructive, or long profiling tasks without an explicit gate.
-- Do not perform non-main worker work directly; dispatch it to Codex or Claude Code CLI sub-agents.
+- Do not perform non-main worker work directly; dispatch it to a compatible sub-agent backend.
 - Preserve user changes in dirty worktrees.
 - Prefer structured updates over free-form state drift.

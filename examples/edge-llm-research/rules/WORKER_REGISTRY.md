@@ -15,7 +15,7 @@ owner: main-orchestrator
 
 Worker names must match `agents/<worker-name>.md`.
 
-Each non-main worker entry is a sub-agent role. The main orchestrator selects and dispatches workers, but it must not perform the worker task itself. Pass the matching `agents/<worker-name>.md` role file to the Codex or Claude Code CLI sub-agent backend.
+Each non-main worker entry is a sub-agent role. The main orchestrator selects and dispatches workers, but it must not perform the worker task itself. Pass the matching `agents/<worker-name>.md` role file to the configured sub-agent backend.
 
 ## main-orchestrator
 

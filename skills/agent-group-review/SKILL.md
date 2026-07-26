@@ -1,6 +1,6 @@
 ---
 name: agent-group-review
-description: Use when Codex should review an agent group workflow, worker output, routing decision, memory update, or task evidence for correctness, missing validation, and risk.
+description: Use when the host agent should review an agent group workflow, worker output, routing decision, memory update, or task evidence for correctness, missing validation, and risk.
 ---
 
 # Agent Group Review
