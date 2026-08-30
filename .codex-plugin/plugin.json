@@ -1,6 +1,6 @@
 {
   "name": "agent-group-orchestrator",
-  "version": "0.1.0",
+  "version": "0.1.0+codex.20260727153614",
   "description": "Backend-neutral project-local multi-agent orchestration, task ledger, and memory sync workflows for Codex and Claude Code.",
   "author": {
     "name": "Local developer"

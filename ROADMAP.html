@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>agent-group-orchestrator 下一步工作路线图</title>
+<style>
+:root{--ink:#1f2430;--muted:#5f6b7a;--line:#e3e8ef;--bg:#f6f8fa;--card:#fff;--accent:#0b57d0;--accent2:#0e7a4d;}
+*{box-sizing:border-box}
+body{margin:0;font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.75}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px 80px}
+header.hero{background:linear-gradient(135deg,#0b2545 0%,#13315c 55%,#1d4e89 100%);color:#fff;padding:56px 28px 44px;}
+header.hero .wrap{padding-bottom:0}
+header.hero h1{font-size:30px;margin:0 0 10px;letter-spacing:.5px}
+header.hero p.sub{margin:0;color:#c9d7ea;font-size:15px;max-width:860px}
+.meta{display:flex;flex-wrap:wrap;gap:20px;margin-top:22px;font-size:13px;color:#a9bdd6}
+.meta b{color:#fff;font-weight:600}
+nav.toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 22px;margin:-26px 0 36px;box-shadow:0 2px 10px rgba(16,34,64,.08);display:flex;flex-wrap:wrap;gap:6px 22px;font-size:14px}
+nav.toc a{color:var(--accent);text-decoration:none}
+nav.toc a:hover{text-decoration:underline}
+h2{font-size:22px;margin:52px 0 6px;padding-left:12px;border-left:5px solid var(--accent)}
+h2 small{font-weight:400;font-size:13px;color:var(--muted);margin-left:10px}
+h3{font-size:17px;margin:26px 0 10px}
+p.lead{color:var(--muted);margin:4px 0 20px;font-size:14.5px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin:14px 0;box-shadow:0 1px 4px rgba(16,34,64,.05)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:860px){.grid2{grid-template-columns:1fr}}
+.badge{display:inline-block;font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;color:#fff;margin-right:8px;vertical-align:2px}
+.badge.effort{background:#5f6b7a}
+.tag{display:inline-block;font-size:12px;background:#eef3fb;color:#28477a;border:1px solid #d6e2f5;border-radius:6px;padding:1px 8px;margin:2px 6px 2px 0}
+ul{margin:8px 0;padding-left:22px}
+li{margin:5px 0}
+.pos{background:#eef6ff;border:1px solid #cfe3fb;border-radius:12px;padding:20px 24px;font-size:15px}
+.principle li{margin:8px 0}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;margin:10px 0;padding:0 18px}
+details summary{cursor:pointer;padding:12px 0;font-weight:600;font-size:15px;list-style-position:inside}
+details[open]{padding-bottom:14px}
+details .inner{border-top:1px dashed var(--line);padding-top:12px}
+.proj{border-left:4px solid var(--accent2);background:#f4faf7;border-radius:8px;padding:12px 16px;margin:10px 0}
+.proj a{color:var(--accent2);font-weight:600;text-decoration:none}
+.proj a:hover{text-decoration:underline}
+.proj p{margin:6px 0;font-size:14px}
+.lesson{border-left:4px solid #b78103;background:#fdf8ec;border-radius:8px;padding:12px 16px;margin:10px 0;font-size:14px}
+.lesson b.t{color:#7a5a00}
+.lesson .apply{margin-top:6px;color:#1f2430}
+.lesson .apply::before{content:"落地方式 → ";font-weight:700;color:#0e7a4d}
+.gap-item{border-left:4px solid #d93025;background:#fdf1f0;border-radius:8px;padding:10px 16px;margin:10px 0;font-size:14px}
+.strength{border-left:4px solid #0e7a4d;background:#f0f9f4;border-radius:8px;padding:10px 16px;margin:10px 0;font-size:14px}
+.risk{border-left:4px solid #8430ce;background:#f7f0fd;border-radius:8px;padding:10px 16px;margin:10px 0;font-size:14px}
+.phase-head{display:flex;align-items:baseline;gap:14px;margin-top:34px}
+.phase-head h3{margin:0;font-size:19px}
+.phase-head span{color:var(--muted);font-size:14px}
+.item h4{margin:0 0 8px;font-size:16px}
+.item .why{color:var(--muted);font-size:14px;margin:6px 0}
+.item .sec{font-size:13.5px;margin-top:10px}
+.item .sec b{color:#28477a}
+table{border-collapse:collapse;width:100%;font-size:14px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef3fb}
+footer{margin-top:60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:18px}
+code{background:#eef1f5;border-radius:4px;padding:1px 6px;font-size:.92em;font-family:"SF Mono",Consolas,monospace}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+<h1>agent-group-orchestrator · 下一步工作路线图</h1>
+<p class="sub">基于多智能体深度调研工作流：并行调研 6 个方向共 20 个开源项目（LangGraph、AutoGen、OpenAI Agents SDK、CrewAI、MetaGPT、claude-flow、claude-squad、SuperClaude、Letta/MemGPT、Mem0、Zep、OpenHands、SWE-agent、Aider 等），叠加对本仓库的独立差距分析，综合产出 17 项分阶段工作规划。</p>
+<div class="meta">
+<span>生成日期：<b>2026-07-26</b></span>
+<span>调研方法：<b>8 个并行研究代理 · 约 42 万 token</b></span>
+<span>可落地经验：<b>35 条</b></span>
+<span>路线图条目：<b>17 项（近期 6 / 中期 6 / 远期 5）</b></span>
+</div>
+</div></header>
+<div class="wrap">
+<nav class="toc">
+<a href="#s1">一、仓库现状</a>
+<a href="#s2">二、差距分析</a>
+<a href="#s3">三、开源调研发现</a>
+<a href="#s4">四、定位与原则</a>
+<a href="#s5">五、三阶段路线图</a>
+</nav>
+
+<h2 id="s1">一、仓库现状概览</h2>
+<p class="lead">基于对 README.md、AGENTS.md、4 个 skills、9 份 references 契约与 6 个脚本的通读。</p>
+<div class="card">
+<p><b>agent-group-orchestrator</b> 是一个<b>后端中立（Claude Code + Codex 双宿主）的项目级多智能体编排插件</b>（v0.1.0）。
+核心思想：主 agent 只充当 <code>main-orchestrator</code> 监督者（目标澄清、任务拆解、worker 选择、风险门禁、记忆同步），
+所有实际工作（开发、测试、调研、评审）必须经 sub-agent 后端派发给注册的 worker 执行；
+全部编排状态落在目标仓库的 <code>.claude/agent_group/</code> 或 <code>.codex/agent_group/</code>，以纯文本文件为唯一事实源。</p>
+<table>
+<tr><th>组成</th><th>内容</th></tr>
+<tr><td><code>skills/</code>（4 个）</td><td>agent-group-init（初始化实例）、agent-group-orchestrate（自动编排）、agent-group-memory-sync（记忆同步）、agent-group-review（评审）</td></tr>
+<tr><td><code>references/</code>（9 份契约）</td><td>路由策略（4 类常用 DAG）、R0–R4 风险门禁、worker registry、sub-agent 执行契约、输出契约、目录契约、记忆 schema / 生命周期 / 同步 SOP</td></tr>
+<tr><td><code>scripts/</code>（6 个，纯标准库）</td><td>init、validate（--strict）、路径解析、tasks.csv → Mermaid DAG 渲染、compact_memory 归档、check_public_safety 泄密扫描</td></tr>
+<tr><td>记忆模型</td><td>三层生命周期：<code>current/</code> 热状态（STATE.md、tasks.csv、agent_outputs/）→ <code>memory/</code> 持久台账（TASK/PROGRESS/DECISIONS/RISKS）→ <code>archive/</code> 归档</td></tr>
+<tr><td>任务模型</td><td><code>tasks.csv</code> + <code>depends_on</code> 列表达任务 DAG，状态枚举 todo/in_progress/blocked/review/done/dropped</td></tr>
+</table>
+</div>
+<h2 id="s2">二、本仓库差距分析</h2>
+<p class="lead">由独立差距分析代理通读全仓库产出：6 项优势、12 项差距、6 项风险。</p>
+<h3>✅ 现有优势</h3>
+<div class="strength">契约文档体系完整且相互引用一致：references/ 下 9 份文档（routing-policy、sub-agent-execution、risk-policy、memory-lifecycle、memory-schema、output-contract、worker-registry、directory-contract、memory-sync-sop）明确定义了监督者/执行者边界、R0-R4 风险门禁、worker 输出契约和记忆三层生命周期（current/memory/archive），主 agent 只做 main-orchestrator 监督、worker 必须经 sub-agent 派发的核心规则在 SKILL.md、references 和实例模板三处保持同构。</div>
+<div class="strength">记忆生命周期设计清晰：references/memory-lifecycle.md 用表格逐文件定义了'必须同步/可以归档/禁止归档'三类边界，配套归档前后检查清单；scripts/compact_memory.py 归档后默认重建可通过严格校验的空热状态，保证实例始终处于可校验形态。</div>
+<div class="strength">工具链全部为纯标准库 Python、带类型注解、单一职责，确定性强：init/validate/paths/render_dag/compact/safety-scan 六个脚本无第三方依赖，validate_agent_group.py --strict 能校验 tasks.csv 列形态、status/risk 枚举、depends_on 自引用与未知引用、STATE.md 与 worker 输出的 11 个标准标题。</div>
+<div class="strength">发布安全做得超出同类插件平均水平：scripts/check_public_safety.py 有 9 类规则（云 token、私钥/JWT、个人邮箱、凭证赋值、真实用户路径、设备标识、运行时 UUID、误粘贴提示、性能报告路径），支持 --git-history 扫描全部可达历史与提交元数据，并接入 .github/workflows/public-safety.yml 在 push/PR 强制执行。</div>
+<div class="strength">双后端（Claude Code + Codex）中立性落地扎实：.claude-plugin/plugin.json 与 .codex-plugin/plugin.json 双清单，scripts/agent_group_paths.py 通过环境信号自动探测后端并解析 .claude/agent_group 与 .codex/agent_group 双标准路径，README 对两侧 marketplace 安装流程都有可操作说明。</div>
+<div class="strength">examples/ 提供两套完整实例 fixture（sample 中立回归样例 + edge-llm-research 领域样例），worker 输出、tasks.csv 的 depends_on DAG、memory 台账都填充了符合契约的内容，可同时用于回归测试和文档示范。</div>
+<h3>⚠️ 主要差距（12 项）</h3><div class="grid2">
+<div class="gap-item"><b>编排能力：失败重试与终止条件无量化契约</b><br>references/sub-agent-execution.md 的 Scheduling Rules 仅有一句'On sub-agent failure, mark the task as blocked or retry with a narrowed prompt'，没有最大重试次数、超时、退避策略、单任务/全局预算上限或全局终止条件（如最大迭代轮次、最大派发 worker 数）。current/tasks.csv 的 schema（references/memory-schema.md、assets/templates/instance/current/tasks.csv）也没有 attempt/retry_count/timeout/deadline 列，orchestrator 陷入'派发-失败-换提示重试'循环时无任何机制强制收敛。</div>
+<div class="gap-item"><b>编排能力：DAG 无环检测与就绪调度支持缺失</b><br>scripts/validate_agent_group.py 的 strict 模式只检查 depends_on 自引用和未知任务 ID（第 129-136 行），不做环检测；scripts/render_task_dag.py 也只是逐行输出 Mermaid 边，不做拓扑排序。若 tasks.csv 出现 A→B→A 互相依赖，校验通过但按'Respect dependencies before dispatching'规则执行会死锁。此外没有任何脚本能输出'当前可派发的就绪任务集合'，就绪判断完全依赖 LLM 阅读 CSV，缺少确定性工具支撑并行派发。</div>
+<div class="gap-item"><b>编排能力：并行派发只有一句 prose，无并发控制原语</b><br>references/sub-agent-execution.md 只说'Dispatch independent workers concurrently when the backend supports parallel sub-agents'，但 config.yml 模板（assets/templates/instance/config.yml）没有 max_parallel_workers 之类的并发上限配置，tasks.csv 没有锁/占用（owner claim）语义，两个并行 sub-agent 同时写 current/tasks.csv 或 current/STATE.md 时没有任何文件锁或合并规则——与 README 自述的'无并发控制'一致，但契约层连约定式规避（如仅 orchestrator 可写 tasks.csv）都未明文化。</div>
+<div class="gap-item"><b>记忆系统：长期台账无界增长，压缩只覆盖 current/</b><br>references/memory-lifecycle.md 明确 memory/TASK_LEDGER.md、PROGRESS_LEDGER.md、DECISIONS.md、RISKS.md 为追加式且'不应归档'，scripts/compact_memory.py 的 CURRENT_FILES 列表（第 11 行）只移动 current/ 下 5 个文件和 agent_outputs/。项目长期运行后台账会无限膨胀，没有任何分卷（rollover）、摘要压缩或分层索引机制，最终热路径读取（skill 要求每次 sync 前读台账）会撑爆上下文窗口。</div>
+<div class="gap-item"><b>记忆系统：无检索机制与跨项目复用能力</b><br>记忆消费方式只有'整文件阅读'：skills/agent-group-memory-sync/SKILL.md 要求顺序读取 STATE.md/tasks.csv/agent_outputs，没有任何按任务 ID、关键词、时间范围检索台账条目的脚本；memory/ 完全绑定单实例路径，没有跨项目导出/导入（如把某项目的 PROJECT_FACTS/DECISIONS 提炼为可复用知识包）或全局用户级记忆层的设计。assets/templates/instance/memory/DOC_REGISTRY.yml 只是空的 documents: []，没有任何脚本或契约说明如何维护和查询它。</div>
+<div class="gap-item"><b>记忆系统：模板 frontmatter 与 references/memory-schema.md 存在 schema 漂移</b><br>assets/templates/instance/rules/*.md 和 compact_memory.py 重建的 STATE.md 都带 ag_schema: v1 的 YAML frontmatter（doc_id/authority/lifecycle/read_policy 等字段），但 references/memory-schema.md 完全没有定义 frontmatter 规范，validate_agent_group.py 也不校验它；DOC_POLICY.yml、DOC_REGISTRY.yml、tasks.meta.yml（memory-lifecycle.md 和 compact_memory.py 都引用了它）三个文件在 references/ 中均无 schema 定义，属于'模板先行、契约缺位'。</div>
+<div class="gap-item"><b>工程质量：测试覆盖严重不足</b><br>tests/ 只有 test_check_public_safety.py 一个文件、7 个用例，且只测 scan_text 单函数。核心脚本 validate_agent_group.py（依赖校验、strict 标题校验）、init_agent_group.py（--force 删除重建、路径解析）、compact_memory.py（移动计划、reset_current、归档名冲突）、render_task_dag.py、agent_group_paths.py（后端探测优先级）全部零单测；也没有 init→validate→compact→validate 的端到端回归测试。</div>
+<div class="gap-item"><b>工程质量：CI 与静态检查缺失</b><br>.github/workflows/public-safety.yml 是唯一 workflow，仅跑安全扫描、unittest discover 和 examples/sample 严格校验；没有 ruff/flake8 lint、mypy 类型检查（脚本已写类型注解但从未被检查）、Python 多版本矩阵（scripts 用了 3.10+ 的 X | None 语法但未声明最低版本）、claude plugin validate 步骤，也没有对 /tmp 新初始化实例的冒烟测试（AGENTS.md 第 27 行明确要求本地做但 CI 未固化）。仓库无 pyproject.toml，无法声明 requires-python。</div>
+<div class="gap-item"><b>生态与分发：版本策略与变更管理缺位</b><br>两个 manifest（.claude-plugin/plugin.json、.codex-plugin/plugin.json）均为 0.1.0，仓库无 CHANGELOG.md、无 git tag、无版本升级/schema 迁移策略说明；ag_schema: v1 出现在模板 frontmatter 中但没有版本协商机制（validator 不识别 v1 之外的实例该如何处理）。git 历史仅 2 个 commit，README 安装章节的 marketplace.json 需要用户手工维护，仓库本身不提供可直接引用的 marketplace 配置或发布脚本。两个 manifest 的字段也不对称：.codex-plugin 缺 homepage/repository。</div>
+<div class="gap-item"><b>生态与分发：示例广度不足</b><br>examples/ 只有 sample 和 edge-llm-research 两套，且全部是 R0/R1 只读研究型流程；没有覆盖核心实现 DAG（architect → user gate → kernel-dev → runner，即 references/routing-policy.md 中的 'Core implementation' 模式）、R3/R4 门禁触发、任务 blocked/重试、双实例并存冲突、跨阶段归档后恢复等关键场景的示例，用户无法从示例学到风险门禁和失败处理的实际形态。</div>
+<div class="gap-item"><b>可观测性：无结构化执行轨迹与成本统计</b><br>唯一的执行留痕是 current/agent_outputs/*.md 里 prose 形式的 'Sub-Agent Reference' 标题（references/output-contract.md），没有结构化事件日志（派发时间、开始/结束时间戳、重试次数、token/成本、backend 会话 ID 的 JSONL 轨迹文件），与 README 自述'无遥测'一致。这导致 agent-group-review skill 要求的'验证输出确由 sub-agent 产生'实际上不可机器验证——只能相信 Markdown 里自报的引用字符串，orchestrator 违规亲自代工时无从检测。</div>
+<div class="gap-item"><b>可观测性：DAG 可视化功能过于单薄</b><br>scripts/render_task_dag.py 仅 59 行，输出裸 Mermaid flowchart 文本：无按 status 着色（done/blocked/in_progress 视觉不可区分）、无 risk 等级标注、无关键路径/就绪前沿高亮、无输出到文件或 HTML 的选项、不校验 depends_on 引用有效性（未知依赖会生成悬空节点边而不报错）、无环检测。作为唯一的可观测性工具，其信息密度不足以支撑真实监督场景。</div>
+</div><h3>🚨 风险清单</h3>
+<div class="risk">证据静默覆盖风险：scripts/compact_memory.py 用 shutil.move 且不检查 archive/&lt;name&gt;/ 是否已存在，同一 archive-name 重复执行时（POSIX 上 os.rename 语义）会静默覆盖先前归档的 STATE.md/tasks.csv 等文件，直接违反自身'归档不是删除、不得丢失证据'的核心契约（references/memory-lifecycle.md）。</div>
+<div class="risk">契约全靠 prose 约束、无机器强制：main-orchestrator 不得代工、失败必须标记 blocked、R3/R4 必须先获门禁等关键规则都只写在 Markdown 契约里，没有 hook、轨迹校验或自动审计工具兜底；一旦宿主 LLM 未忠实执行 SKILL.md，整个监督模型失效且事后不可取证。</div>
+<div class="risk">依赖环导致的执行死锁：validator 不检测 depends_on 环，orchestrator 按'先满足依赖再派发'执行含环的 tasks.csv 时会永久等待，且缺少全局终止条件（最大轮次/预算），无人值守场景可能无限消耗 token。</div>
+<div class="risk">台账无界增长反噬编排质量：PROGRESS_LEDGER/TASK_LEDGER/DECISIONS 只追加不分卷，若项目跨多个 epic 长期使用，每次 memory sync 前的'读取台账'步骤会持续膨胀上下文，最终导致同步质量下降或直接超出上下文窗口——而这恰是记忆系统本要解决的问题。</div>
+<div class="risk">双实例状态分叉：agent_group_paths.py 在 .claude/agent_group 和 .codex/agent_group 并存时按后端偏好自动选择（resolve_instance_path 第 92 行），CLI 只打印 stderr 警告；用户在两个宿主间切换时，任务状态和记忆可能在两个实例中静默分叉，且没有合并或一致性检查工具。</div>
+<div class="risk">安全扫描器误报可能侵蚀门禁公信力：personal-email 规则匹配几乎所有邮箱、personal-path 匹配所有 /home|/Users|/workspace 路径（check_public_safety.py 第 70-94 行），在真实项目文档中误报率会很高且无 allowlist/inline-suppress 机制，团队可能因噪音而绕过或关闭 CI 门禁，反而放大真实泄密风险。</div>
+<h2 id="s3">三、开源项目调研发现 <small>6 个方向 · 20 个项目 · 35 条可落地经验</small></h2>
+<p class="lead">每个方向由独立研究代理基于官方文档 / 论文 / GitHub 调研产出，经验条目均已区分「事实」与「推测」，并落到本仓库具体文件。点击展开。</p>
+<details><summary>方向 1：LangGraph <span style="font-weight:400;color:#5f6b7a">（2 个项目 · 6 条经验）</span></summary><div class="inner">
+<p style="font-size:13.5px;color:#5f6b7a">LangGraph 多智能体编排设计调研：任务图表达、检查点/中断恢复、supervisor 与层级团队、持久化与 time-travel，及其对文件契约型轻量编排插件（agent-group-orchestrator）的借鉴</p>
+<div class="proj"><a href="https://github.com/langchain-ai/langgraph" target="_blank">LangGraph（langchain-ai/langgraph）</a><p>LangGraph 是 LangChain 生态中面向有状态、长运行智能体工作流的底层编排框架，核心抽象是 StateGraph：以共享状态（TypedDict/Pydantic schema + reducer 归并函数）为中心，节点作为计算单元、边（含条件边）作为控制流，底层采用受 Google Pregel 启发的消息传递 + super-step（超步）执行模型（事实：官方 Graph API 文档 https://docs.langchain.com/oss/python/langgraph/graph-api）。它把持久化（checkpointer 在每个超步保存 StateSnapshot）作为一等公民，在此单一基座上派生出人机协同中断（interrupt/Command）、容错恢复（durable execution）与 time-travel 调试（replay/fork）三类能力（事实：https://docs.langchain.com/oss/python/langgraph/persistence 与 https://docs.langchain.com/oss/python/langgraph/durable-execution）。多智能体方面官方定义了 network、supervisor、hierarchical teams、自定义 workflow 等架构，通过 Command(goto=..., graph=Command.PARENT) 实现节点内 handoff（事实：多智能体概念文档，https://langchain-ai.github.io/langgraph/concepts/multi_agent/）。</p><ul>
+<li>StateGraph + reducer：状态按 schema 分为若干 channel，节点只返回'增量更新'，由 reducer（如 operator.add、add_messages）决定合并语义；未指定 reducer 则覆盖写（事实，官方 Graph API 文档）</li>
+<li>Pregel/BSP 超步执行：并行节点属于同一 super-step，顺序节点属于不同 super-step；每个超步结束才提交状态，形成天然的'事务边界'（事实，官方文档与 reference.langchain.com/python/langgraph/graph/state）</li>
+<li>条件边 add_conditional_edges：路由函数读取当前状态返回下一节点名，实现数据驱动分支（事实，https://reference.langchain.com/python/langgraph/graph/state/StateGraph/add_conditional_edges）</li>
+<li>Send API 动态扇出（map-reduce）：条件边返回 Send 对象列表，可在运行时按数据量动态派生 N 个并行节点实例，每个实例携带独立子状态；下游普通边作为 fan-in 汇聚点，LangGraph 保证所有分支完成后才执行 reduce 节点（事实，https://reference.langchain.com/python/langgraph/types/Send）</li>
+<li>Checkpointer + thread_id：每个超步持久化一份 StateSnapshot（channel 值、下一步待执行节点、config、metadata、pending tasks），thread_id 是恢复执行的主键；实现从 InMemorySaver 到 Postgres/DynamoDB 可插拔（事实，https://docs.langchain.com/oss/python/langgraph/persistence）</li>
+<li>interrupt/Command 人机协同：interrupt() 在节点内暂停并落盘状态，可挂起数小时到数天，用 Command(resume=...) 携带人类输入恢复；恢复语义是'重跑该节点'而非从中断行继续，因此要求节点幂等（事实+社区实践警示，https://docs.langchain.com/oss/python/langgraph/durable-execution 与 Medium 复盘文）</li>
+<li>durability 模式：提供多档持久化时机（如 sync/async/exit），在可靠性与写入开销间权衡（事实，官方 durable-execution 文档）</li>
+<li>time-travel：get_state_history 遍历检查点树（类似 git commit 历史），以 checkpoint_id 重放；update_state(as_node=...) 修改历史状态后 fork 出新分支，检查点前的节点不重跑、之后的节点全部重执行（事实，https://docs.langchain.com/oss/python/langgraph/use-time-travel）</li>
+<li>多智能体 handoff：节点返回 Command 对象同时携带控制流（goto）与状态更新（update），可跨子图边界（Command.PARENT）；把'去哪'的决策放进节点而非静态边（事实，多智能体概念文档）</li>
+<li>supervisor 模式：中心 supervisor 节点用 LLM 结构化输出决定下一个 worker，worker 完成后交回 supervisor 复核，不满意可退回重做形成反馈环；官方实践建议 supervisor 只保留 route/finish 能力、不挂业务工具（事实+生态经验，https://github.com/langchain-ai/langgraph-supervisor-py）</li>
+<li>hierarchical teams：每个子团队有自己的 sub-supervisor 和局部状态，顶层 supervisor 只在团队粒度路由，团队内部消息历史不必上浮到全局（事实，官方教程与 langchain-opentutorial）</li>
+</ul></div>
+<div class="proj"><a href="https://github.com/langchain-ai/langgraph-supervisor-py" target="_blank">langgraph-supervisor-py（官方 supervisor 库）</a><p>LangGraph 官方的层级多智能体封装库：create_supervisor() 一行创建'supervisor 管 worker'的编译图，支持 supervisor 套 supervisor 组成多级团队。核心是基于工具调用（tool-calling）的 handoff 机制与可配置的消息历史管理（转发全量历史 vs 只转发最终结果）。值得注意的是（事实）：LangChain 现已建议多数场景直接用工具调用实现 supervisor 而非依赖该库，理由是直接实现对上下文工程（context engineering）控制力更强——这对'契约文档 + prompt'型插件是一个有利佐证。</p><ul>
+<li>create_supervisor([...worker...]).compile()：声明式组装 supervisor-worker 拓扑，supervisor 可嵌套形成层级（事实，README）</li>
+<li>tool-based handoff：把'移交给 agent X'建模为一次工具调用，天然获得参数校验与审计记录（事实，README）</li>
+<li>消息历史裁剪策略：可选择向 supervisor 回传 worker 的完整过程消息或仅最终答复，控制上下文膨胀（事实，README）</li>
+<li>官方转向建议：推荐直接用 tool-calling 手写 supervisor 以精细控制注入 worker 的上下文（事实，reference.langchain.com/python/langgraph-supervisor 页面说明）</li>
+</ul></div>
+<h3 style="font-size:15px">对本仓库的可落地经验</h3>
+<div class="lesson"><b class="t">把'每步落盘的状态快照'升级为一等公民：为编排循环定义显式的 StateSnapshot 契约</b><br>事实：LangGraph 的一切高级能力（HITL、容错、time-travel）都建立在同一个基座上——checkpointer 在每个 super-step 保存包含'channel 值 + 下一步待执行节点(next) + metadata + 未完成写入(pending writes)'的 StateSnapshot，thread_id 作为恢复主键。关键洞察是：快照里不仅有'数据'，还有'接下来要执行什么'的控制流信息，因此进程死掉后可以精确续跑。agent-group-orchestrator 的 current/ 热状态目录本质上就是文件版 checkpointer，但目前（推测，基于任务描述'无并发控制'）缺少'next 待派发任务集合 + 本轮编排回合号'这类控制流字段的规范化记录。<div class="apply">在 references/memory-schema.md 中给 current/ 增加一个规范化的 orchestrator-state 文件契约（如 current/orchestrator-state.md 或 .csv）：字段包括 round（等价 super-step 序号）、tasks.csv 中每个任务的运行时状态（pending/dispatched/done/failed）、本轮已派发但未回收的 worker 列表（等价 pending writes）。skills/agent-group-orchestrate/SKILL.md 的编排循环改为'每轮派发前后各写一次该文件'，这样主 agent 会话中断后重新进入 skill 即可从文件恢复，而不是靠重读全部台账推断进度。scripts/validate_agent_group.py 增加对该文件与 tasks.csv 一致性的校验（如 dispatched 任务必须存在且其 depends_on 均已 done）。</div></div>
+<div class="lesson"><b class="t">用 Send 式'动态扇出 + 显式 fan-in 汇聚任务'表达 map-reduce，弥补静态 tasks.csv DAG 的表达盲区</b><br>事实：LangGraph 引入 Send API 正是因为静态图有两个盲区——分支数量在建图时未知、每个分支需要不同的输入子状态；解法是路由函数在运行时返回 Send 对象列表实现动态扇出，并靠'reduce 节点等所有分支完成'的语义保证汇聚正确。tasks.csv + depends_on 是纯静态 DAG，同样存在这两个盲区（推测：例如'对搜索到的 N 个候选框架各做一次评测'这类任务，N 在写 CSV 时未知）。文件契约下的对应物不是 API，而是'允许编排者在运行中向 tasks.csv 追加带模板的子任务行'。<div class="apply">在 skills/agent-group-orchestrate/SKILL.md 中定义'动态展开任务'约定：某任务可标记 type=fanout 并声明子任务模板与输入清单来源文件，编排者执行到它时向 tasks.csv 追加 N 行子任务（id 加统一前缀如 t7.1..t7.N，每行 depends_on=t7），并自动追加一行 type=reduce 的汇聚任务 depends_on 全部子任务。scripts/render_task_dag.py 对同前缀子任务折叠渲染（避免 Mermaid 爆炸），scripts/validate_agent_group.py 校验 fanout 任务必有配对 reduce 任务、且追加行不得篡改既有行（append-only），references/sub-agent-execution.md 中为子任务实例规定'独立子状态'——每个 worker 只拿到自己那一份输入，而非整个 current/。</div></div>
+<div class="lesson"><b class="t">interrupt/resume 的核心教训：恢复 = 重跑整个节点，所以把幂等性和风险门禁写进任务粒度契约</b><br>事实：LangGraph 官方明确恢复语义是'从检查点之后的节点整体重执行'（包括其中的 LLM 调用与外部 API 调用），并因此要求用户把副作用包进 task、保持节点确定性/幂等；社区复盘（Medium《The Hidden Replay Risk in LangGraph》）指出这是生产事故高发区——代码正确但重放造成重复副作用。同时 LangGraph 的 interrupt_before/interrupt_after 把'高危动作前必须停下等人'做成了图上的声明式属性，而不是靠 prompt 自觉。对目标仓库：R1-R4 风险门禁目前（推测）主要是编排者遵循的政策文本，worker 失败重派时的副作用重复问题没有结构化防护。<div class="apply">两处落地：(1) references/risk-policy.md 把 R1-R4 门禁从'政策描述'升级为 tasks.csv 的列级契约——增加 risk_level 与 requires_approval 列，规定 R3/R4 任务等价于 interrupt_before：编排者必须先在 current/ 写入一条 pending-approval 记录并停止派发该任务，待用户明确批准后才可继续；scripts/validate_agent_group.py 校验高风险任务未经 approval 记录不得处于 dispatched/done 状态。(2) references/sub-agent-execution.md 增加'幂等执行契约'：worker 输出必须写到以 task id 命名的独立产物路径，重派同一任务时先清理/覆盖旧产物，禁止追加式副作用（如往共享台账 append），append 类操作统一由 memory-sync 阶段合并——这正对应 LangGraph 的'副作用包进 task + reducer 统一归并'。</div></div>
+<div class="lesson"><b class="t">reducer 思维：为每个共享文件声明'合并语义'，把并发写冲突从运行时问题变成契约问题</b><br>事实：LangGraph 状态的每个 channel 都必须声明更新如何合并（覆盖、operator.add 追加、add_messages 按 id 去重更新），节点只产出增量、由框架按 reducer 归并；这使并行节点写同一状态成为定义良好的操作，也是同一 super-step 内并行安全的前提。目标仓库的 memory/ 持久台账与 current/ 热状态相当于'裸共享内存'——多个 worker 或多轮编排写同一文件时的合并规则（推测）目前散落在 memory-sync SOP 的操作步骤里，而非按文件声明。<div class="apply">在 references/memory-schema.md 中为每个契约文件显式标注 merge policy 字段：例如 memory/decisions.md = append-only（等价 operator.add）、current/task-status = last-writer-wins 但仅编排者可写（等价覆盖 + 单写者）、memory/knowledge 条目 = 按条目 id upsert（等价 add_messages 的按 id 去重语义）。references/memory-sync-sop.md 的同步流程改写成'按各文件声明的 merge policy 机械执行'，scripts/compact_memory.py 与 scripts/validate_agent_group.py 据此做机器校验（如检测 append-only 文件的历史行被改写即报错——这同时是防篡改审计）。这也为未来加并发 worker 铺路：单写者 + 声明式合并是无锁文件系统上最便宜的并发控制。</div></div>
+<div class="lesson"><b class="t">supervisor 契约要点：监督者只做路由与验收、不干活；层级团队用'局部状态 + 只上浮结论'控制上下文膨胀</b><br>事实：LangGraph 官方 supervisor 模式中，supervisor 节点用结构化输出（而非自由文本）决定 next worker 与移交上下文，worker 完成后必须交回 supervisor 复核，形成可退回重做的反馈环；生态最佳实践（CallSphere 等）强调 supervisor 上零业务工具、只有 route/finish。hierarchical teams 模式的关键则是：子团队内部消息不上浮，顶层只看到团队级结果。另一个重要事实：官方现在建议直接用 tool-calling 手写 supervisor 而非用封装库，理由是对注入 worker 的上下文控制更精细——这说明'编排逻辑写成显式契约'（正是目标仓库的路线）比黑盒框架更受青睐。<div class="apply">(1) references/routing-policy.md 把路由决策格式化：规定 main-orchestrator 每次派发必须产出一条结构化路由记录（task id、选中 worker、依据的 registry 条目、注入的上下文文件白名单），写入 current/，等价 supervisor 的结构化输出；并明文禁止 main-orchestrator 直接执行 worker 职责（对应'supervisor 零业务工具'）。(2) references/worker-registry.md / output-contract.md 引入'上浮裁剪'契约：worker 的过程性输出留在自己的产物目录（等价团队局部状态），只有 output-contract 规定的结论块允许被 memory-sync 写入 memory/ 台账——这直接对应 langgraph-supervisor 的'只转发最终结果'历史管理策略，防止台账被过程噪声撑爆。(3) skills/agent-group-review/SKILL.md 明确验收失败的退回路径：review 不通过时在 tasks.csv 追加修订子任务而非原地改状态，保留反馈环的完整轨迹。</div></div>
+<div class="lesson"><b class="t">time-travel 的文件系统等价物：不可变检查点历史 + fork 而非覆盖，archive/ 可以顺便变成调试器</b><br>事实：LangGraph 的 time-travel 依赖检查点形成类似 git 历史的分支树，get_state_history 可回溯任意历史状态，update_state 后 fork 出新时间线，原时间线保持完整不丢；用途是复现（replay 精确序列）、调试（检查中间状态定位错误）、what-if（从同一状态派生多个分支）与审计。目标仓库已有 archive/ 归档与 compact_memory.py，但（推测）归档目前是'压缩瘦身'导向，历史状态被合并后即不可精确回放。在纯文件 + git 仓库的环境里，实现同等能力其实比 LangGraph 更便宜——git 本身就是检查点存储。<div class="apply">(1) scripts/compact_memory.py 归档时改为'快照式归档'：把整份 current/ 与 tasks.csv 按 round 号原样拷入 archive/rounds/&lt;n&gt;/ 再压缩台账，保证任意一轮的完整状态可精确恢复（等价 checkpoint_id）；(2) 在 skills/agent-group-orchestrate/SKILL.md 增加'回滚/分叉'操作约定：从 archive/rounds/&lt;n&gt;/ 恢复 current/ 后必须新开分支目录或 git branch 继续，禁止覆盖原历史（对应 LangGraph fork 语义与其 issue #4987 揭示的'fork 不给新 id 会毁掉后续历史'的教训）；(3) scripts/render_task_dag.py 增加 --at-round &lt;n&gt; 参数，用归档快照渲染当时的 DAG 状态，配合 review skill 做'决策是如何走到这一步'的审计回放。</div></div>
+</div></details>
+<details><summary>方向 2：AutoGen / OpenAI Agents SDK <span style="font-weight:400;color:#5f6b7a">（2 个项目 · 6 条经验）</span></summary><div class="inner">
+<p style="font-size:13.5px;color:#5f6b7a">AutoGen 与 OpenAI Agents SDK 的编排机制调研：发言者选择、handoff/guardrails/tracing、终止与失败恢复、评测与可观测性，及其对文件驱动轻量编排插件 agent-group-orchestrator 的借鉴</p>
+<div class="proj"><a href="https://github.com/microsoft/autogen" target="_blank">Microsoft AutoGen (autogen-agentchat v0.4+，含 0.2 遗留 GroupChat)</a><p>微软的多智能体编程框架，核心抽象是 Team（RoundRobinGroupChat / SelectorGroupChat / Swarm 等）+ 可组合终止条件 + 可序列化团队状态。SelectorGroupChat 用一个模型充当'选主持人'，基于对话历史与各 agent 的 description 动态选择下一个发言者；0.2 时代的 GroupChat 还支持把发言者转移建模为有限状态机（FSM）图约束。事实：项目现已进入社区维护模式，微软将新项目引导到 Microsoft Agent Framework。</p><ul>
+<li>SelectorGroupChat 发言者选择（事实，来自 https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/selector-group-chat.html ）：selector_prompt 模板（含 {roles}/{participants}/{history} 占位符）让模型只返回下一个角色名；candidate_func 先对候选 worker 做确定性过滤再交给模型选；selector_func 可完全绕过模型做纯规则选择（返回 None 时回退到模型）；allow_repeated_speaker 控制是否允许连续同一发言者；max_selector_attempts=3 限制模型选择重试次数。</li>
+<li>0.2 版 GroupChat 的四种 speaker_selection_method（auto/manual/random/round_robin）+ allowed_or_disallowed_speaker_transitions 图约束：把'谁能接谁的话'声明为一个有向图（FSM），LLM 只在图允许的候选集中选择；agent 的 description 字段承担'转移条件'的语义（事实，来自 https://microsoft.github.io/autogen/0.2/blog/2024/02/11/FSM-GroupChat/ ）。自定义选择函数返回 None 即终止对话。</li>
+<li>组合式终止条件（事实，来自 https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/termination.html ）：MaxMessageTermination、TextMentionTermination（可用 sources= 限定只有特定 agent 说出该词才终止）、HandoffTermination 等，可用 | 和 &amp; 组合；条件是有状态的，触发后必须 reset 才能复用；不设终止条件则无限运行——终止是显式外置策略，不藏在 agent 内部。</li>
+<li>失败恢复与状态持久化（事实，来自 https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/state.html ）：team.save_state() 返回可 JSON 序列化的字典（含所有参与 agent 的状态），可写盘后用 load_state() 在新建的 team 上恢复并继续对话；终止条件在每次 run 后自动 reset，直接再次 run 即可'断点续跑'；运行中调用 save_state 会抛 RuntimeError（必须先停下）。</li>
+<li>评测与可观测性：agbench（仓库 python/packages/agbench，事实）是独立 CLI 评测工具，用 Docker 隔离每个任务、从干净初始状态重复运行、集中收集日志再由 metrics 脚本统计，曾用于在 GAIA/AssistantBench/WebArena 上评测 Magentic-One（ https://arxiv.org/abs/2411.04468 ）；运行时观测官方博客推荐 AgentOps 两行代码接入，监控 LLM 调用、成本、失败与多 agent 交互（ https://microsoft.github.io/autogen/0.2/blog/2024/07/25/AgentOps/ ）。</li>
+</ul></div>
+<div class="proj"><a href="https://github.com/openai/openai-agents-python" target="_blank">OpenAI Agents SDK (openai-agents-python，前身为实验项目 Swarm)</a><p>OpenAI 的轻量 agent 框架，抽象极少：Agent（指令+工具）、Handoff（agent 间交接）、Guardrail（输入/输出/工具三层护栏）、Session/RunState（状态）、内置 Tracing。Runner 负责跑循环：产出 final output 即停、遇 handoff 换 agent 重入循环、否则执行工具调用后继续，超过 max_turns 抛 MaxTurnsExceeded。设计哲学是'把编排循环交给 SDK，把策略写成小函数'。</p><ul>
+<li>Handoff 即工具（事实，来自 https://openai.github.io/openai-agents-python/handoffs/ ）：交接目标对 LLM 呈现为 transfer_to_&lt;agent_name&gt; 工具；handoff() 支持 tool_name_override、on_handoff 回调、input_type（要求交接时附带结构化参数）、input_filter（交接时裁剪/改写传给下游 agent 的历史，如内置的移除全部工具调用记录）；官方提供 RECOMMENDED_PROMPT_PREFIX 让 agent 理解交接语义。handoff 只在单次 run 内生效。</li>
+<li>三层 Guardrails 与 tripwire（事实，来自 https://openai.github.io/openai-agents-python/guardrails/ ）：input guardrail 只作用于链条第一个 agent，tripwire 触发则 agent 根本不执行（省 token、避免工具副作用）；output guardrail 只作用于产出最终输出的 agent，触发则抛 OutputGuardrailTripwireTriggered 异常；tool guardrail 在每次 function tool 调用前后执行。护栏与 agent 就近绑定（colocate）以提高可读性。</li>
+<li>终止与失败恢复（事实，来自 https://openai.github.io/openai-agents-python/running_agents/ 与 /human_in_the_loop/ ）：终止条件 = '产生了 output_type 类型的 final output' 或 max_turns 上限（超限抛 MaxTurnsExceeded 防死循环）；异常体系区分 GuardrailTripwireTriggered / ModelBehaviorError 等便于 try/except 分类处置；RunState 是可序列化快照（to_string/from_string 存 JSON），需要人工审批的工具调用会记录为 interruption 而非直接执行，应用 approve/reject 后用同一 state 恢复运行——审批可以跨进程、跨时间。</li>
+<li>多轮状态续接的四种方式（事实，来自 https://openai.github.io/openai-agents-python/results/ ）：result.to_input_list()（客户端自管全量历史）、session（SDK 持久化历史）、conversation_id / previous_response_id（服务端托管），按'谁拥有历史'选择。</li>
+<li>Tracing 默认开启（事实，来自 https://github.com/openai/openai-agents-python/blob/main/docs/tracing.md ）：每次 run 自动生成 trace 及 span，覆盖 LLM 生成、工具调用、handoff、guardrail 检查与自定义事件；TracingProcessor 插件接口可导出到 OpenAI Traces 仪表盘或 Langfuse/W&amp;B 等第三方后端；可用环境变量 OPENAI_AGENTS_DISABLE_TRACING=1 关闭，文档强调对敏感数据要禁用内容采集。评测侧主要依托 Traces 仪表盘做调试与回放，未内置类似 agbench 的基准工具（推测：因其定位是轻量 SDK，评测交给平台侧）。</li>
+</ul></div>
+<h3 style="font-size:15px">对本仓库的可落地经验</h3>
+<div class="lesson"><b class="t">把路由从'散文'升级为可校验的转移图：借鉴 AutoGen 的 candidate_func + FSM 转移约束</b><br>事实：AutoGen 的发言者选择是三段式漏斗——先用声明式图约束（allowed_or_disallowed_speaker_transitions）或 candidate_func 把候选集收窄，再让 LLM 只在合法候选中选，最后 max_selector_attempts 兜底。这比纯 prompt 描述路由规则可靠得多，因为非法转移在机制层被排除而不是靠模型自觉。推测：目标仓库的 Common DAGs 目前是 routing-policy.md 里的文本示意（repo-explorer -&gt; architect -&gt; ...），主 agent 完全靠阅读理解来遵守，存在选错 worker 或跳过 gate 的风险。<div class="apply">在 references/routing-policy.md 中把 Common DAGs 补充为一张机器可读的 worker 转移表（例如 references/ 下新增 worker-transitions.csv：from_worker,to_worker,condition），并在 scripts/validate_agent_group.py 的 --strict 模式中新增校验：current/tasks.csv 中相邻依赖任务的 owner 转移必须落在允许边内（validate_agent_group.py 已有 STRICT_TASK_COLUMNS 与 depends_on 引用校验，扩展点现成）。skills/agent-group-orchestrate/SKILL.md 第 5 步'Build a small task DAG'可要求先运行该校验再派发。</div></div>
+<div class="lesson"><b class="t">显式、可组合、带来源限定的终止条件与预算上限</b><br>事实：AutoGen 用 MaxMessageTermination | TextMentionTermination('APPROVE', sources=[...]) 这类可组合条件外置终止策略，且不设条件就会无限跑；OpenAI Agents SDK 用 max_turns + MaxTurnsExceeded 异常硬性防死循环。两者共同点是：终止/预算是编排器的一等公民，不依赖 agent 自己'觉得做完了'。推测：目标仓库当前 orchestrate 流程没有轮次/重试预算，sub-agent-execution.md 只说'失败则 blocked 或 narrowed prompt 重试'，没有重试上限，理论上主 agent 可对同一任务无限重派。<div class="apply">在 current/tasks.csv 增加 max_retries 与 retry_count 列（或 notes 内约定格式），scripts/validate_agent_group.py 校验 retry_count &lt;= max_retries；在 skills/agent-group-orchestrate/SKILL.md 的 Workflow 第 7 步和 references/sub-agent-execution.md 的 Scheduling Rules 中写死默认预算（如每任务最多 2 次重派、每轮编排最多 N 个 dispatch），超限即置 blocked 并上报用户——等价于文件驱动版的 MaxMessageTermination。同时可仿照 sources= 语义规定：只有 reviewer worker 的输出文件中出现 APPROVE 段落才允许把任务标为 done。</div></div>
+<div class="lesson"><b class="t">把 R1-R4 风险门禁与泄密扫描改造成分层 guardrail：输入护栏在派发前、输出护栏在收单后、且机制化触发</b><br>事实：OpenAI Agents SDK 把护栏分为 input（第一个 agent 执行前，触发即完全不执行，省成本防副作用）、output（最终输出后）、tool（每次工具调用前后）三层，tripwire 触发走异常路径而非靠模型自查。推测：目标仓库的 risk-policy.md（R0-R4）目前主要靠主 agent 阅读后自律执行，check_public_safety.py 泄密扫描也需要有人记得去跑，属于'纸面护栏'。<div class="apply">输入护栏：在 references/sub-agent-execution.md 的 Worker Prompt Minimums 基础上，为 scripts/ 新增一个 lint（或扩展 validate_agent_group.py）在派发前检查任务行必须含 risk 等级、R3/R4 任务必须存在用户 gate 记录（如 tasks.csv 的 notes 里有 gate:granted 标记），否则 skills/agent-group-orchestrate 第 6/7 步禁止 dispatch。输出护栏：在 skills/agent-group-memory-sync 与 skills/agent-group-review 的固定步骤中强制运行 scripts/check_public_safety.py，扫描 current/agent_outputs/ 与 memory/ 后才允许归档/发布——即'output guardrail 只挂在最后一环'的文件驱动等价物。</div></div>
+<div class="lesson"><b class="t">Handoff 时裁剪上下文（input_filter）而非全量转发：让 sub-agent prompt 只带依赖产物</b><br>事实：OpenAI Agents SDK 的 handoff 默认让下游看到全部历史，但提供 input_filter 在交接点裁剪（如内置'移除所有工具调用'过滤器），且推荐用统一的 RECOMMENDED_PROMPT_PREFIX 让所有 agent 共享交接语义；AutoGen 的 SelectorGroupChat 则相反是全员广播。对上下文窗口有限、按 token 计费的 sub-agent 派发，前者显然更经济。推测：目标仓库若在派发 worker 时把整个 current/ 或全部前序输出塞进 prompt，会浪费上下文并稀释指令。<div class="apply">在 references/sub-agent-execution.md 的 Worker Prompt Minimums 中把'dependency outputs to read'收紧为白名单语义：sub-agent prompt 只允许引用 tasks.csv 中 depends_on 指向任务的 current/agent_outputs/&lt;task_id&gt;_&lt;worker&gt;.md 文件路径（等价于 input_filter），禁止转发无关历史；并在 references/output-contract.md 里为每个 worker 输出规定一个不超过 N 行的 'Summary for downstream' 小节，下游任务默认只读该小节、按需再读全文。RECOMMENDED_PROMPT_PREFIX 的对应物是给所有 agents/&lt;worker&gt;.md 角色文件规定统一头部段（角色边界 + 输出契约提醒），可由 init_agent_group.py 模板保证。</div></div>
+<div class="lesson"><b class="t">文件驱动的 trace：为每次派发追加结构化事件日志，DAG 渲染叠加运行状态</b><br>事实：OpenAI Agents SDK 默认对每次 run 记录 trace/span（LLM 生成、工具调用、handoff、guardrail 检查），并通过 TracingProcessor 插件导出到任意后端；AutoGen 生态用 AgentOps 两行接入监控成本、失败与多 agent 交互。两者都证明：可观测性必须是自动落盘的副产品，而不是让 agent '记得写报告'。目标仓库 0.1.0 无遥测，这是与两个框架差距最大的一块（事实：README/背景确认无遥测）。<div class="apply">纯标准库即可实现：新增 scripts/append_trace_event.py，向 current/trace.jsonl 追加 {ts, task_id, worker, backend, sub_agent_ref, event(dispatched/completed/blocked/retried/gate_requested), evidence_path}，并在 skills/agent-group-orchestrate/SKILL.md 第 7-10 步和 references/sub-agent-execution.md 的 backend 适配器要求中把'记录 sub-agent reference'从散文升级为对该脚本的强制调用；scripts/render_task_dag.py 读取 trace.jsonl 后按 status 给 Mermaid 节点着色（done/blocked/running），compact_memory.py 归档时把 trace.jsonl 一并滚动到 archive/。这就是 trace_id=任务 id、span=事件行的文件版 tracing。</div></div>
+<div class="lesson"><b class="t">可恢复的运行状态与'中断即审批'语义 + 隔离化回归评测</b><br>事实：AutoGen 的 team.save_state() 输出可 JSON 序列化状态、load_state() 恢复续跑；OpenAI Agents SDK 的 RunState 可 to_string() 持久化，人工审批被建模为 interruption——运行暂停、状态落盘、approve/reject 后从原状态恢复，而不是重开新会话。评测方面 agbench 的核心经验是：每次评测从干净 Docker 环境出发、支持重复运行统计方差、日志集中收集。推测：目标仓库的 current/STATE.md + tasks.csv 天然就是持久化状态，但缺少'崩溃/中断后如何恢复'与'R3/R4 gate 等待中'的显式表示；tests/ 目录存在但无自动化编排评测。<div class="apply">恢复语义：在 references/memory-lifecycle.md 与 skills/agent-group-orchestrate/SKILL.md 第 2 步中定义 resume 流程——会话重启后先读 current/STATE.md 与 tasks.csv，凡 status=in_progress 且无对应 agent_outputs 文件的任务视为中断需重派；为 R3/R4 引入 status=awaiting_gate（在 validate_agent_group.py 的 VALID_STATUSES 中登记），gate 批准即 approve、拒绝改路由即 reject，对齐 RunState 的 interruption 模型。评测：仿 agbench 在 tests/ 下加回归 harness——用 scripts/init_agent_group.py 在临时目录生成干净实例、注入 examples/ 里的固定 tasks.csv 场景、跑 validate_agent_group.py --strict 与 render_task_dag.py 断言输出，纯标准库即可进 CI，弥补'无自动化 CI 评测'的短板。</div></div>
+</div></details>
+<details><summary>方向 3：CrewAI / MetaGPT <span style="font-weight:400;color:#5f6b7a">（2 个项目 · 6 条经验）</span></summary><div class="inner">
+<p style="font-size:13.5px;color:#5f6b7a">CrewAI 与 MetaGPT 多智能体编排机制调研——对 agent-group-orchestrator 在 worker registry、路由策略、输出契约上的借鉴</p>
+<div class="proj"><a href="https://github.com/crewAIInc/crewAI" target="_blank">CrewAI</a><p>CrewAI 是一个角色扮演式多智能体编排框架（Python），核心抽象是 Agent（角色）、Task（任务）、Crew（团队）与 Process（流程），并在其上叠加事件驱动的 Flows 编排层。它的定位是"Crew 负责协作、Flow 负责流程控制"：Crew 内部由 LLM 自主协作与委派，Flow 则用装饰器把 Crew/LLM 调用编织进确定性的、可持久化的状态机。配置推荐使用 agents.yaml / tasks.yaml 的声明式方式，任务输出可通过 Pydantic 模型与 guardrail 做机器校验。</p><ul>
+<li>角色定义三元组（事实，来自官方文档 https://docs.crewai.com/en/concepts/agents）：role（职位）、goal（目标）、backstory（背景/专长），外加 tools、llm、max_iter、max_rpm、memory、cache、verbose 等属性；社区最佳实践强调"专才优于通才"，且约 80% 精力应放在任务设计而非角色设计上。</li>
+<li>显式委派开关（事实，https://docs.crewai.com/en/concepts/collaboration）：allow_delegation=True 时 agent 自动获得 "Delegate work to coworker" 与"向同事提问"两个协作工具；防止委派失控的做法是：在 backstory 中写清职责边界、限制 max_iter、对底层执行者关闭 allow_delegation。</li>
+<li>Process.sequential 与 Process.hierarchical（事实，https://docs.crewai.com/en/learn/hierarchical-process）：默认 sequential 按任务列表顺序执行；hierarchical 必须配置 manager_llm（自动生成带协调提示词的 manager agent）或自定义 manager_agent，manager 必须不在 agents（worker）列表内；hierarchical 下任务可不指定 agent，由 manager 依据各 agent 的 role/goal 动态指派，并在推进前验证结果、必要时重新委派。已知代价与坑（事实，来自文档与 issue #4783、#2606）：每次 manager 决策都是一次 LLM 调用，弱 manager 会产生循环或不完整的委派，且委派工具的参数 schema 曾出现类型错误。</li>
+<li>Task 输出契约（事实，https://docs.crewai.com/en/concepts/tasks）：每个 Task 必须写 expected_output（对结果形态的自然语言描述，属软约束）；output_json / output_pydantic 用 Pydantic 模型做硬校验（校验失败会自动让 LLM 重试修复）；context=[上游任务] 显式声明数据依赖，把上游结构化输出注入下游提示词，避免下游因信息缺失而幻觉。</li>
+<li>Task Guardrail 质量门禁（事实，https://docs.crewai.com/en/concepts/tasks）：函数式 guardrail 接收 TaskOutput 返回 (bool, Any)，失败时把原因反馈给 agent 重做；字符串式 guardrail 自动生成 LLMGuardrail 用 LLM 按描述评审输出；可叠加多层，并需谨慎设置重试上限（重试少=流程更严格，重试多=更有创造空间）。</li>
+<li>Flows 事件驱动编排（事实，https://docs.crewai.com/en/guides/flows/first-flow）：@start 定义入口，@listen 监听上游步骤完成，@router 检查状态后返回字符串路由到匹配的下游分支，配合 or_/and_ 组合条件；状态支持 dict（非结构化）或 Pydantic（结构化+校验），每次执行自动分配 UUID，支持 @persist 持久化与断点恢复，还能把流程渲染成 HTML 可视化图。</li>
+<li>声明式配置（事实，https://docs.crewai.com/en/concepts/tasks 与 DeepWiki）：agents.yaml/tasks.yaml 存放 role/goal/backstory 与 description/expected_output/agent/context，支持 {topic} 变量插值；Python 侧用 @CrewBase 装饰器把 YAML 中的名字解析到 agent/task/tool/输出模型实例。</li>
+</ul></div>
+<div class="proj"><a href="https://github.com/FoundationAgents/MetaGPT" target="_blank">MetaGPT</a><p>MetaGPT（ICLR 2024 论文，arXiv:2308.00352）是把人类软件公司的标准作业程序（SOP）编码进多智能体协作的元编程框架，口号是 "Code = SOP(Team)"：输入一行需求，产出 PRD、竞品分析、系统设计、任务清单直至代码仓库。其最鲜明的设计是：agent 之间不靠自由对话通信，而是以结构化文档（PRD/设计文档/任务表/代码）作为通信介质，通过全局消息池 + 发布-订阅机制流转，从机制上抑制对话式幻觉与信息过载。</p><ul>
+<li>SOP 化装配线（事实，论文 https://arxiv.org/abs/2308.00352）：ProductManager 产出含 User Stories 与 Requirement Pool 的 PRD → Architect 产出系统模块设计与交互时序（含接口定义、UML）→ ProjectManager 拆解为任务清单 → Engineer 实现 → QA Engineer 写并跑测试；SOP 为每个角色规定职责、中间产物的确切格式与质量标准，形成清晰的交接协议。</li>
+<li>文档即接口（事实，论文对比 ChatDev 一节）：agent 间通过文档与图表而非对话沟通，文档必须包含下游所需的全部信息，"防止无关内容与信息缺失"；每类 Action（如 WriteDesign）自带输出 schema、校验与重试逻辑，是可复用可替换的模块。</li>
+<li>全局消息池 + 发布-订阅（事实，论文与官方教程 https://docs.deepwisdom.ai/main/en/guide/tutorials/multi_agent_101.html）：所有 agent 把标准化输出 publish 到共享消息池，各角色按 _watch([上游Action]) 订阅相关消息（如 Architect 订阅 WritePRD、QA 订阅 Engineer 的代码），过滤无关上下文以避免信息过载与上下文窗口爆炸；后续版本把 subscription 演化为 tags。</li>
+<li>Role 运行循环（事实，官方教程）：_observe 从环境取被 watch 的消息 → _think 选定待执行 Action → _act 执行并把结果封装为 Message 发布回环境；每步都与角色 Memory 交互。组队方式：Team().hire([各角色]) + invest(预算) + run_project(idea) + run(n_round)。</li>
+<li>可执行反馈质量门禁（事实，论文）：Engineer 在运行时执行并调试自己生成的代码，迭代修正；消融实验显示该机制在 HumanEval 上带来 4.2%、MBPP 上 5.4% 的 Pass@1 绝对提升（整体 85.9%/87.7%）；另支持 use_code_review 开启代码评审、--run-tests 触发 QA 动作，甚至可用 is_human=True 把人类接入为评审者。</li>
+<li>增量开发模式（事实，https://docs.deepwisdom.ai/v0.5/en/guide/in_depth_guides/incremental_development.html）：--inc 配合 --project-path 基于既有仓库迭代，新需求累积进现有 PRD，再基于当前 PRD 重跑流水线；--max-auto-summarize-code 限制自动代码总结轮数。</li>
+<li>已知局限（事实+社区评论）：线性 SOP 流水线偏脆——PRD 发布后缺少 Engineer 反向质疑需求并触发精化循环的内建机制；成本方面论文报告单示例分析+设计约 $0.2、完整项目约 $2.0（GPT-4 时期数据）。</li>
+</ul></div>
+<h3 style="font-size:15px">对本仓库的可落地经验</h3>
+<div class="lesson"><b class="t">worker registry 借鉴 CrewAI 的 role/goal/backstory + 显式委派开关，把角色定义升级为可校验的结构化字段</b><br>事实：CrewAI 用 role/goal/backstory 三元组加 allow_delegation、max_iter、tools 等属性定义 agent，且社区经验表明在 backstory 写清职责边界、对执行层关闭委派可显著减少委派失控；CrewAI hierarchical 模式要求 manager 不在 worker 池内——这与目标仓库 main-orchestrator 只做监督、不落地执行的定位完全同构，是对现有设计的正向验证。推测：目标仓库当前 worker registry 契约字段（name/agent_file/triggers/responsibilities/permission boundary/inputs/output shape）偏散文化，缺一个明确的一句话 goal 和"是否允许再委派"的显式声明，路由时 LLM 只能靠通读长文推断。<div class="apply">在 references/worker-registry.md 的契约中新增两个必填字段：goal（一句话目标，供 skills/agent-group-orchestrate 选路时快速匹配）与 delegation（allowed/forbidden，默认 forbidden，仅 main-orchestrator 为 allowed）；同步更新 assets/templates/instance/rules/WORKER_REGISTRY.md 与 agents/*.md 的 frontmatter，并在 scripts/validate_agent_group.py 中加一条校验：worker 名称、agent_file、frontmatter 三方一致（现有要求）之外，检查 goal/delegation 字段存在且非 main worker 的 delegation 不为 allowed——把"worker 不得互相转派、只能由 main-orchestrator 经 sub-agent 后端派发"从文档约定变成机器检查。</div></div>
+<div class="lesson"><b class="t">输出契约借鉴 CrewAI 的 expected_output + guardrail 双层校验：先程序化门禁、后 reviewer 评审，并给重试设上限</b><br>事实：CrewAI 每个 Task 强制写 expected_output（软约束），再用 output_pydantic/output_json 做 schema 硬校验（失败自动带原因重试），guardrail 支持函数式（返回 (bool, 原因)）与 LLM 式两级，官方建议谨慎设置重试上限。目标仓库的 references/output-contract.md 已规定 worker 输出应含 task id、backend、scope、conclusion 等 11 项字段，但目前是纯文本约定，没有任何脚本消费它。推测：给 agent_outputs 增加 YAML frontmatter（task_id/worker/backend/sub_agent_ref/risk/status）即可让纯标准库脚本完成 CrewAI 函数式 guardrail 等价物，成本很低且不引入依赖。<div class="apply">1) 在 references/output-contract.md 中把 11 项字段拆为"机器可校验 frontmatter + 自由正文"两层；2) 在 scripts/validate_agent_group.py（或新增 scripts/check_output_contract.py）中实现函数式 guardrail：扫描 current/agent_outputs/&lt;task_id&gt;_&lt;worker&gt;.md，校验 frontmatter 字段齐全、task_id 存在于 current/tasks.csv、worker 在 registry 中、文件命名与内容一致，不合格则输出结构化原因供 orchestrator 打回重做；3) 在 skills/agent-group-orchestrate 的流程中规定：guardrail 通过后才进入 reviewer（LLM 式二层校验），并写死每个任务最多 N 次（如 2 次）打回，超限则升级为阻塞项记入 memory/RISKS.md——对应 CrewAI 的 retry limit 与 MetaGPT 缺失反向精化循环的教训。</div></div>
+<div class="lesson"><b class="t">路由策略借鉴 CrewAI Flows 的 @router 条件路由：把 Common DAGs 从示例升级为"条件 → DAG 模板"路由表，并记录路由依据</b><br>事实：CrewAI Flows 用 @start/@listen/@router 构成事件驱动状态机，@router 检查结构化状态后返回字符串路由到不同分支，支持 or_/and_ 组合、Pydantic 状态校验、每次执行分配 UUID 并可持久化恢复，还能渲染 HTML 流程图。目标仓库 references/routing-policy.md 目前列出 4 类 Common DAGs（只读分析/文档/核心实现/远程验证），但选择哪一类靠 orchestrator 自由判断，仅要求"跳过 worker 时记录原因"。推测：显式的路由条件表能降低不同后端（Claude Code vs Codex）下选路的不一致性，这对后端中立插件尤为重要。<div class="apply">1) 在 references/routing-policy.md 中为每个 Common DAG 增加 router 条件列（如：目标含核心源码写入→核心实现 DAG 且必经 R3 user gate；仅涉 R0/R1→只读分析 DAG），形成"条件→模板→必经门禁"三列路由表，skills/agent-group-orchestrate 的 SKILL 步骤中要求先对照该表定级再生成 tasks.csv；2) 在 current/tasks.csv 或 orchestrator 输出中新增 route_reason 字段，等价于 @router 的返回值留痕；3) scripts/render_task_dag.py 已能把 tasks.csv 渲染成 Mermaid DAG（对应 Flows 的 plot 可视化），可再让 validate_agent_group.py 校验生成的 DAG 覆盖了所选模板的必经节点（如核心实现 DAG 必含 architect→user gate→kernel-dev→reviewer 链），防止 orchestrator 私自裁剪门禁节点。</div></div>
+<div class="lesson"><b class="t">把 MetaGPT 的"文档即接口"落到 agent_outputs：为每类 worker 定义标准化产物 schema，下游 worker 只读上游文档而非全量上下文</b><br>事实：MetaGPT 的核心差异化在于 agent 间用结构化文档（PRD/系统设计/任务表）而非对话通信，SOP 为每个角色规定中间产物的确切格式与质量标准，文档必须自足（含下游所需全部信息），论文明确此举用于抑制对话式幻觉与信息缺失。目标仓库天然是文件驱动的（current/agent_outputs、memory/ 台账），与这一思想同源，但 output-contract.md 对所有 worker 用同一套通用字段。推测：按角色分化产物 schema（architect 输出必须含模块划分/接口定义/实现范围/风险，perf-analyst 必须含基线数据与对比表，repo-explorer 必须含文件清单与关键路径）会让 kernel-dev 等下游 worker 的输入更接近 MetaGPT 中 Engineer 拿到的设计文档，减少下游重复探索。<div class="apply">1) 在 references/output-contract.md 中新增"按 worker 类型的产物 schema"小节，或在 assets/templates/instance/agents/*.md 各角色文件尾部附上该角色的输出模板（对应 MetaGPT 每个 Action 自带输出 schema 的做法）；2) 在 references/sub-agent-execution.md 的执行契约中规定：派发下游 worker 时，inputs 只传上游指定产物路径（如 kernel-dev 只收 architect 的设计文档 + tasks.csv 中本任务行），而非整个 current/ 目录——这正是 MetaGPT 订阅机制防信息过载的文件系统版；3) memory/DOC_REGISTRY.yml 可扩展为登记每份产物的类型与消费者，充当轻量消息池索引。</div></div>
+<div class="lesson"><b class="t">借鉴 MetaGPT 的 _watch 订阅机制：在 worker registry 中声明每个 worker 订阅的上游产物类型，替代隐式的全量上下文传递</b><br>事实：MetaGPT 中每个 Role 通过 _watch([上游Action]) 订阅消息池中特定类型的消息（Architect watch WritePRD，QA watch 工程师代码），论文将其作为解决信息过载、保持通信可追溯可扩展的关键机制；后续版本演化为 tags。目标仓库 worker registry 已有 typical inputs 字段，但它描述的是"通常读什么"，不是"由什么上游产物触发/驱动"。推测：把 inputs 语义收紧为 watches（本 worker 的启动依赖 = 上游哪些 worker 的产物），能让 tasks.csv 的 depends_on 列由 registry 半自动推导——即 depends_on 不再靠 orchestrator 临场编排，而是"registry 声明订阅关系 → 选定 worker 集合后自动连边"，降低 DAG 编排出错率。<div class="apply">1) 在 references/worker-registry.md 契约中把 typical inputs 拆为 watches（上游 worker 产物依赖，如 kernel-dev watches architect）与 reads（静态输入，如 memory/PROJECT_FACTS.md）；2) skills/agent-group-orchestrate 生成 current/tasks.csv 时按 watches 自动填 depends_on（分号分隔，沿用现有格式）；3) scripts/validate_agent_group.py 增加交叉校验：tasks.csv 中每条 depends_on 边要么符合 registry 声明的 watches 关系，要么在 notes 中注明例外原因；scripts/render_task_dag.py 的 Mermaid 图可用不同边样式区分"registry 推导边"与"临场追加边"。</div></div>
+<div class="lesson"><b class="t">借鉴 MetaGPT 可执行反馈与 CrewAI hierarchical manager 验证：把 runner→reviewer 闭环和 orchestrator 抽查制度化，并警惕监督者调用成本</b><br>事实：MetaGPT 的 executable feedback（运行时执行并调试代码）在消融实验中带来 4.2%~5.4% Pass@1 绝对提升，是其质量把关中收益最明确的单项机制；CrewAI hierarchical 的 manager 在每步验证 worker 结果、不合格则重新委派，但每次决策都是一次 LLM 调用（3 worker × 3 task 约产生 6~9 次额外 manager 调用），成本随任务数线性增长。目标仓库的核心实现 DAG 已含 kernel-dev→reviewer→validation gate→runner→reviewer 链，方向正确。推测：应把"带证据的执行验证"设为 R3 变更合并进 memory 台账的硬条件，同时限制 main-orchestrator 抽查的粒度（抽查产物文件而非复读全过程），以免监督开销吞掉 sub-agent 并行收益——尤其当前版本无遥测、无法度量该开销。<div class="apply">1) 在 references/risk-policy.md 中给 R3 增加一条默认处理：核心源码变更未附 runner 产出的执行/测试证据（命令、退出码、日志路径）时，reviewer 必须判定为未完成，skills/agent-group-review 的检查单同步增加"可执行证据存在性"项；2) 在 references/output-contract.md 的 runner 输出中把 commands run + 退出状态 + 产物路径设为必填（对应 executable feedback 的最小文件系统实现）；3) 在 references/routing-policy.md 中明确 main-orchestrator 的证据抽查仅限读取 agent_outputs 与关键产物文件、每任务至多一次，并把"监督调用次数"列入未来遥测需求（写入 README 的 roadmap 或 memory/RISKS.md 模板示例），对应 CrewAI manager 成本教训。</div></div>
+</div></details>
+<details open><summary>方向 4：Claude Code 生态竞品 <span style="font-weight:400;color:#5f6b7a">（4 个项目 · 5 条经验）</span></summary><div class="inner">
+<p style="font-size:13.5px;color:#5f6b7a">Claude Code 生态多智能体编排开源项目竞品调研（claude-flow/ruflo、claude-squad、SuperClaude、Anthropic 官方 subagents/agent teams/plugins/skills）</p>
+<div class="proj"><a href="https://github.com/ruvnet/claude-flow" target="_blank">claude-flow（已改名 ruvnet/ruflo）</a><p>生态内最大的第三方多智能体编排平台，定位为"agent meta-harness"。核心设计是双模式编排：swarm 模式做一次性并行派发，hive-mind 模式做 queen-led 持久化协作并让所有 agent 读写同一 SQLite 存储；通过 Claude Code hooks 在工具执行前注入上下文、执行后持久化结果，并以 MCP 协议暴露约 87 个编排工具。事实：GitHub API 显示（2026-07-26）仓库已重命名为 ruvnet/ruflo，66,063 stars / 7,854 forks，仍由单一作者主导、近乎每日发版。诟病点：README 充满未经第三方复现的指标（84.8% SWE-Bench、150x 语义查询加速、27+ 神经模型等），被评论者称为"如果只需要一个 agent 修 bug，它是巨大的 overkill"；rywalker.com 的研究综述指出该项目 star 数与可引用的一线生产报告数量严重不成比例，且 repo 名/npm 包名/CLI 名不一致造成新手混乱（此段为来自第三方评论的事实，其推论属推测）。</p><ul>
+<li>swarm 模式：每个子任务 spawn 独立 agent 并行执行，输出随运行持久化（事实，来自项目文档）</li>
+<li>hive-mind 模式：queen-led 协调 + 共享 SQLite 记忆库 .swarm/memory.db（宣称 12 张专用表、namespace 管理、跨会话持久化）</li>
+<li>hooks 自动化：pre-hook 注入最小上下文、post-hook 写回已验证结果，宣称用于"每次构建的强化学习"</li>
+<li>约 87 个 MCP 工具 + 神经/WASM/共识协议/RL 路由等重型附加层（被评论者认为对多数编码任务是过重机器）</li>
+<li>npx claude-flow init 生成 .claude-flow/ 目录（agent registry、memory schema、run config）——同样是"项目本地实例目录"思路</li>
+</ul></div>
+<div class="proj"><a href="https://github.com/smtg-ai/claude-squad" target="_blank">claude-squad</a><p>Go 编写的终端 TUI，管理多个并行的 AI 编码 agent 会话（Claude Code、Codex、Gemini、Aider、OpenCode、Amp），是"后端中立"路线的成功先例。核心机制极简：每个会话一个 tmux 隔离终端 + 一个 git worktree 隔离分支，从根上解决多 agent 在同一 repo 互踩文件的问题。事实：GitHub API 显示 8,184 stars / 592 forks，AGPL-3.0。它受欢迎恰恰因为范围窄——只解决"并发隔离 + 会话管理 + 结果 review"，不做任务拆解、不做记忆、不做路由，几乎没有"设计过度"的批评。</p><ul>
+<li>tmux 会话隔离：每个 agent 独立终端会话，支持后台 auto-accept/yolo 模式（事实）</li>
+<li>git worktree 隔离：每个任务独立分支/工作树，避免半成品代码互相污染（事实）</li>
+<li>内建 review 流：TUI 内 diff 预览、checkout、resume、commit-and-push（事实）</li>
+<li>并发上限约 10 个实例的非阻塞后台会话；profiles 定义多套程序配置（事实，来自文档/评测）</li>
+<li>后端中立：同一套隔离与会话机制适配 Claude Code / Codex / Gemini / Aider 等多种 agent CLI</li>
+</ul></div>
+<div class="proj"><a href="https://github.com/SuperClaude-Org/SuperClaude_Framework" target="_blank">SuperClaude Framework</a><p>纯配置层框架：通过 CLAUDE.md / 命令 / agent 定义"改装"Claude Code，不引入独立运行时。事实：GitHub API 显示 23,601 stars / 1,989 forks；v4 提供 30 个 /sc: 前缀 slash 命令、20 个 agent、7 种行为模式，集成 8 个外部 MCP server，pipx 一键安装。其演化史本身就是教训：v2 的 9 个 persona 旗标体系后来演化为 agent 体系；v3 发布说明承认 hooks 系统"变得复杂且多 bug"而被整体移除（事实）；当前 README 警告旧文档描述的 TypeScript 插件系统尚不存在（文档漂移，事实）。评论共识：预置的强观点工作流与用户自身模式不合时，用户会"与框架搏斗"（来自评测文章的事实性引述）。</p><ul>
+<li>命令体系：30 个分类 slash 命令（/sc:implement、/sc:analyze、/sc:improve 等），按开发/分析/质量分域</li>
+<li>persona→agent 演化：认知角色（architect、security 等）从命令行旗标演化为独立 agent 定义文件</li>
+<li>行为模式（behavioral modes）：7 种全局模式调制模型行为，属于纯 prompt 层机制</li>
+<li>MCP 集成策略：不自带能力，而是写明"何时激活哪个外部 MCP server"的路由指令</li>
+<li>反面教训：hooks 子系统因复杂性被砍、文档与实现漂移、观点过强导致定制成本高</li>
+</ul></div>
+<div class="proj"><a href="https://code.claude.com/docs/en/agent-teams" target="_blank">Anthropic 官方 subagents / agent teams / plugins / skills</a><p>官方能力栈分层清晰：skills（2025 年 10 月起的开放标准，SKILL.md 按需加载）、subagents（单会话内派发、隔离上下文窗口、只能向主 agent 汇报、互相不通信）、plugins（把 skills/agents/commands/hooks 打包为可安装单元）、agent teams（实验特性，需 CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1）。agent teams 的关键事实：team lead 协调多个独立 Claude Code 实例，队友通过磁盘上的共享任务列表（每个 task 是一个 JSON 文件，位于 ~/.claude/tasks/ 命名空间下）认领工作，通过 inbox JSON 文件互发消息；delegate 模式强制 lead 只用协调类工具；官方文档明示 token 成本约为单会话的 3-7 倍，只适合并行探索型任务；TeamCreate 工具已在 v2.1.178 移除、spawn 不再需要建团步骤（API 仍在快速变动）。此外 Bash 已支持 run_in_background 后台任务。</p><ul>
+<li>subagents：markdown 定义 + 独立上下文窗口 + 只向主 agent 汇报——与目标仓库的 worker 派发模型直接对应（事实）</li>
+<li>agent teams：共享 task list（磁盘 JSON 文件）+ mailbox/inbox 消息 + 队友直接互通，与 subagent 的星型拓扑形成对比（事实）</li>
+<li>delegate 模式：lead 被限制为 coordination-only 工具集，等价于目标仓库"主 agent 只做监督"的强制版（事实）</li>
+<li>skills 开放标准：SKILL.md 名称/描述常驻、正文按需加载，同一格式跨 Claude.ai / Claude Code / Managed Agents 复用（事实）</li>
+<li>官方明确的成本告诫：teams 3-7x token 成本、简单串行任务应避免——官方自己在给"轻量优先"背书（事实）</li>
+</ul></div>
+<h3 style="font-size:15px">对本仓库的可落地经验</h3>
+<div class="lesson"><b class="t">克制的功能面比功能堆叠更受欢迎：并发隔离才是未被满足的真实痛点</b><br>对比很鲜明：claude-squad 只做"tmux + git worktree 隔离 + 会话管理"一件事，8k+ stars 且几乎零负面评价；claude-flow/ruflo 堆叠 87 个 MCP 工具、神经网络、共识协议，虽有 66k stars 但被系统性诟病 overkill 与 hype-to-evidence gap。目标仓库当前明确"无并发控制"，而多 worker 并行写同一 repo 恰是 claude-squad 证明过的最高价值场景（事实：其 README 与评测都以"两个会话互踩文件"为核心卖点）。<div class="apply">不要给 skills/ 增加第 5、6 个 skill，而是在现有契约内补并发隔离：在 references/sub-agent-execution.md 和 references/risk-policy.md 中新增"写并发规则"——R2 及以上风险的实现类 worker 必须在独立 git worktree 中执行，worktree 路径记入 current/agent_outputs/&lt;task_id&gt;_&lt;worker&gt;.md 的 backend 元数据；scripts/validate_agent_group.py 增加校验：tasks.csv 中无 depends_on 关系的两个任务若声明写同一路径范围（可在 tasks.csv 加 scope 列）则报错。这是纯文件契约级的并发控制，零运行时依赖。</div></div>
+<div class="lesson"><b class="t">对齐官方 agent teams 的磁盘任务模型，把 tasks.csv 做成可双向映射的中立契约</b><br>事实：官方 agent teams 的协调基座就是"磁盘上的共享任务列表 + 每 task 一个 JSON 文件 + inbox 消息文件"，与目标仓库"tasks.csv + depends_on + current/agent_outputs/"是同构的文件契约思路；且官方 API 仍在剧烈变动（TeamCreate 已删除、team_name 字段废弃）。推测：直接绑定 teams API 会被频繁 breaking change 拖累，但提供一个"tasks.csv ↔ teams task JSON"的适配说明能白嫖官方能力（真正的并行 worker、mailbox）而不牺牲后端中立。<div class="apply">在 references/sub-agent-execution.md 增加第三种后端 profile："agent-teams 后端"（Claude Code 实验特性），规定 lead 必须开 delegate 模式、每个 teammate 对应 tasks.csv 一行、完成时仍必须落盘 current/agent_outputs/&lt;task_id&gt;_&lt;worker&gt;.md（inbox 消息不算交付物）；references/routing-policy.md 补充：teammate 可互相通信的拓扑下，R3/R4 门禁仍只能由 main-orchestrator 出具。scripts/render_task_dag.py 可加 --format json 导出与 teams task 文件同构的结构，作为未来适配层的接缝。</div></div>
+<div class="lesson"><b class="t">只做可机验的声明，用 golden fixture 回归拉开与"营销型框架"的差距</b><br>claude-flow 最大的信任危机是不可复现的指标（84.8% SWE-Bench、150x 加速）——第三方综述明确指出其 star 数与一线生产报告数量不成比例（事实：rywalker.com 研究页）。SuperClaude 的文档漂移（README 承认宣传中的插件系统不存在）是同类问题的轻度版本。目标仓库当前"无自动化 CI 评测"，若不补，references/ 契约与 scripts/ 行为之间的漂移只是时间问题（推测，但有 SuperClaude hooks 因"复杂且多 bug"被整体移除的先例佐证）。<div class="apply">把 examples/sample/ 升级为 golden fixture：CI 中依次跑 scripts/init_agent_group.py（幂等性）、scripts/validate_agent_group.py（对 examples/sample 与 examples/edge-llm-research 双实例）、scripts/render_task_dag.py（输出与 checked-in 的 Mermaid 快照 diff）、scripts/compact_memory.py（对构造的过期 current/ 验证归档结果）、tests/test_check_public_safety.py。README 的能力声明逐条链接到对应测试。这样每一条契约（directory-contract.md、memory-schema.md、output-contract.md）都有机检背书，而不是靠 prompt 自觉。</div></div>
+<div class="lesson"><b class="t">记忆系统坚持"纯文本可 diff"，但借鉴 hive-mind 的两个可移植机制：namespace 与 post-hook 强制写回</b><br>事实：claude-flow 的 SQLite 记忆（12 表、namespace、跨会话共享）是其 hive-mind 模式的核心卖点，解决的真问题是"tester 能看到 implementer 刚产出的东西"以及记忆按域隔离；但 SQLite 对用户不可 review、不可 git diff、不可 PR 审查。目标仓库的 markdown 台账（PROGRESS_LEDGER/DECISIONS/RISKS + DOC_REGISTRY.yml）在可审计性上是差异化优势，缺的不是存储格式，而是"写回时机的强制性"——hooks 自动持久化正是 claude-flow 用户真实受益的部分（事实与推测混合：受益判断来自其文档与评测的一致描述）。<div class="apply">两处落地：1) references/memory-schema.md 给记忆条目加 namespace/scope 字段（如 task_id 与 worker 名前缀），scripts/compact_memory.py 按 namespace 归档而非整文件搬运，使 archive/ 可按任务线索回溯；2) skills/agent-group-memory-sync/SKILL.md 与 references/memory-sync-sop.md 中把"每个 task 到达 done 状态前必须完成记忆写回"定为硬门禁，并在 scripts/validate_agent_group.py 中机检：tasks.csv 里 status=done 的 task_id 必须能在 memory/PROGRESS_LEDGER.md 中 grep 到，否则 validate 失败——用校验器模拟 post-hook，零 hooks 依赖、保持后端中立。</div></div>
+<div class="lesson"><b class="t">角色/路由层宁少勿多：persona 膨胀与强观点工作流是已被验证的负资产</b><br>事实：SuperClaude 的 30 命令 + 20 agent + 7 模式带来的主要批评是"为别人的工作流设计，不合则与框架搏斗"；其 hooks 子系统因复杂被整体移除。claude-flow 的重型路由（RL routing、共识协议）被认为对多数任务过重。反观官方 subagent 模型极简：一个 markdown 文件 + 工具白名单 + 隔离上下文。推测：worker registry 的健康上限在个位数角色，每加一个角色都要有明确的"何时跳过"规则，否则路由决策本身成为 token 与延迟负担（官方文档已证实 teams 是 3-7x token 成本）。<div class="apply">references/worker-registry.md 为每个 worker 强制三字段：触发条件、跳过条件、与相邻 worker 的边界（当前 routing-policy.md 已有 "perf-analyst?" 可选标记，应把"跳过须在 orchestrator 输出中记录理由"升级为 output-contract.md 的必填字段并由 validate 机检）；skills/agent-group-orchestrate/SKILL.md 中明确"默认最小 DAG"原则——routing-policy.md 的四类常见 DAG 保持为唯一预置集合，新增 DAG 模板须走 examples/ 实例验证后才能进 references/，防止路由策略像 SuperClaude 命令集一样无界膨胀。</div></div>
+</div></details>
+<details><summary>方向 5：记忆系统 <span style="font-weight:400;color:#5f6b7a">（6 个项目 · 6 条经验）</span></summary><div class="inner">
+<p style="font-size:13.5px;color:#5f6b7a">开源智能体记忆系统调研：分层记忆、抽取更新流水线、记忆生命周期与 Markdown/向量/图记忆实践，及其对 agent-group-orchestrator 三层 Markdown+CSV 记忆的改进启示</p>
+<div class="proj"><a href="https://github.com/letta-ai/letta" target="_blank">Letta / MemGPT</a><p>源自 UC Berkeley 的 MemGPT 论文（2023），把 LLM 看作运行在受限上下文上的操作系统进程，提出'虚拟上下文管理'。现已发展为以持久化状态为默认的通用 agent 平台。其记忆架构与本仓库的 current/memory/archive 三层最为同构：core≈current/STATE.md，recall≈ledger，archival≈archive/。</p><ul>
+<li>三层记忆层级（事实）：Core Memory 常驻上下文窗口（类比 RAM），是有标签、有容量预算的 memory block（如 persona/human/自定义任务块）；Recall Memory 是可搜索的完整对话历史（类比磁盘缓存）；Archival Memory 是经处理索引后的长期知识库，实现上用 PostgreSQL + pgvector 向量检索。</li>
+<li>自编辑记忆（事实）：agent 在推理循环中通过工具调用（core_memory_append / core_memory_replace、archival 插入与搜索）自主决定记什么、改什么；代价是记忆质量完全依赖模型判断，且每次记忆操作消耗推理 token。</li>
+<li>Sleep-time compute（事实，Letta 2025-04 白皮书）：把记忆整理从对话热路径剥离，由共享 memory block 的后台 sleep-time agent 在空闲期异步重组记忆，把'原始上下文'加工成'已学习上下文'；主 agent 每走 N 步触发一次，频率可配。</li>
+<li>取舍（来自第三方对比，事实性引用）：自编辑方式自适应但不可预测——模型没存的东西就丢了；这正是'契约化 SOP + 校验器'这类确定性方案的对立面。</li>
+</ul></div>
+<div class="proj"><a href="https://github.com/mem0ai/mem0" target="_blank">Mem0</a><p>定位为可插拔的生产级长期记忆层（论文 arXiv:2504.19413）。核心是'抽取 + 更新'两阶段流水线：先用 LLM 从新消息对中抽取候选事实，再检索 top-k 相似旧记忆，由 LLM 通过工具调用裁决每条候选事实的去留，是目前最清晰的记忆冲突消解操作语义。</p><ul>
+<li>四操作裁决（事实，来自论文）：ADD（全新信息新建）、UPDATE（补充/修正/刷新已有记忆）、DELETE（新信息与旧记忆矛盾时删除）、NOOP（重复或无关则不动）；论文配置为参考最近 10 条消息 + 10 条相似记忆。</li>
+<li>图变体 Mem0g（事实）：抽取实体与关系三元组，配 Conflict Detector 标记重叠/矛盾的节点与边，Update Resolver 决定合并、失效或跳过；支持把关系标记为 obsolete 而非物理删除，以保留时间线。</li>
+<li>成本教训（事实性分析）：每次写记忆需要 2 次 LLM 调用 + 1 次向量检索，100 轮对话仅记忆管理就要 200+ 次调用——说明'每步都做智能消解'在编排场景不划算，应放在阶段边界批量做。</li>
+<li>工程告警（事实，GitHub issue #4896）：v2.0.0 曾退化为 ADD-only + MD5 精确去重，与文档宣称的冲突消解不符，矛盾事实被并存写入——'文档承诺的消解语义'必须有测试/校验兜底，否则会静默失效。</li>
+</ul></div>
+<div class="proj"><a href="https://www.langchain.com/blog/langmem-sdk-launch" target="_blank">LangMem (LangChain)</a><p>LangChain 团队的长期记忆 SDK，按认知科学把 agent 记忆分为语义（事实）、情景（经历）、程序性（行为规则）三类，并提供'热路径工具调用'与'后台异步整理'两种集成模式。存储后端无关（KV/Postgres/向量库均可），靠命名空间做多租户隔离。</p><ul>
+<li>三类记忆（事实）：semantic=事实与用户画像（支持无界 collection 与单文档 profile 两种形态）；episodic=过去交互的情节摘要，可作 few-shot 范例；procedural=agent 自我更新提示词规则，实现行为层自我改进。</li>
+<li>后台整合（事实）：BackgroundMemoryManager 在会话外异步运行，对比新内容与既有记忆后并行发出 create/update/delete 工具调用；抽取提示词可配置，用于在'覆盖面'与'去重合并'之间调平衡。</li>
+<li>整合防膨胀（事实）：通过合并相关记忆、消解矛盾避免'记忆囤积'（memory hoarding）导致的无界增长。</li>
+<li>运维教训（事实性引用）：有评测指出其检索 p50 延迟高达 ~18s，不适合同步热路径——再次印证记忆整理应离线/异步化。</li>
+</ul></div>
+<div class="proj"><a href="https://github.com/getzep/graphiti" target="_blank">Zep / Graphiti（时间知识图谱记忆）</a><p>Graphiti 是开源时间知识图谱引擎（论文 arXiv:2501.13956），Zep 是其上的记忆服务。核心贡献是双时间轴模型与'边失效'：新事实到来时不删除旧事实，而是给旧边打上失效时间戳，查询时取指定时点的有效切片，实现无损的矛盾消解与时间推理。</p><ul>
+<li>双时间轴（事实）：同时记录事件时间 T（事实何时发生）与摄入时间 T'（系统何时观察到），每条边带四个时间戳：t_created/t_expired（系统内创建/失效）与 t_valid/t_invalid（事实真实有效区间）。</li>
+<li>边失效代替删除（事实）：新边可使旧边失效（invalidate not delete），被取代的事实保留可溯源；这与本仓库 DECISIONS.md 的 supersedes、RISKS.md 的状态机（active/mitigated/closed/accepted）是同一思想的图谱化版本。</li>
+<li>非损失设计（事实）：情节边把 episode（原始证据）与抽取出的实体/事实双向关联，语义结论可回溯到原始来源做引用——对应 ledger 摘要必须引用 agent_outputs/ 原始证据的契约。</li>
+<li>实时增量摄入（事实）：区别于 GraphRAG 的静态文档摘要，支持流式更新与混合检索（向量+BM25+图遍历）。</li>
+</ul></div>
+<div class="proj"><a href="https://arxiv.org/abs/2305.10250" target="_blank">MemoryBank（Ebbinghaus 遗忘曲线记忆衰减）</a><p>较早提出用艾宾浩斯遗忘曲线做 LLM 记忆衰减的工作：记忆强度 R=e^(−t/S)，被召回的记忆强度增强，久未访问的记忆衰减淘汰；存储上按'日事件摘要 + 全局画像'分层，FAISS 稠密检索。后续工作（FadeMem、H-MEM 等）扩展了多维强度模型。</p><ul>
+<li>指数衰减 + 召回强化（事实）：R=e^(−t/S)，访问即重置/增强强度，实现'用进废退'。</li>
+<li>分层摘要存储（事实）：对话日志 → 每日事件摘要 → 全局 portrait，逐级压缩。</li>
+<li>重要告警（事实，来自 A-MEM 实验与综述）：基于遗忘曲线的管理能控制记忆规模、降低检索时间，但会造成任务性能显著下降；规则式衰减只是'有用性'的间接代理，可能丢弃语义重要但低频的信息——因此工程上更稳妥的是'标记 stale 而非删除'。</li>
+<li>FadeMem 改进（事实）：按语义相关性、访问频率、时间模式做差异化衰减速率，配 LLM 引导的冲突消解与记忆融合，宣称减少 45% 存储。</li>
+</ul></div>
+<div class="proj"><a href="https://dev.to/whoffagents/multi-agent-memory-without-a-vector-database-the-markdown-first-approach-2lo0" target="_blank">Markdown-first 记忆实践（memweave / Manus / Claude Code CLAUDE.md 与 auto memory）</a><p>业界近期的实践收敛：Manus、Claude Code 等高营收 agent 产品均以纯 Markdown 文件为主记忆而非托管向量库，理由是可审查、可 diff、git 原生、无供应商锁定。核心架构原则是'存储与检索索引分离'：Markdown 是唯一事实源，任何索引（向量/BM25/SQLite）都是可随时删除重建的派生物（memweave 项目即此实现，见 https://towardsdatascience.com/memweave-zero-infra-ai-agent-memory-with-markdown-and-sqlite-no-vector-database-required/）。</p><ul>
+<li>存储/检索分离（事实性共识）：Markdown+YAML frontmatter 为 canonical 存储，索引是 disposable artifact，可零损失重建——这为纯标准库仓库提供了'不引入向量库也能升级检索'的路径。</li>
+<li>先解决策展再解决检索（事实性观点，多智能体团队实践）：早期 agent 的瓶颈是'不知道什么值得记、查询模式是什么'，先建向量层是'快速做错事'；Markdown-first 让你先观察访问模式再优化。</li>
+<li>CLAUDE.md 实践（事实）：CLAUDE.md 建议 &lt;200 行、命令优先、用 @docs/xxx.md 引用而非粘贴（上下文填满会导致模型指令遵循度下降，即 context rot）；Claude Code 的 auto memory 存于 ~/.claude/projects/&lt;project&gt;/memory/，MEMORY.md 仅前 200 行随启动加载——'热记忆有硬预算'是普遍做法。</li>
+<li>适用边界（事实性观点）：Markdown 适合上下文有限、结构化的项目本地 agent；企业级大规模多租户记忆才需要数据库方案。</li>
+</ul></div>
+<h3 style="font-size:15px">对本仓库的可落地经验</h3>
+<div class="lesson"><b class="t">压缩策略：把'归档'升级为'摘要+归档'的两步收口，借鉴 sleep-time / 后台整合把整理工作放在阶段边界而非热路径</b><br>事实：Letta 的 sleep-time agent 与 LangMem 的 BackgroundMemoryManager 都把记忆整理从对话热路径剥离，异步地把原始上下文加工为'已学习上下文'；Mem0 的成本数据（每写一条记忆 2 次 LLM 调用）也说明逐步智能消解太贵。本仓库现状：compact_memory.py 只做文件搬运并重建空 hot state，memory-lifecycle.md 明确写着'它不会自动更新长期 ledger，需要人工或 agent 按 SOP 完成同步'——即摘要与归档之间只有软约束（检查清单），没有硬门禁。推测：在多轮 epic 后，archive/&lt;yyyymmdd_topic&gt;/ 会积累大量无索引原始证据，PROGRESS_LEDGER 漏记归档事件的概率随轮次上升。<div class="apply">1) 在 skills/agent-group-memory-sync/SKILL.md 的工作流第 8 步之前，增加一个必须经 sub-agent 派发的'compaction summarizer' worker 步骤（复用 references/sub-agent-execution.md 的契约），产出 archive/&lt;yyyymmdd_topic&gt;/SUMMARY.md（含任务清单、结论、指向 agent_outputs 的证据索引）；2) 给 scripts/compact_memory.py 增加 --require-summary 开关：archive 目录内无 SUMMARY.md 或 memory/PROGRESS_LEDGER.md 中未出现 archive 路径字符串时拒绝执行（纯标准库可实现：读文件 grep 路径）；3) scripts/validate_agent_group.py --strict 增加检查：archive/ 下每个子目录必须被 PROGRESS_LEDGER.md 引用至少一次。</div></div>
+<div class="lesson"><b class="t">冲突处理：为 PROJECT_FACTS 与 DECISIONS 引入 Mem0 式 ADD/UPDATE/SUPERSEDE/NOOP 操作语义 + Zep 式失效时间戳，并让校验器兜底</b><br>事实：Mem0 用 ADD/UPDATE/DELETE/NOOP 四操作裁决候选事实与旧记忆的关系；Zep/Graphiti 用边失效（记录 t_valid/t_invalid，invalidate 而非 delete）无损消解矛盾。本仓库已有雏形：DECISIONS.md 有 supersedes 字段、RISKS.md 有四态状态机、PROJECT_FACTS.md 有 stale 标记，方向与业界一致。但缺两样：条目级唯一 ID + 机器可校验的字段结构（当前 memory-schema.md 对 memory/ 文件只有'recommended fields'，validate_agent_group.py 不校验条目结构）。另一个事实性教训是 Mem0 issue #4896：文档宣称的冲突消解在代码里退化成 ADD-only 而无人察觉——没有校验器兜底的消解语义会静默失效。推测：多 worker 并发写 PROJECT_FACTS.md 时，同一事实的新旧版本会以两条并存条目出现，下游 worker 无法判断哪条有效。<div class="apply">1) 在 references/memory-schema.md 中把 PROJECT_FACTS.md 条目升级为带结构的列表项或小节：fact_id、status(active/stale/superseded)、superseded_by、last_verified(日期)、evidence(指向 agent_outputs 或 archive 路径)；DECISIONS.md 条目强制 decision id 唯一且 supersedes 必须指向存在的 id；2) scripts/validate_agent_group.py --strict 增加解析逻辑：decision id 唯一性、supersedes 引用存在性、RISKS 状态枚举合法性（正则 + 标准库即可，与现有 tasks.csv 校验同风格）；3) 在 skills/agent-group-memory-sync 的 Write Rules 中把'追加新事实'改写为四操作判断流程：先查同 fact_id/同主题条目，再决定 UPDATE（改 last_verified）、SUPERSEDE（旧条目标 superseded_by）或 NOOP，禁止直接 DELETE。</div></div>
+<div class="lesson"><b class="t">检索：坚持'Markdown 为唯一事实源、索引为可重建派生物'，用纯标准库生成轻量索引并在派发时做条目级注入而非整文件注入</b><br>事实：memweave 与 Markdown-first 实践的核心原则是存储与检索索引分离——索引（SQLite/BM25/向量）可随时删除重建、零记忆损失；Manus/Claude Code 等产品以 Markdown 文件为主记忆已被广泛报道；CLAUDE.md 实践强调 &lt;200 行 + @引用防 context rot。本仓库现状：worker 经 sub-agent 派发时（references/sub-agent-execution.md、routing-policy.md），输入是角色文件+scope+路径，worker 需要自己去读整份 ledger；TASK_LEDGER/PROGRESS_LEDGER 是随 epic 单调增长的追加式文件。推测：项目运行数月后 ledger 达数千行，每个 worker 读全文既烧上下文又诱发'上下文腐烂'，但引入向量库又违背仓库的零依赖定位。<div class="apply">1) 新增 scripts/build_memory_index.py（纯标准库）：扫描 memory/ 与 archive/*/SUMMARY.md，产出 memory/INDEX.md（条目 id、标题、状态、日期、文件+锚点），作为可随时重建的派生物，不入 validator 必需清单；2) 修改 references/sub-agent-execution.md 的执行契约：orchestrator 派发任务时，在 inputs 中只注入与 task 相关的 ledger 条目片段（按 task id / fact_id 从 INDEX.md 定位），而不是让 worker 通读 memory/ 全目录；3) 在 references/routing-policy.md 中补一条：repo-explorer 类只读 worker 的默认第一输入是 memory/INDEX.md + current/STATE.md，命中不足再回退 grep 全量 ledger。</div></div>
+<div class="lesson"><b class="t">记忆衰减：不做自动删除式衰减，采用'last_verified + stale 超期告警'的保守衰减，并给 ledger 做分节滚动压缩</b><br>事实：MemoryBank 用艾宾浩斯曲线 R=e^(−t/S) 做衰减，但 A-MEM 的实验与后续综述指出规则式遗忘虽控制了规模却造成任务性能显著下降——低频但关键的信息会被误删；Zep 的做法是失效标记而非删除；本仓库 memory-lifecycle.md 也已确立'归档不是删除''风险不能删只能改状态'的原则，与业界结论一致。推测：本仓库真正的衰减风险不在删错，而在'不衰减'——PROJECT_FACTS 中过期事实（如已改名的入口文件、已变更的构建命令）没有时间元数据，无法机器判断新鲜度，会被后续 worker 当作事实继续引用。<div class="apply">1) 在 references/memory-schema.md 为 PROJECT_FACTS.md 每条事实增加 last_verified 日期字段（上一条 lesson 的结构基础上）；2) scripts/validate_agent_group.py 增加非阻断 warning：last_verified 超过 N 天（可在 config.yml 配置，默认 30）且 status=active 的事实列为'待复核'，输出清单供 orchestrator 生成复核任务；3) 在 skills/agent-group-orchestrate/SKILL.md 的编排流程中加一步：epic 启动时把'待复核事实'转成 tasks.csv 里 risk=R0 的 repo-explorer 验证任务（复用 depends_on 让它先于实现类任务）；4) 对 TASK_LEDGER.md 采用按 epic 分节 + compact 时滚动压缩：已归档 epic 的任务节压缩为一行摘要 + archive 路径链接，原文随 compact_memory.py 进 archive，防 ledger 无界增长。</div></div>
+<div class="lesson"><b class="t">热记忆预算：借鉴 Letta memory block 的容量预算与 CLAUDE.md &lt;200 行实践，给 current/ 各文件设硬预算并由校验器强制</b><br>事实：Letta 的 core memory block 是带容量预算的常驻上下文单元；Claude Code 的 auto memory 只加载 MEMORY.md 前 200 行；CLAUDE.md 最佳实践建议全文 &lt;200 行、用引用替代粘贴，依据是上下文填充会导致指令遵循度可测量地下降（Chroma 2025 研究，转引自实践文章）。本仓库现状：memory-schema.md 只有'Keep it concise'这样的软规则，validate_agent_group.py 校验标题结构但不校验体量。推测：STATE.md 在多轮同步后会被 agent 越写越长（粘贴日志、堆积历史 evidence），恰好违背'hot state 只服务快速恢复'的设计初衷，且没有任何机制报警。<div class="apply">1) 在 references/memory-schema.md 为热记忆写明确预算：current/STATE.md ≤ 80 行、Latest Evidence 一节只允许链接不允许代码块、current/tasks.csv 行数上限（如 40 个 active 任务）；2) scripts/validate_agent_group.py --strict 增加体量检查：超预算报 warning，STATE.md 中出现超过 N 行的 fenced code block 报错（这正是'链接而非粘贴日志'规则的机器化）；3) 在 skills/agent-group-memory-sync 的 Write Rules 中把预算写成硬规则，超限时的正确动作是把内容移入 current/agent_outputs/ 并留链接——与 Letta 'core 满了就下沉到 archival' 的分层下沉逻辑一致。</div></div>
+<div class="lesson"><b class="t">程序性记忆回写：用 LangMem 的 semantic/episodic/procedural 三分法审视三层设计，补齐'从失败中更新 rules/ 的受门禁回写通道'</b><br>事实：LangMem 把记忆分为语义（事实）、情景（经历）、程序性（行为规则）三类，其中 procedural memory 允许 agent 基于反馈更新自己的提示词与操作规则，实现行为层自我改进。对照本仓库：PROJECT_FACTS≈semantic、TASK/PROGRESS_LEDGER + agent_outputs≈episodic 都已齐备，但 procedural 层（rules/ROUTING_POLICY.md、rules/WORKER_REGISTRY.md、agents/*.md）目前是只进不出的静态契约——memory-lifecycle.md 只说'修改规则需要明确说明原因'，没有定义谁在什么时机基于什么证据提出修改。推测：反复出现的同类失败（如某 worker 总是超 scope、某类任务总在同一门禁卡住）只会沉淀为 RISKS/PROGRESS 条目，不会转化为路由策略或角色定义的改进，系统不会'长记性'。<div class="apply">1) 在 skills/agent-group-review/SKILL.md 中增加'规则回写建议'输出段：reviewer 在评审 worker 输出时，如发现可泛化的流程教训，产出 proposed rule change（目标文件、diff 级描述、支撑证据链接），写入 current/agent_outputs/ 而非直接改 rules/；2) 在 references/risk-policy.md 中把'修改 rules/* 与 agents/*'定级为 R3+（需 user gate），使回写走 routing-policy.md 已有的 'architect -&gt; user gate' DAG 模式；3) 采纳后在 memory/DECISIONS.md 记一条带 supersedes 的决策，保持程序性记忆的演化历史可追溯——这是 LangMem procedural memory 思想在'确定性契约 + 人工门禁'架构下的安全落地方式。</div></div>
+</div></details>
+<details><summary>方向 6：软件工程代理与评测 <span style="font-weight:400;color:#5f6b7a">（4 个项目 · 6 条经验）</span></summary><div class="inner">
+<p style="font-size:13.5px;color:#5f6b7a">软件工程代理项目的执行可靠性与评测设计调研（OpenHands / SWE-agent / Aider / SWE-bench），及其对 agent-group-orchestrator 编排质量验证的借鉴</p>
+<div class="proj"><a href="https://github.com/All-Hands-AI/OpenHands" target="_blank">OpenHands (原 OpenDevin)</a><p>MIT 协议的开源软件工程代理平台（ICLR 2025 论文），核心是事件流架构：Agent 产出 Action，Runtime 在隔离沙箱中执行并返回 Observation，所有交互作为类型化事件流经中央 pub/sub 枢纽。V1 重构为模块化 Agent SDK，全部 action/observation 记录为不可变事件的 append-only EventLog，官方明确以此支撑确定性回放、暂停/恢复与调试。事实来源：GitHub 仓库、ICLR 2025 论文（https://proceedings.iclr.cc/paper_files/paper/2025/file/a4b6ad6b48850c0c331d1259fc66a69c-Paper-Conference.pdf）与 SDK 论文（https://arxiv.org/html/2511.03690v1）。</p><ul>
+<li>事件流架构（事实）：Action/Observation 类型化事件 + append-only EventLog，V1 的不可变事件支持确定性回放与断点恢复</li>
+<li>沙箱执行（事实）：每个会话启动隔离 Docker 容器，容器内运行 ActionExecutionServer（FastAPI）执行 bash/文件/浏览器/Jupyter 操作；支持 Docker/K8s/本地进程/远程多种 Runtime 后端</li>
+<li>微代理 microagents（事实）：Markdown+YAML frontmatter 的领域知识文件；无 frontmatter 者常驻上下文，带 triggers 者按用户消息关键词动态加载；仓库级放在 .openhands/microagents/（V1 演进为 skills，新增 path-triggered 按文件 glob 注入）</li>
+<li>评测体系（事实）：主仓 evaluation/benchmarks/swe_bench/ 覆盖 SWE-bench/SWE-bench-Live/SWT-Bench/SWE-Gym 等；V1 拆出独立 OpenHands/benchmarks 仓库（https://github.com/OpenHands/benchmarks），实例级 Docker 镜像预构建、隔离容器 32+ 并发评测</li>
+<li>CI 分层（事实）：SDK 论文描述单元测试 + 基于 LLM 的集成测试（文件操作/命令执行/git/浏览等场景化工作流）+ 示例全量周期性运行 + 基准评测四层 QA；GitHub Actions 中 eval-runner 同时跑集成测试与 SWE-Bench 评测（issue #5076 讨论拆分）</li>
+<li>V0→V1 教训（事实）：单体仓库中 agent 核心逐渐吸收 benchmark 依赖与环境 hack 导致系统脆弱，因而将评测 harness 与核心解耦为独立仓库</li>
+</ul></div>
+<div class="proj"><a href="https://github.com/SWE-agent/SWE-agent" target="_blank">SWE-agent</a><p>普林斯顿团队的 NeurIPS 2024 工作（arXiv:2405.15793），核心命题是 Agent-Computer Interface（ACI）：LM 代理是一类新型用户，应为其专门设计接口——少量简单动作、防错守护栏、每回合简洁明确的反馈。其 .traj 轨迹文件 + inspector + run-replay 工具链是代理项目中最完整的轨迹留痕/回放范式之一。</p><ul>
+<li>ACI 设计（事实）：收敛动作空间为查看/搜索/编辑文件的少量命令，编辑前跑 linter（flake8）拦截坏编辑，窗口化文件视图，每步给出具体简洁的效果反馈；消融显示在 300 个 SWE-bench 实例上比裸 shell 基线多解 10.7 个百分点</li>
+<li>ACI 迭代方法论（事实，论文）：通过在 SWE-bench dev split 手选样例上的定性行为分析迭代接口设计，配合 window size/历史处理/温度的超参扫描——即用固定评测集驱动接口设计</li>
+<li>轨迹留痕（事实）：批量运行目录含 run_batch.config.yaml、preds.json、日志与每实例的 instance.traj + instance.config.yaml，目录模式 trajectories/&lt;user&gt;/&lt;experiment&gt;；配置与轨迹同存以保证可追溯</li>
+<li>轨迹查看（事实）：sweagent inspect（终端 pager）与 sweagent inspector（Web 界面，https://swe-agent.com/latest/usage/inspector/）；批量模式下与同目录 results.json 关联后逐轨迹显示 ✅/❌ 评测结果</li>
+<li>轨迹回放与演示（事实）：sweagent run-replay 在环境中重放轨迹全部动作，用于调试工具与制作 demonstration；traj-to-demo 把轨迹转成可手工编辑的 YAML demo，再 run-replay 验证——形成'录制→编辑→回放验证'闭环</li>
+<li>评测解耦（事实）：run-batch 只产轨迹与 preds.json，评测由 SWE-bench harness 单独执行；另有 quick-stats/compare-runs/merge-preds 等运行间对比命令</li>
+</ul></div>
+<div class="proj"><a href="https://github.com/Aider-AI/aider" target="_blank">Aider</a><p>结对编程 CLI 工具，是'benchmark 驱动开发'的代表：自建代码编辑基准（早期 133 题 Exercism Python，后升级为 225 题六语言 polyglot 基准），凡改 prompt、编辑格式或模型配置必跑基准，用量化分数决定是否合入。repo map 用 tree-sitter 提取符号并在 token 预算内选取最重要部分，帮助 LLM 理解大仓库。</p><ul>
+<li>polyglot 基准（事实）：225 道 Exercism 练习覆盖 C++/Go/Java/JS/Python/Rust，两次尝试制（第一次失败则展示单测结果再试），主指标 pass_rate_2（https://aider.chat/docs/leaderboards/）</li>
+<li>过程合规指标（事实）：'well-formed edits / percent using correct edit format' 度量模型是否遵守编辑格式契约——不仅测结果对不对，还测是否守规矩；违规时给反馈并要求重发修正版</li>
+<li>编辑格式即契约（事实）：whole/diff 等格式按模型基准表现在 aider/resources/model-settings.yml 固化为默认；architect/editor 角色拆分（推理与编辑分离）也由基准验证出 SOTA（85%）后才采纳（https://aider.chat/2024/09/26/architect.html）</li>
+<li>可复现性（事实）：基准输出 YAML 记录全部生效配置 + 仓库 git hash（有未提交改动标 dirty），model+edit_format+commit_hash 即可复现任一次运行（https://github.com/Aider-AI/aider/blob/main/benchmark/README.md）</li>
+<li>回归门禁文化（事实）：release notes 中直接写'Benchmarked at 63.9%, no regression'，prompt 级改动也过基准验证</li>
+<li>repo map（事实）：tree-sitter 提取类/函数签名，按重要性排序装入 --map-tokens 预算（默认 1k），替代早期 ctags 方案（https://aider.chat/docs/repomap.html）</li>
+<li>评测安全（事实）：基准在 Docker 容器内跑，因为 harness 会无人工审查地执行 LLM 生成的代码</li>
+</ul></div>
+<div class="proj"><a href="https://github.com/SWE-bench/SWE-bench" target="_blank">SWE-bench（评测基准生态，作为三者共同的回归评测底座）</a><p>以真实 GitHub issue + 金标测试补丁为核心的软件工程代理基准，是 OpenHands 与 SWE-agent 的共同回归评测底座。评测与推理分离：代理只产 preds.json（补丁预测），由独立 harness 在实例级 Docker 镜像中跑测试判定 resolve；衍生出 Verified/Live/Multimodal/SWT-Bench 等变体覆盖不同能力面。</p><ul>
+<li>推理/评测分离（事实）：代理产出预测文件，评测由独立 harness 执行，避免评测逻辑污染代理核心</li>
+<li>实例级环境固化（事实，OpenHands benchmarks 文档）：每个实例按仓库+issue 预构建专用 Docker 镜像并推送公共 registry，特殊依赖（如 sphinx-doc 需 docutils&lt;0.21）用 allowlist 加层，保证环境可复现</li>
+<li>隔离并行（事实）：评测实例在隔离容器中运行，支持 32+ worker 大规模并行</li>
+<li>多维变体（事实）：SWE-bench Verified（人工核验）、SWE-bench-Live（防污染的新题）、SWT-Bench（测试生成能力）等，说明单一指标不足以覆盖代理能力面</li>
+</ul></div>
+<h3 style="font-size:15px">对本仓库的可落地经验</h3>
+<div class="lesson"><b class="t">教训一：把'编排轨迹'升级为一等公民——append-only 结构化事件日志，而非仅靠 Markdown 报告</b><br>OpenHands 的核心可靠性机制是所有 Action/Observation 记录为不可变事件的 append-only EventLog（事实），SWE-agent 则把每次运行的 .traj 与 config 同目录留存（事实）。两者共同点：轨迹是机器可读、可回放、可与评测结果关联的结构化数据，而不是给人看的散文。目标仓库当前的留痕是 current/agent_outputs/&lt;task_id&gt;_&lt;worker&gt;.md 加 output-contract 中'记录 backend 与 sub-agent reference'的软性要求，人可读但机器不可校验、不可回放（推测：一旦 worker 数量或轮次增多，仅靠 Markdown 将无法做自动化质量分析）。<div class="apply">在 references/output-contract.md 中新增机器可读附件要求：每次编排在 current/agent_outputs/ 旁产出 events.jsonl（每行一条事件：ts、task_id、worker、backend、sub_agent_ref、event_type=dispatch/output/gate/retry/block、artifact 路径），由 skills/agent-group-orchestrate/SKILL.md 第 8/10 步强制写入；scripts/render_task_dag.py 顺势扩展为可叠加 events.jsonl 的执行状态着色（dispatched/done/blocked），使 tasks.csv 的静态 DAG 与实际执行轨迹可对照。compact_memory.py 归档时将 events.jsonl 一并落入 archive/，形成可追溯台账。</div></div>
+<div class="lesson"><b class="t">教训二：借鉴 SWE-agent 的 traj-to-demo / run-replay，建立'金标编排轨迹'作为回归 fixture</b><br>SWE-agent 的闭环是：录制轨迹 → traj-to-demo 转成可手工编辑的 YAML → run-replay 在环境中重放并验证（事实）。这让'一次好的运行'固化为可重复执行的测试资产。目标仓库的编排本质是确定性决策（读 goal + registry + routing-policy → 产出 worker 选择与 tasks.csv DAG），比代码代理更容易做无 LLM 的回放校验（推测：worker 选择与 DAG 结构的正确性可以离线判定，无需真实派发 sub-agent）。<div class="apply">以 examples/sample/ 与 examples/edge-llm-research/ 为种子建立 evaluation/fixtures/：每个 fixture 含输入（goal 描述 + config.yml + agents/ 注册表）与金标输出（期望的 tasks.csv DAG、期望选中/跳过的 worker 及理由、期望风险等级）。新增 scripts/replay_orchestration_check.py（纯标准库，延续现有 scripts/ 风格），比对实际产出的 tasks.csv/events.jsonl 与金标：DAG 边集合匹配率、worker 选择准确率、跳过理由是否记录。tests/ 目前只有 test_check_public_safety.py，把该回放校验接入 tests/ 即得到第一层编排回归测试。</div></div>
+<div class="lesson"><b class="t">教训三：Aider 式 benchmark 驱动开发——每次修改 SKILL/契约文档必须跑固定评测集，并记录 commit hash 保证可复现</b><br>Aider 的做法（事实）：凡 prompt、编辑格式、模型配置变更必跑基准，release note 直接写'no regression'；输出 YAML 记录全部配置 + git hash，三元组即可复现任一次运行。对编排插件而言，SKILL.md 与 references/*.md 就是它的'prompt'——目前修改这些文档没有任何量化验证手段（事实：仓库 0.1.0 无 CI、无评测），改坏了路由策略只能靠人工发现（推测）。<div class="apply">建立 evaluation/orchestration-bench/：10-20 个标准 goal（覆盖 routing-policy.md 中四类 DAG 模式：只读分析/文档/核心实现/远程验证，以及 R0-R4 各风险档），用真实后端（Claude Code 或 Codex）跑 agent-group-orchestrate，评分维度：(a) DAG 与参考模式匹配度；(b) 越权率——main-orchestrator 是否违反 sub-agent-execution.md 亲自执行 worker 任务（可从 events.jsonl 判定无 dispatch 事件却有 worker 结论）；(c) output-contract 字段合规率（Aider 的 well-formed edits 思路——过程合规是独立指标）；(d) R3/R4 门禁触发正确率（对照 risk-policy.md）。每次运行输出 YAML 记录插件 git hash + 后端 + 模型，写入 evaluation/results/。规则：凡改 skills/*/SKILL.md 或 references/routing-policy.md、risk-policy.md，PR 必须附本基准分数对比。</div></div>
+<div class="lesson"><b class="t">教训四：SWE-agent ACI 的'lint-before-apply'守护栏——把 validate_agent_group.py 扩展为派发前后的 DAG/契约 linter</b><br>SWE-agent 证明（事实，消融 +10.7pp）：在动作生效前用 linter 拦截坏编辑、并给出简洁具体的反馈，比事后补救有效得多；SWE-Bench-CL 等后继工作也复制了'编辑前 flake8'模式。对编排插件，等价物是：在 orchestrator 派发前对 tasks.csv 做结构校验，在 worker 产出后对 output 做契约校验——错误在进入下一环节前被拦截并以明确信息反馈给 orchestrator（推测：这是提升执行可靠性成本最低的一步，因为全部可用纯标准库离线实现）。<div class="apply">扩展 scripts/validate_agent_group.py，新增两类检查：(1) tasks.csv DAG lint——depends_on 引用的 task id 必须存在、无环（拓扑排序检测）、id 符合 AUTO-&lt;yyyymmdd&gt;-&lt;nn&gt;（routing-policy.md 规定的格式）、status 转移合法（如 done 的任务不得依赖 pending 任务）、owner 必须在 agents/ 注册表中且非 main-orchestrator 独占实现类任务；(2) agent_outputs 契约 lint——文件名匹配 &lt;task_id&gt;_&lt;worker&gt;.md、必含 output-contract.md 列出的 task id/backend/sub-agent reference/conclusion 等段落。skills/agent-group-orchestrate/SKILL.md 第 5 步（建 DAG 后）与第 8 步（写输出后）显式要求运行该校验，失败即阻断并回报，对应 SWE-agent'每回合具体简洁反馈'原则。</div></div>
+<div class="lesson"><b class="t">教训五：OpenHands microagents 的触发式知识加载——为 references/ 引入按需加载的 frontmatter 触发约定</b><br>OpenHands 的 microagents/skills（事实）：无 frontmatter 的文件常驻上下文，带 triggers 的仅在关键词命中时加载，V1 还支持按文件 glob 的 path-triggered 注入；PR #8114 进一步简化为'只有 triggers 重要'。目标仓库的 SKILL.md 已有手写的 Reference Loading 段（'需要 worker 选择时读 routing-policy.md'），本质是人肉触发规则，但格式不统一、不可被工具校验（事实：当前 references/*.md 无 frontmatter）。<div class="apply">为 references/ 下 9 个契约文档统一加 YAML frontmatter（triggers: [worker selection, DAG]、load: always|on-demand），skills/*/SKILL.md 的 Reference Loading 段改为引用 frontmatter 约定而非逐条硬编码；scripts/validate_agent_group.py 增加一致性检查：SKILL.md 引用的 reference 必须存在、always 级文档（如 sub-agent-execution.md 的核心禁令）必须出现在 orchestrate 工作流的第 2-3 步。收益（推测）：降低每轮编排的上下文开销，且触发规则本身成为可回归测试的数据而非散文。</div></div>
+<div class="lesson"><b class="t">教训六：评测分层与隔离——无 LLM 的确定性测试进 CI，LLM 评测独立目录/独立触发，避免 OpenHands V0 的耦合教训</b><br>OpenHands 明确的架构教训（事实，SDK 论文）：V0 单体仓库中 agent 核心吸收了 benchmark 依赖与环境 hack 导致脆弱，V1 将评测拆到独立 benchmarks 仓库；其 QA 分四层——单元测试、LLM 集成测试、示例全量运行、基准评测，且 CI 中集成测试与重型评测分开触发（issue #5076）。Aider 则把会执行 LLM 生成代码的基准放进 Docker（事实）。目标仓库当前只有 1 个单测且无 CI（事实）。<div class="apply">分三层落地：第一层（每次 push 的 GitHub Actions，纯标准库、秒级）——现有 tests/test_check_public_safety.py，加上 init_agent_group.py 初始化后目录结构断言（对照 directory-contract.md）、validate_agent_group.py 对 examples/sample 与 edge-llm-research 的通过性、render_task_dag.py 对样例 tasks.csv 的 Mermaid golden 输出比对、compact_memory.py 归档幂等性（对照 memory-lifecycle.md 的 current/memory/archive 三态）；第二层（PR 手动触发）——教训二的金标轨迹回放校验；第三层（发版前）——教训三的 LLM 编排基准，放独立 evaluation/ 目录并声明独立依赖，不让插件核心（scripts/ 纯标准库承诺）沾染评测依赖。</div></div>
+</div></details>
+<h2 id="s4">四、差异化定位与设计原则</h2>
+<div class="pos"><b>定位：</b>agent-group-orchestrator 应定位为“介于官方原生 subagents 与重型编排框架之间的可审计文件契约编排层”：不做运行时、不做数据库、不做神经路由（claude-flow 的反面教训），而是把 LangGraph/AutoGen 等框架中已被验证的编排语义（检查点、终止条件、guardrail、reducer、转移图）翻译成纯 Markdown+CSV 的机器可校验契约，让任何后端（Claude Code / Codex / 未来的 agent teams）的主 agent 都能以 git-diff 可审查、CI 可回归、崩溃可恢复的方式监督多 worker 协作。差异化壁垒是“每条契约都有校验器兜底 + golden fixture 回归”——这正是 66k star 的 claude-flow 缺失、8k star 的 claude-squad 用克制赢得口碑的那条护城河。</div>
+<h3>五条设计原则</h3><ol class="principle">
+<li>Markdown/CSV 是唯一事实源：任何索引、DAG 渲染、轨迹统计都是可随时删除重建的派生物，绝不引入必需的数据库或服务端组件（memweave/Manus 的存储与检索分离原则）</li>
+<li>契约必须机检：凡写进 references/ 的规则，必须在 validate_agent_group.py 或 CI 中有对应校验，拒绝只存在于 prose 的承诺（Mem0 issue #4896 静默退化与 SuperClaude 文档漂移的教训）</li>
+<li>归档不是删除：冲突用失效标记（superseded/stale）消解，归档做快照式落盘保证任意一轮可精确回放，证据链永不折断（Zep 边失效 + LangGraph time-travel）</li>
+<li>预算与终止显式化：重试次数、编排轮次、门禁等待、热记忆行数都有硬上限并由校验器强制，不依赖模型自觉收敛（AutoGen 组合终止条件 + OpenAI Agents max_turns）</li>
+<li>功能面克制：worker 角色保持个位数、skills 保持 4 个，新机制必须先在 examples/ 以 fixture 形式验证并挂上回归测试后才进 references/（claude-squad 窄范围成功 vs SuperClaude persona 膨胀的对照）</li>
+</ol>
+<h2 id="s5">五、三阶段工作路线图</h2>
+<p class="lead">优先级：<span class="badge" style="background:#d93025">P0</span>必须做 <span class="badge" style="background:#e37400">P1</span>应该做 <span class="badge" style="background:#1a73e8">P2</span>可以做；工作量：S 小 / M 中 / L 大。近期先补工程与可靠性短板，中期深化契约语义，远期才做大特性——每个条目都标注了借鉴来源与落到具体文件的交付物。</p>
+<div class="phase-head"><h3>第一阶段：工程与可靠性补底</h3><span>近期(0-1月) · 6 项</span></div>
+<div class="card item">
+<h4><span class="badge" style="background:#d93025">P0</span><span class="badge effort">工作量 小 (S)</span>修复 compact_memory 归档静默覆盖，并升级为快照式归档</h4>
+<div class="why">compact_memory.py 用 shutil.move 且不检查 archive/&lt;name&gt;/ 是否已存在，重复执行会静默覆盖历史归档，直接违反自身‘归档不是删除’契约——这是当前最严重的证据丢失风险；顺势把归档从‘搬运瘦身’升级为‘按轮次完整快照’，为未来回放/审计打基础。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>LangGraph 的 checkpoint/StateSnapshot 机制：每个 super-step 保存完整可恢复快照，checkpoint_id 可精确回放</li>
+<li>LangGraph time-travel 的 fork-not-overwrite 语义：历史时间线保持完整不丢</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">scripts/compact_memory.py（归档目标已存在时报错或自动加序号后缀；整份 current/ 与 tasks.csv 原样拷入 archive/&lt;yyyymmdd_topic&gt;/ 后再重建热状态）</span>
+<span class="tag">references/memory-lifecycle.md（补充归档命名冲突处理与快照完整性规则）</span>
+<span class="tag">tests/test_compact_memory.py（归档幂等性、冲突拒绝、reset_current 后通过 strict 校验）</span>
+</div></div>
+<div class="card item">
+<h4><span class="badge" style="background:#d93025">P0</span><span class="badge effort">工作量 中 (M)</span>validate_agent_group.py 升级为 DAG linter：环检测、就绪集合、重试/终止预算</h4>
+<div class="why">当前 strict 模式只查 depends_on 自引用与未知 ID，含环的 tasks.csv 会导致编排死锁；且无重试上限与全局轮次预算，orchestrator 可无限重派烧 token。把这三件事做成派发前的确定性 lint 是成本最低、收益最直接的可靠性提升。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>SWE-agent 的 ACI lint-before-apply：动作生效前用 linter 拦截坏编辑，消融显示 +10.7pp</li>
+<li>AutoGen 的组合式终止条件（MaxMessageTermination 等）：终止/预算是编排器一等公民</li>
+<li>OpenAI Agents SDK 的 max_turns + MaxTurnsExceeded 硬性防死循环</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">scripts/validate_agent_group.py（拓扑排序环检测、retry_count&lt;=max_retries 校验、status 转移合法性、owner 必须在 registry 且实现类任务不得为 main-orchestrator）</span>
+<span class="tag">scripts/render_task_dag.py（新增 --ready 输出当前可派发就绪任务集合，供 orchestrator 确定性调度）</span>
+<span class="tag">assets/templates/instance/current/tasks.csv 与 references/memory-schema.md（新增 max_retries/retry_count 列定义）</span>
+<span class="tag">references/sub-agent-execution.md（Scheduling Rules 写死默认预算：每任务最多 2 次重派、每轮最多 N 个 dispatch，超限置 blocked 上报用户）</span>
+<span class="tag">skills/agent-group-orchestrate/SKILL.md（建 DAG 后与每次派发前强制运行校验）</span>
+</div></div>
+<div class="card item">
+<h4><span class="badge" style="background:#d93025">P0</span><span class="badge effort">工作量 中 (M)</span>建立分层 CI：单测补齐 + golden fixture 回归 + lint/类型检查</h4>
+<div class="why">核心脚本零单测、CI 只跑安全扫描，references/ 契约与 scripts/ 行为漂移只是时间问题（SuperClaude hooks 因复杂多 bug 被整体砍掉的先例）；确定性测试全部纯标准库、秒级，应立即进 CI，同时补上版本管理基础设施。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>OpenHands 的四层 QA 分层：单元测试与重型评测分开触发，评测依赖不污染核心（V0→V1 解耦教训）</li>
+<li>Aider 的可复现性实践：每次运行记录配置 + git hash，release note 写明 no regression</li>
+<li>claude-flow 的反面教训：不可复现的能力声明摧毁信任，只做可机验的声明</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">tests/test_validate_agent_group.py、tests/test_init_agent_group.py、tests/test_render_task_dag.py、tests/test_agent_group_paths.py（含 init→validate→compact→validate 端到端链路）</span>
+<span class="tag">.github/workflows/ci.yml（unittest 全量 + ruff + mypy + 对 examples/sample 与 examples/edge-llm-research 双实例 strict 校验 + render_task_dag 输出与 checked-in Mermaid 快照 diff）</span>
+<span class="tag">pyproject.toml（声明 requires-python&gt;=3.10，脚本已用 X|None 语法）</span>
+<span class="tag">CHANGELOG.md 与两个 manifest 字段对齐（.codex-plugin/plugin.json 补 homepage/repository）</span>
+</div></div>
+<div class="card item">
+<h4><span class="badge" style="background:#d93025">P0</span><span class="badge effort">工作量 中 (M)</span>引入 events.jsonl 结构化编排轨迹，DAG 渲染叠加执行状态</h4>
+<div class="why">当前唯一留痕是 Markdown 里自报的 Sub-Agent Reference 字符串，‘worker 确由 sub-agent 产出’不可机器验证，orchestrator 违规代工无从检测；append-only 事件日志是零依赖就能拿到的可观测性，也是后续回放校验与评测基准的数据底座。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>OpenHands 的 append-only EventLog：所有 Action/Observation 记为不可变类型化事件，支撑确定性回放与调试</li>
+<li>OpenAI Agents SDK 的默认 tracing：trace/span 覆盖派发、工具调用、guardrail 检查，可观测性是自动落盘的副产品</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">scripts/append_trace_event.py（向 current/trace.jsonl 追加 {ts, task_id, worker, backend, sub_agent_ref, event(dispatched/completed/blocked/retried/gate_requested), evidence_path}）</span>
+<span class="tag">skills/agent-group-orchestrate/SKILL.md（派发/回收/重试步骤强制调用该脚本）</span>
+<span class="tag">references/output-contract.md（把‘记录 sub-agent reference’从散文升级为对 trace 事件的强制引用）</span>
+<span class="tag">scripts/render_task_dag.py（读取 trace.jsonl 按 done/blocked/running 给 Mermaid 节点着色）</span>
+<span class="tag">scripts/compact_memory.py（归档时把 trace.jsonl 一并滚入 archive/）</span>
+</div></div>
+<div class="card item">
+<h4><span class="badge" style="background:#e37400">P1</span><span class="badge effort">工作量 中 (M)</span>worker 输出契约机器化：frontmatter + 函数式 guardrail 校验</h4>
+<div class="why">output-contract.md 的 11 项字段目前是纯文本约定、无脚本消费；给 agent_outputs 加 YAML frontmatter 即可用纯标准库实现结构校验，不合格输出带原因打回，等价于 CrewAI 函数式 guardrail 的文件系统版。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>CrewAI 的 Task Guardrail：函数式校验返回 (bool, 原因)，失败反馈给 agent 重做，重试设上限</li>
+<li>Aider 的 well-formed edits 指标：过程合规（是否守格式契约）是独立于结果正确性的度量</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">references/output-contract.md（拆为机器可校验 frontmatter：task_id/worker/backend/sub_agent_ref/risk/status + 自由正文两层）</span>
+<span class="tag">scripts/validate_agent_group.py（新增 agent_outputs lint：文件名匹配 &lt;task_id&gt;_&lt;worker&gt;.md、frontmatter 齐全、task_id 存在于 tasks.csv、worker 在 registry 中）</span>
+<span class="tag">assets/templates/instance/agents/*.md（各角色文件尾部附统一输出模板头）</span>
+<span class="tag">skills/agent-group-orchestrate/SKILL.md（guardrail 通过才可进入 reviewer，打回上限 2 次，超限记入 memory/RISKS.md）</span>
+</div></div>
+<div class="card item">
+<h4><span class="badge" style="background:#e37400">P1</span><span class="badge effort">工作量 小 (S)</span>check_public_safety.py 增加 allowlist 与行内豁免，遏制误报侵蚀门禁</h4>
+<div class="why">personal-email/personal-path 规则在真实项目文档中误报率高且无豁免机制，团队会因噪音绕过或关闭 CI 门禁，反而放大真实泄密风险；基线/豁免是成熟密钥扫描器的标准做法。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>gitleaks 的 .gitleaksignore / allowlist 机制与 detect-secrets 的 baseline 文件：已知误报登记在案，新增告警才阻断</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">scripts/check_public_safety.py（支持 .agsafety-allowlist 文件按 规则ID:路径:指纹 豁免，支持行内 ag-safety: ignore 注释）</span>
+<span class="tag">tests/test_check_public_safety.py（补充 allowlist 命中/未命中用例）</span>
+<span class="tag">.github/workflows/public-safety.yml（改为基线对比模式：仅新增违规阻断）</span>
+</div></div>
+<div class="phase-head"><h3>第二阶段：契约语义深化——门禁、并发、恢复、记忆结构化</h3><span>中期(1-3月) · 6 项</span></div>
+<div class="card item">
+<h4><span class="badge" style="background:#d93025">P0</span><span class="badge effort">工作量 中 (M)</span>R3/R4 风险门禁机制化：awaiting_gate 状态 + gate 记录校验</h4>
+<div class="why">R1-R4 目前是靠主 agent 阅读自律的‘纸面护栏’；把高风险任务的‘停下等人’建模为 tasks.csv 的显式状态与可校验记录，未经批准记录的任务不得进入 dispatched/done，从机制层排除跳门禁。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>OpenAI Agents SDK 的 interruption 模型：需人工审批的调用记录为中断、状态落盘、approve/reject 后从原状态恢复</li>
+<li>LangGraph 的 interrupt_before：高危动作前必须停下等人是图上的声明式属性而非 prompt 自觉</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">references/risk-policy.md（R3/R4 等价 interrupt_before：先写 pending-approval 记录并停止派发；修改 rules/* 与 agents/* 定级 R3+）</span>
+<span class="tag">scripts/validate_agent_group.py（VALID_STATUSES 增加 awaiting_gate；R3/R4 任务无 gate:granted 记录不得为 dispatched/done）</span>
+<span class="tag">references/memory-schema.md 与 assets/templates/instance/current/tasks.csv（新增 risk 列与 gate 记录格式）</span>
+<span class="tag">examples/ 新增核心实现 DAG 示例实例（architect → user gate → kernel-dev → runner → reviewer，含一次 gate 拒绝与改路由，补齐示例广度缺口）</span>
+</div></div>
+<div class="card item">
+<h4><span class="badge" style="background:#e37400">P1</span><span class="badge effort">工作量 中 (M)</span>为每个共享文件声明 merge policy，并建立写并发规则（scope 冲突检测 + worktree 隔离约定）</h4>
+<div class="why">memory/ 与 current/ 目前是‘裸共享内存’，多 worker 并行写无任何合并规则；单写者 + 声明式合并语义是无锁文件系统上最便宜的并发控制，配合 scope 列冲突检测与 worktree 隔离约定，把‘无并发控制’短板补成契约级并发控制。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>LangGraph 的 reducer/channel：每个状态通道声明合并语义（append-only/覆盖/按 id upsert），并行写成为定义良好的操作</li>
+<li>claude-squad 的 git worktree 隔离：每任务独立工作树，从根上解决多 agent 互踩文件——其 8k star 证明这是最高价值的真实痛点</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">references/memory-schema.md（逐文件标注 merge policy：DECISIONS.md=append-only、current/tasks.csv=单写者仅 orchestrator、PROJECT_FACTS 条目=按 id upsert）</span>
+<span class="tag">references/sub-agent-execution.md 与 references/risk-policy.md（R2+ 实现类 worker 必须在独立 git worktree 执行，worktree 路径记入输出 frontmatter；worker 禁止直接写 memory/，append 类操作统一由 memory-sync 合并）</span>
+<span class="tag">assets/templates/instance/current/tasks.csv（新增 scope 列）</span>
+<span class="tag">scripts/validate_agent_group.py（无依赖关系的两任务声明重叠 scope 即报错；append-only 文件历史行被改写即报错）</span>
+</div></div>
+<div class="card item">
+<h4><span class="badge" style="background:#e37400">P1</span><span class="badge effort">工作量 中 (M)</span>记忆条目结构化：唯一 ID + ADD/UPDATE/SUPERSEDE/NOOP 操作语义 + last_verified 保守衰减</h4>
+<div class="why">PROJECT_FACTS/DECISIONS 已有 supersedes/stale 雏形但缺条目级 ID 与机检结构，过期事实无时间元数据会被后续 worker 持续引用；采用‘标记失效而非删除 + 超期告警’的保守衰减，规避规则式遗忘误删关键信息的已知陷阱。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>Mem0 的四操作裁决语义（ADD/UPDATE/DELETE/NOOP），及其 issue #4896 教训：消解语义必须有校验器兜底否则静默退化</li>
+<li>Zep/Graphiti 的边失效代替删除：t_valid/t_invalid 时间戳保留完整时间线</li>
+<li>MemoryBank/A-MEM 的实验告警：自动删除式衰减导致任务性能显著下降，故只做 stale 标记</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">references/memory-schema.md（PROJECT_FACTS 条目结构：fact_id/status(active|stale|superseded)/superseded_by/last_verified/evidence；DECISIONS 强制 id 唯一且 supersedes 引用存在）</span>
+<span class="tag">scripts/validate_agent_group.py（id 唯一性、supersedes 引用存在性、RISKS 状态枚举；last_verified 超 30 天且 active 的事实输出非阻断‘待复核’清单）</span>
+<span class="tag">skills/agent-group-memory-sync/SKILL.md（Write Rules 改写为四操作判断流程，禁止直接 DELETE）</span>
+<span class="tag">skills/agent-group-orchestrate/SKILL.md（epic 启动时把待复核事实转为 R0 级 repo-explorer 验证任务）</span>
+</div></div>
+<div class="card item">
+<h4><span class="badge" style="background:#e37400">P1</span><span class="badge effort">工作量 大 (L)</span>台账防膨胀：摘要+归档两步收口、分节滚动压缩、轻量记忆索引与条目级注入</h4>
+<div class="why">追加式台账无界增长会反噬编排质量（每次 sync 前读全量台账撑爆上下文）；把记忆整理放在阶段边界批量做、热记忆设硬预算、派发时只注入相关条目片段，三管齐下且全部纯标准库可实现。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>Letta 的 sleep-time compute 与 LangMem 的 BackgroundMemoryManager：记忆整理离开热路径、在阶段边界异步批量执行</li>
+<li>memweave/Markdown-first 实践：索引是可随时重建的派生物，Markdown 是唯一事实源</li>
+<li>Letta core memory block 的容量预算与 CLAUDE.md &lt;200 行实践：热记忆有硬预算，满了下沉</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">scripts/compact_memory.py（新增 --require-summary：archive 目录无 SUMMARY.md 或 PROGRESS_LEDGER 未引用 archive 路径时拒绝执行）</span>
+<span class="tag">skills/agent-group-memory-sync/SKILL.md（归档前增加经 sub-agent 派发的 compaction summarizer 步骤，产出含证据索引的 SUMMARY.md；已归档 epic 的 TASK_LEDGER 节压缩为一行摘要+链接）</span>
+<span class="tag">scripts/build_memory_index.py（新增，扫描 memory/ 与 archive/*/SUMMARY.md 生成 memory/INDEX.md 派生索引，不入 validator 必需清单）</span>
+<span class="tag">references/memory-schema.md（热记忆预算：STATE.md≤80 行、Evidence 只准链接不准代码块，validate --strict 超限告警）</span>
+<span class="tag">references/sub-agent-execution.md（派发 inputs 收紧为白名单：只注入 depends_on 上游产物路径与 INDEX.md 定位的相关条目，禁止转发整个 current/）</span>
+</div></div>
+<div class="card item">
+<h4><span class="badge" style="background:#e37400">P1</span><span class="badge effort">工作量 中 (M)</span>路由策略机器化：条件→DAG 模板→必经门禁三列路由表 + registry watches 推导 depends_on</h4>
+<div class="why">四类 Common DAGs 目前靠 orchestrator 自由判断选择，不同后端下选路不一致、门禁节点可能被私自裁剪；把候选收窄与转移合法性交给声明式表格和校验器，LLM 只在合法集合内决策。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>AutoGen 的 candidate_func + FSM 发言者转移图约束：非法转移在机制层排除而非靠模型自觉</li>
+<li>CrewAI Flows 的 @router 条件路由：检查结构化状态返回路由值并留痕</li>
+<li>MetaGPT 的 _watch 订阅机制：下游角色声明订阅上游产物类型，通信关系由声明推导</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">references/routing-policy.md（每类 Common DAG 增加 router 条件列与必经门禁列，形成三列路由表；orchestrator 输出必含 route_reason）</span>
+<span class="tag">references/worker-registry.md（typical inputs 拆为 watches 与 reads；新增必填 goal 一句话目标与 delegation 开关，默认 forbidden）</span>
+<span class="tag">skills/agent-group-orchestrate/SKILL.md（生成 tasks.csv 时按 watches 自动填 depends_on，例外须在 notes 注明）</span>
+<span class="tag">scripts/validate_agent_group.py（校验所选 DAG 覆盖模板必经节点、depends_on 边符合 watches 声明或有注明例外、非 main worker 的 delegation 不为 allowed）</span>
+</div></div>
+<div class="card item">
+<h4><span class="badge" style="background:#e37400">P1</span><span class="badge effort">工作量 中 (M)</span>定义 orchestrator-state 恢复契约：会话中断后从文件精确续跑</h4>
+<div class="why">current/ 天然是文件版 checkpointer，但缺‘下一步要执行什么’的控制流字段；补上 round 序号与已派发未回收 worker 清单，主 agent 会话中断后重进 skill 即可从文件恢复，而非重读全部台账推断进度。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>LangGraph 的 StateSnapshot：快照含数据 + next 待执行节点 + pending writes，thread_id 即恢复主键</li>
+<li>AutoGen 的 team.save_state()/load_state()：可序列化状态落盘后在新 team 上恢复续跑</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">references/memory-schema.md（新增 current/orchestrator-state.md 契约：round 序号、各任务运行时状态、本轮已派发未回收 worker 列表）</span>
+<span class="tag">skills/agent-group-orchestrate/SKILL.md（每轮派发前后各写一次该文件；resume 流程：status=in_progress 且无对应 agent_outputs 的任务视为中断需重派）</span>
+<span class="tag">scripts/validate_agent_group.py（该文件与 tasks.csv 一致性校验：dispatched 任务的 depends_on 必须均已 done）</span>
+<span class="tag">scripts/compact_memory.py（归档时纳入 orchestrator-state）</span>
+</div></div>
+<div class="phase-head"><h3>第三阶段：评测体系与大特性——回放、基准、动态任务、生态适配</h3><span>远期(3-6月) · 5 项</span></div>
+<div class="card item">
+<h4><span class="badge" style="background:#e37400">P1</span><span class="badge effort">工作量 中 (M)</span>金标编排轨迹回放校验：把好的一次运行固化为回归 fixture</h4>
+<div class="why">编排决策（goal+registry+policy → worker 选择与 DAG）比代码代理更容易做无 LLM 的离线判定；以 examples/ 为种子建金标 fixture，比对实际产出的 tasks.csv/trace.jsonl 与期望值，得到第一层不烧 token 的编排回归测试。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>SWE-agent 的 traj-to-demo / run-replay 闭环：录制轨迹→手工编辑→回放验证，把好运行固化为测试资产</li>
+<li>SWE-bench 的推理/评测分离：代理只产预测文件，判定由独立 harness 执行</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">evaluation/fixtures/（每个 fixture 含输入 goal+config.yml+agents/ 与金标输出：期望 tasks.csv DAG 边集、期望选中/跳过 worker 及理由、期望风险定级）</span>
+<span class="tag">scripts/replay_orchestration_check.py（新增，纯标准库：DAG 边匹配率、worker 选择准确率、跳过理由是否留痕、门禁节点完整性）</span>
+<span class="tag">tests/test_replay_orchestration.py（接入 CI 第二层，PR 触发）</span>
+</div></div>
+<div class="card item">
+<h4><span class="badge" style="background:#e37400">P1</span><span class="badge effort">工作量 大 (L)</span>orchestration-bench：LLM 编排基准与 benchmark 驱动的契约修改流程</h4>
+<div class="why">SKILL.md 与 references/*.md 就是本插件的‘prompt’，目前改坏路由策略只能人工发现；建 10-20 个标准 goal 覆盖四类 DAG 与 R0-R4 各档，量化 DAG 匹配度、越权率（无 dispatch 事件却有 worker 结论）、契约合规率、门禁触发正确率，凡改 SKILL/路由/风险契约的 PR 必须附分数对比。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>Aider 的 benchmark 驱动开发：凡改 prompt/格式必跑基准，输出记录配置+git hash 保证可复现，release note 写明 no regression</li>
+<li>OpenHands 的评测解耦教训：评测 harness 独立目录/独立依赖，不污染纯标准库核心</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">evaluation/orchestration-bench/（标准 goal 集 + 评分脚本 + 独立依赖声明，不进 scripts/）</span>
+<span class="tag">evaluation/results/（每次运行的 YAML：插件 git hash + 后端 + 模型 + 四维分数）</span>
+<span class="tag">AGENTS.md 与 CHANGELOG.md（写明‘改 skills/*/SKILL.md 或 routing-policy/risk-policy 必附基准对比’的流程规则）</span>
+<span class="tag">.github/workflows/ci.yml（发版前手动触发的第三层评测 job）</span>
+</div></div>
+<div class="card item">
+<h4><span class="badge" style="background:#1a73e8">P2</span><span class="badge effort">工作量 大 (L)</span>动态扇出任务类型：fanout/reduce 契约弥补静态 DAG 表达盲区</h4>
+<div class="why">‘对搜索到的 N 个候选各做一次评测’这类任务在写 CSV 时 N 未知，静态 depends_on 无法表达；以 append-only 追加子任务行 + 配对汇聚任务的约定实现文件契约版 map-reduce，属于成熟度依赖前两阶段（预算、校验、轨迹）齐备后的大特性。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>LangGraph 的 Send API：运行时按数据动态派生 N 个并行节点实例、各带独立子状态，下游 reduce 节点等全部分支完成才执行</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">references/memory-schema.md 与 references/sub-agent-execution.md（type=fanout 任务声明子任务模板与输入清单来源；子任务 id 前缀 t7.1..t7.N；每个实例只拿自己那份输入）</span>
+<span class="tag">scripts/validate_agent_group.py（fanout 必有配对 reduce 且 depends_on 覆盖全部子任务；追加行 append-only 不得篡改既有行）</span>
+<span class="tag">scripts/render_task_dag.py（同前缀子任务折叠渲染防 Mermaid 爆炸）</span>
+<span class="tag">examples/ 新增 fanout 示例实例（如多候选框架并行评测场景）</span>
+</div></div>
+<div class="card item">
+<h4><span class="badge" style="background:#1a73e8">P2</span><span class="badge effort">工作量 中 (M)</span>agent-teams 第三后端 profile：tasks.csv 与官方磁盘任务模型的双向映射</h4>
+<div class="why">官方 agent teams 的协调基座（磁盘共享任务列表 + inbox 文件）与本仓库文件契约同构，但其 API 仍在剧烈变动（TeamCreate 已删除）；以适配 profile 而非绑定的方式白嫖官方并行 worker 能力，保持后端中立不被 breaking change 拖累。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>Anthropic 官方 agent teams 的磁盘任务模型（每 task 一个 JSON 文件 + inbox 消息）与 delegate 模式（lead 仅协调类工具，即本仓库‘主 agent 只监督’的强制版）</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">references/sub-agent-execution.md（第三种后端 profile：lead 必须 delegate 模式、每 teammate 对应 tasks.csv 一行、inbox 消息不算交付物、完成仍须落盘 agent_outputs）</span>
+<span class="tag">references/routing-policy.md（teammate 互通拓扑下 R3/R4 门禁仍只能由 main-orchestrator 出具）</span>
+<span class="tag">scripts/render_task_dag.py（新增 --format json 导出与 teams task 文件同构结构，作为未来适配层接缝）</span>
+</div></div>
+<div class="card item">
+<h4><span class="badge" style="background:#1a73e8">P2</span><span class="badge effort">工作量 中 (M)</span>程序性记忆回写通道：让系统从反复失败中‘长记性’且受门禁保护</h4>
+<div class="why">PROJECT_FACTS≈语义记忆、台账+agent_outputs≈情景记忆均已齐备，但 rules/ 与 agents/ 是只进不出的静态契约——同类失败只会沉淀为 RISKS 条目而不会改进路由策略；补上‘reviewer 提议 → R3 user gate → DECISIONS 留痕’的受控回写闭环。</div>
+<div class="sec"><b>借鉴来源：</b><ul>
+<li>LangMem 的 semantic/episodic/procedural 三分法：procedural memory 允许基于反馈更新行为规则实现自我改进</li>
+<li>MetaGPT 线性 SOP 缺少反向精化循环的教训：反馈环必须显式设计进流程</li>
+</ul></div><div class="sec"><b>交付物：</b>
+<span class="tag">skills/agent-group-review/SKILL.md（新增‘规则回写建议’输出段：proposed rule change 含目标文件、diff 级描述、证据链接，写入 agent_outputs 而非直接改 rules/）</span>
+<span class="tag">references/risk-policy.md（修改 rules/*、agents/* 定级 R3+，走 architect→user gate DAG）</span>
+<span class="tag">references/memory-schema.md（采纳后在 memory/DECISIONS.md 记带 supersedes 的决策，规则演化史可追溯）</span>
+<span class="tag">examples/ 补一个含规则回写全流程的示例片段</span>
+</div></div>
+<footer>
+本报告由 Claude Code 多智能体研究工作流生成（2026-07-26）：6 个方向研究代理并行检索官方文档 / 论文 / GitHub 议题，1 个差距分析代理通读本仓库，1 个综合代理产出路线图。
+调研结论中已区分「事实（来自文档/论文）」与「推测（基于经验）」；外部项目的 star 数与版本信息以调研当日为准。
+</footer>
+</div>
+</body>
+</html>
