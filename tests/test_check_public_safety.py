@@ -38,9 +38,16 @@ class PublicSafetyTest(unittest.TestCase):
             "noreply" + "@github.com",
             "octocat" + "@users.noreply.github.com",
             "1+" + "octocat" + "@users.noreply.github.com",
+            "cursoragent" + "@cursor.com",
+            "CursorAgent" + "@Cursor.com",
         )
         for address in addresses:
             self.assertNotIn("personal-email", self.rule_ids(f"Author: Name <{address}>"))
+
+    def test_rejects_other_cursor_domain_addresses(self) -> None:
+        email = "dev" + "@cursor.com"
+        self.assertIn("personal-email", self.rule_ids(email))
+        self.assertIn("personal-email", self.rule_ids(f"note {email}"))
 
     def test_keeps_published_identity_but_reports_message_email(self) -> None:
         published_address = "owner" + "@published.example"
@@ -107,6 +114,25 @@ class GitHistorySafetyTest(unittest.TestCase):
             )
             self.assertEqual(len(blobs), 1)
             self.assertTrue(str(blobs[0].path).endswith("NOTES.md"))
+
+    def test_history_scan_accepts_cursor_agent_identity(self) -> None:
+        bot = "cursoragent" + "@cursor.com"
+        leaked = "owner" + "@file-private.example"
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            self.git(repo, "init", "-b", "main")
+            (repo / "README.md").write_text(f"contact {leaked}\n", encoding="utf-8")
+            self.git(repo, "add", "README.md")
+            self.commit(repo, "Add readme", bot)
+
+            findings = [
+                finding
+                for finding in scan_git_history(repo, [])
+                if finding.rule_id == "personal-email"
+            ]
+            self.assertEqual(len(findings), 1)
+            self.assertTrue(str(findings[0].path).endswith("README.md"))
+            self.assertFalse(any(finding.path.name.endswith(".metadata") for finding in findings))
 
     def git(self, repo: Path, *args: str, env: dict[str, str] | None = None) -> None:
         subprocess.run(

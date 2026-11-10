@@ -41,11 +41,13 @@ class Finding:
     description: str
 
 
-# 这些地址不是个人收件箱：文档占位符，以及 GitHub 合并提交和 noreply 身份。
+# 这些地址不是个人收件箱：文档占位符、GitHub noreply 身份，
+# 以及 Cursor Agent 的机器人提交身份。其它 @cursor.com 地址仍视为个人邮箱。
 NONPERSONAL_EMAILS = (
     r"noreply@example\.com",
     r"noreply@github\.com",
     r"[A-Z0-9._%+-]+@users\.noreply\.github\.com",
+    r"cursoragent@cursor\.com",
 )
 
 
