@@ -41,6 +41,22 @@ class Finding:
     description: str
 
 
+# 这些地址不是个人收件箱：文档占位符，以及 GitHub 合并提交和 noreply 身份。
+NONPERSONAL_EMAILS = (
+    r"noreply@example\.com",
+    r"noreply@github\.com",
+    r"[A-Z0-9._%+-]+@users\.noreply\.github\.com",
+)
+
+
+def personal_email_pattern() -> Pattern[str]:
+    allowed = "|".join(NONPERSONAL_EMAILS)
+    return re.compile(
+        rf"(?i)\b(?!(?:{allowed})\b)"
+        r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b"
+    )
+
+
 def build_rules() -> tuple[Rule, ...]:
     pasted_prompts = ("请" + "完成如下修改", "请" + "修改 examples 路径下的 demo")
     return (
@@ -68,10 +84,7 @@ def build_rules() -> tuple[Rule, ...]:
         Rule(
             "personal-email",
             "疑似个人邮箱地址",
-            re.compile(
-                r"(?i)\b(?!noreply@example\.com\b)"
-                r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b"
-            ),
+            personal_email_pattern(),
         ),
         Rule(
             "credential-assignment",
@@ -180,6 +193,86 @@ def scan_bytes(path: Path, data: bytes) -> list[Finding]:
     return scan_text(path, text)
 
 
+def git_ref_exists(root: Path, ref: str) -> bool:
+    result = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", ref],
+        cwd=root,
+        capture_output=True,
+    )
+    return result.returncode == 0
+
+
+def default_branch_ref(root: Path) -> str | None:
+    """解析已发布历史所在的默认分支。
+
+    CI 以 detached merge ref 检出，已发布提交在 origin/main，而不是当前 HEAD。
+    """
+    head = subprocess.run(
+        ["git", "symbolic-ref", "--quiet", "refs/remotes/origin/HEAD"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+    )
+    candidates: list[str] = []
+    if head.returncode == 0:
+        ref = head.stdout.strip()
+        if ref.startswith("refs/remotes/"):
+            candidates.append(ref.removeprefix("refs/remotes/"))
+    candidates.extend(["origin/main", "main", "origin/master", "master"])
+    for candidate in candidates:
+        if git_ref_exists(root, candidate):
+            return candidate
+    return None
+
+
+def published_identity_emails(root: Path) -> set[str]:
+    """返回默认分支上已经公开的作者和提交者邮箱。
+
+    这些地址位于已发布提交的身份字段中。扫描仍会检查文件内容和提交说明。
+    """
+    ref = default_branch_ref(root)
+    if ref is None:
+        return set()
+    raw = git_output(root, "log", "--format=%ae%x1f%ce", ref).decode("utf-8", errors="replace")
+    emails: set[str] = set()
+    for line in raw.splitlines():
+        for part in line.split("\x1f"):
+            address = part.strip().lower()
+            if address:
+                emails.add(address)
+    return emails
+
+
+def single_line(value: str) -> str:
+    return " ".join(value.replace("\r", " ").splitlines()).strip()
+
+
+def without_published_identity_emails(
+    findings: list[Finding],
+    commit_text: str,
+    published: set[str],
+) -> list[Finding]:
+    """去掉默认分支身份字段中的已知邮箱。
+
+    commit_text 的前四行固定为作者名、作者邮箱、提交者名、提交者邮箱。
+    提交说明和文件内容中的个人邮箱仍会报告。
+    """
+    if not published:
+        return findings
+    lines = commit_text.splitlines()
+    kept: list[Finding] = []
+    for finding in findings:
+        if finding.rule_id != "personal-email" or finding.line not in (2, 4):
+            kept.append(finding)
+            continue
+        if finding.line > len(lines):
+            kept.append(finding)
+            continue
+        if lines[finding.line - 1].strip().lower() not in published:
+            kept.append(finding)
+    return kept
+
+
 def git_output(root: Path, *args: str) -> bytes:
     try:
         result = subprocess.run(
@@ -197,6 +290,7 @@ def scan_git_history(root: Path, refs: list[str]) -> list[Finding]:
     findings: list[Finding] = []
     object_paths: dict[str, str] = {}
     revision_args = refs or ["--all"]
+    published_emails = published_identity_emails(root)
     object_lines = git_output(
         root, "rev-list", "--objects", *revision_args
     ).decode("utf-8")
@@ -225,10 +319,22 @@ def scan_git_history(root: Path, refs: list[str]) -> list[Finding]:
             continue
         commit_id, author, author_email, committer, committer_email, message = fields
         commit_text = "\n".join(
-            [author, author_email, committer, committer_email, message]
+            [
+                single_line(author),
+                single_line(author_email),
+                single_line(committer),
+                single_line(committer_email),
+                message,
+            ]
         )
         metadata_path = root / ".git-history" / f"{commit_id[:12]}.metadata"
-        findings.extend(scan_text(metadata_path, commit_text))
+        findings.extend(
+            without_published_identity_emails(
+                scan_text(metadata_path, commit_text),
+                commit_text,
+                published_emails,
+            )
+        )
 
     return findings
 
