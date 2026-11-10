@@ -13,56 +13,52 @@ owner: main-orchestrator
 
 # Bootstrap
 
-At the start of an agent-group workflow, read:
+This file is the runtime entry. Read it with `current/STATE.md`. Do not open a skill-pack reference for the same rules.
 
-```text
-rules/BOOTSTRAP.md
-rules/SUB_AGENT_EXECUTION.md
-current/STATE.md
-```
+## Working set
 
-Then read on demand:
+For an orchestrate turn, also read:
 
-```text
-rules/WORKER_REGISTRY.md
-rules/ROUTING_POLICY.md
-rules/MEMORY_SYNC_SOP.md
-memory/PROJECT_FACTS.md
-memory/TASK_LEDGER.md
-memory/PROGRESS_LEDGER.md
-memory/DECISIONS.md
-memory/RISKS.md
-memory/ROADMAP.md
-current/epic.md
-current/acceptance.md
-current/prompt.md
-current/tasks.csv
-```
+- `current/tasks.csv`
+- `memory/PROJECT_FACTS.md`
 
-## Default Mode
+That is the hot set. `memory/PROJECT_FACTS.md` is compact; read it whole. Do not open another file unless a trigger below matches.
 
-Use `auto-orchestrate` when the user provides a goal without assigning workers.
+## On-demand index
 
-The main orchestrator should:
+Open one row, and only when its trigger is true. Then stop.
 
-1. Clarify the goal only when necessary.
-2. Classify risk.
-3. Select workers from `WORKER_REGISTRY.md`.
-4. Build a small DAG from `ROUTING_POLICY.md`.
-5. Apply R3/R4 gates before sensitive work.
-6. Dispatch selected non-main workers through the configured sub-agent backend.
-7. Monitor sub-agent progress and blockers without doing worker-scoped work directly.
-8. Store worker outputs in `current/agent_outputs/`.
-9. Spot-check evidence, synchronize memory using `MEMORY_SYNC_SOP.md`, and report status, sub-agent references, files changed, blockers, and next step.
+| File | Open only when |
+| --- | --- |
+| `rules/ROUTING_POLICY.md` | Adding a worker beyond `repo-explorer` and `kernel-dev` |
+| `rules/WORKER_REGISTRY.md` | A role other than those two is under consideration |
+| `rules/SUB_AGENT_EXECUTION.md` | Dispatching a sub-agent |
+| `rules/MEMORY_SYNC_SOP.md` | Writing durable memory or closing a phase |
+| `rules/RUNBOOK_REMOTE.md` | An R4 remote or long command is proposed |
+| `memory/LEDGER_INDEX.md` | History from an earlier task or phase is required |
+| `memory/ROADMAP.md` | The goal asks for optimization directions |
+| `current/prompt.md` | Updating the demo research prompt |
+| `current/epic.md` | Scope is unclear |
+| `current/acceptance.md` | Checking whether the goal is done |
 
-The main orchestrator is a supervisor only. It must not directly perform development, testing, benchmarking, repository discovery, upstream research, architecture analysis, or final review assigned to workers.
+`memory/LEDGER_INDEX.md` is the only door to durable ledgers. From there, read `## Summary` and `## Recent` of the one ledger you need. Do not load a ledger in full.
 
-## Risk Gate Summary
+## Default mode
 
-- R0: read-only.
-- R1: agent-group metadata and documentation.
-- R2: non-core project docs, scripts, or reports.
-- R3: core source, build, deployment, database, or production behavior.
-- R4: remote, long-running, destructive, profiling, or cost-incurring work.
+Use `auto-orchestrate` when the user provides a goal and does not name workers.
 
-R3 and R4 require explicit user confirmation.
+1. Classify risk with the summary below.
+2. Do cheap read-only R0/R1 lookups in this session. Dispatch a sub-agent only for substantial work.
+3. Default DAG: `repo-explorer`, then `kernel-dev` if a change is required. This demo's competitor-research goal is the exception recorded in `rules/ROUTING_POLICY.md`.
+4. Pass each sub-agent a short upstream summary and file paths.
+5. Keep each worker output within 120 lines and 6000 characters.
+6. Update `current/STATE.md`, `current/tasks.csv`, and `memory/PROJECT_FACTS.md` when a fact changed.
+7. At phase end, run `compact_memory.py` so `current/` is archived and ledgers roll forward.
+
+## Risk summary
+
+- R0: read-only. Proceed.
+- R1: agent-group metadata and documentation. Proceed, and report files changed.
+- R2: non-core docs, scripts, or reports. Proceed when the scope is explicit.
+- R3: core source, build, deployment, database, or production behavior. Ask first.
+- R4: remote, long, destructive, profiling, or cost-incurring work. Ask first.

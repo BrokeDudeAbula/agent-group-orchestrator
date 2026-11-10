@@ -13,57 +13,27 @@ owner: main-orchestrator
 
 # Worker Registry
 
-Worker names must match `agents/<worker-name>.md`.
+This file is the runtime worker registry. Do not also read the skill-pack worker reference.
 
-Each non-main worker entry is a sub-agent role. The main orchestrator selects and dispatches workers, but it must not perform the worker task itself. Pass the matching `agents/<worker-name>.md` role file to the configured sub-agent backend.
+Open it only when a role other than `repo-explorer` or `kernel-dev` is under consideration. Worker names match `agents/<worker-name>.md`. Pass that path to the sub-agent; do not paste the role file into the prompt.
 
 ## main-orchestrator
 
 agent_file: `agents/main-orchestrator.md`
 
-Use for user communication, task decomposition, DAG construction, sub-agent dispatch, progress supervision, evidence spot checks, risk gates, memory synchronization, and final reporting.
+Plans, routes, performs cheap read-only R0/R1 lookups, syncs hot memory, and reports.
 
-For this demo, also use for maintaining `current/prompt.md` and ensuring optimization directions are written to `memory/ROADMAP.md`.
+For this demo, also maintain `current/prompt.md` and write optimization directions to `memory/ROADMAP.md`.
 
-Permission: may write agent-group metadata and documentation; ask before R3/R4 work. Must not directly perform non-main worker tasks.
+Permission: agent-group metadata and documentation. Ask before R3/R4. Do not perform a substantial worker task inline.
 
 ## repo-explorer
 
 agent_file: `agents/repo-explorer.md`
 
-Use for read-only repository, artifact, report, script, and call-chain discovery.
+Read-only discovery larger than a few named files.
 
-For this demo, select when the current edge LLM engine needs to be mapped: model loader, scheduler, operator stack, KV cache, quantization, benchmark scripts, timing code, and hardware assumptions.
-
-Permission: read-only.
-
-## perf-analyst
-
-agent_file: `agents/perf-analyst.md`
-
-Use for benchmark, baseline, latency, throughput, profiling, and evidence-comparison tasks.
-
-For this demo, select for e2e benchmark methodology, module benchmark methodology, timing semantics, metric alignment, and evidence quality.
-
-Permission: read-only unless explicitly gated.
-
-## oss-scout
-
-agent_file: `agents/oss-scout.md`
-
-Use for upstream, open-source, official-doc, issue, paper, or implementation comparison.
-
-For this demo, select for researching `trt-edge-llm`, `vLLM`, TensorRT-LLM, SGLang, MLC-LLM, and other relevant inference engines.
-
-Permission: read-only research.
-
-## architect
-
-agent_file: `agents/architect.md`
-
-Use for option analysis, design planning, implementation scope, validation strategy, and risk assessment.
-
-For this demo, select for turning research findings into current-repo optimization directions and roadmap entries.
+For this demo, select when the current edge LLM engine needs a capability map.
 
 Permission: read-only.
 
@@ -71,19 +41,49 @@ Permission: read-only.
 
 agent_file: `agents/kernel-dev.md`
 
-Use for scoped implementation or documentation edits after the main orchestrator defines write scope.
+Scoped edits after the write gate. This is the default implementer.
 
-For this demo, skip unless the user explicitly asks to implement a roadmap item after research review.
+For this demo, skip unless the user asks to implement a roadmap item after review.
 
-Permission: write only inside approved scope.
+Permission: write only inside the approved scope.
+
+## perf-analyst
+
+agent_file: `agents/perf-analyst.md`
+
+Measurements and evidence comparison. Skip unless the goal is a performance claim.
+
+For this demo, select for e2e and module benchmark methodology and timing semantics.
+
+Permission: read-only unless explicitly gated.
+
+## oss-scout
+
+agent_file: `agents/oss-scout.md`
+
+Upstream and open-source research. Skip unless the goal needs that comparison.
+
+For this demo, select for `trt-edge-llm`, `vLLM`, TensorRT-LLM, SGLang, and MLC-LLM.
+
+Permission: read-only research.
+
+## architect
+
+agent_file: `agents/architect.md`
+
+Design comparison before editing. Skip unless several options must be compared.
+
+For this demo, select to turn findings into optimization directions on `memory/ROADMAP.md`.
+
+Permission: read-only.
 
 ## runner
 
 agent_file: `agents/runner.md`
 
-Use for build, test, benchmark, profiling, or remote validation after required gates.
+Gated builds, tests, profiling, or remote validation.
 
-For this demo, skip during static research. Use only after an R4 gate for remote device runs, long profiling, or competitor benchmark execution.
+For this demo, skip during static research. Use only after an R4 gate.
 
 Permission: gated execution.
 
@@ -91,8 +91,8 @@ Permission: gated execution.
 
 agent_file: `agents/reviewer.md`
 
-Use for evidence review, regression risk, missing tests, permission boundary checks, and final gate review.
+Review when the user asked, evidence is disputed, or the next step is R3/R4. Do not add a reviewer by default.
 
-For this demo, select to check unsupported competitor claims, license risks, timing mismatches, edge suitability, and whether roadmap items are actionable.
+For this demo, select to check unsupported competitor claims, license risk, and timing mismatches.
 
 Permission: read-only by default.

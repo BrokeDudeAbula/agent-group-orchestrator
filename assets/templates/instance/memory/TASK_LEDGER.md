@@ -1,4 +1,9 @@
 # Task Ledger
 
-Append durable task records here.
+## Summary
 
+No durable task records yet.
+
+## Recent
+
+None.

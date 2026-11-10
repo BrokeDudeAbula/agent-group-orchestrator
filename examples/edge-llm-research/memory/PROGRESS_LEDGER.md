@@ -1,5 +1,11 @@
 # Progress Ledger
 
+## Summary
+
+2026-06-16: research demo prepared. Live evidence still has to replace placeholders.
+
+## Recent
+
 ## 2026-06-16
 
 - Prepared a research demo for an edge-deployed LLM inference engine.

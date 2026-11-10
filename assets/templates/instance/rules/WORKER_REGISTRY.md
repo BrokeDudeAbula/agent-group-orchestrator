@@ -13,47 +13,23 @@ owner: main-orchestrator
 
 # Worker Registry
 
-Worker names must match `agents/<worker-name>.md`.
+This file is the runtime worker registry. Do not also read the skill-pack worker reference.
 
-Each non-main worker entry is a sub-agent role. The main orchestrator selects and dispatches workers, but it must not perform the worker task itself. Pass the matching `agents/<worker-name>.md` role file to the configured sub-agent backend.
+Open it only when a role other than `repo-explorer` or `kernel-dev` is under consideration. Worker names match `agents/<worker-name>.md`. Pass that path to the sub-agent; do not paste the role file into the prompt.
 
 ## main-orchestrator
 
 agent_file: `agents/main-orchestrator.md`
 
-Use for user communication, task decomposition, DAG construction, sub-agent dispatch, progress supervision, evidence spot checks, risk gates, memory synchronization, and final reporting.
+Plans, routes, performs cheap read-only R0/R1 lookups, syncs hot memory, and reports.
 
-Permission: may write agent-group metadata and documentation; ask before R3/R4 work. Must not directly perform non-main worker tasks.
+Permission: agent-group metadata and documentation. Ask before R3/R4. Do not perform a substantial worker task inline.
 
 ## repo-explorer
 
 agent_file: `agents/repo-explorer.md`
 
-Use for read-only repository, artifact, report, script, and call-chain discovery.
-
-Permission: read-only.
-
-## perf-analyst
-
-agent_file: `agents/perf-analyst.md`
-
-Use for benchmark, baseline, latency, throughput, profiling, and evidence-comparison tasks.
-
-Permission: read-only unless explicitly gated.
-
-## oss-scout
-
-agent_file: `agents/oss-scout.md`
-
-Use for upstream, open-source, official-doc, issue, paper, or implementation comparison.
-
-Permission: read-only research.
-
-## architect
-
-agent_file: `agents/architect.md`
-
-Use for option analysis, design planning, implementation scope, validation strategy, and risk assessment.
+Read-only discovery larger than a few named files.
 
 Permission: read-only.
 
@@ -61,15 +37,39 @@ Permission: read-only.
 
 agent_file: `agents/kernel-dev.md`
 
-Use for scoped implementation or documentation edits after the main orchestrator defines write scope.
+Scoped edits after the write gate. This is the default implementer.
 
-Permission: write only inside approved scope.
+Permission: write only inside the approved scope.
+
+## perf-analyst
+
+agent_file: `agents/perf-analyst.md`
+
+Measurements and evidence comparison. Skip unless the goal is a performance claim.
+
+Permission: read-only unless explicitly gated.
+
+## oss-scout
+
+agent_file: `agents/oss-scout.md`
+
+Upstream and open-source research. Skip unless the goal needs that comparison.
+
+Permission: read-only research.
+
+## architect
+
+agent_file: `agents/architect.md`
+
+Design comparison before editing. Skip unless several options must be compared.
+
+Permission: read-only.
 
 ## runner
 
 agent_file: `agents/runner.md`
 
-Use for build, test, benchmark, profiling, or remote validation after required gates.
+Gated builds, tests, profiling, or remote validation.
 
 Permission: gated execution.
 
@@ -77,6 +77,6 @@ Permission: gated execution.
 
 agent_file: `agents/reviewer.md`
 
-Use for evidence review, regression risk, missing tests, permission boundary checks, and final gate review.
+Review when the user asked, evidence is disputed, or the next step is R3/R4. Do not add a reviewer by default.
 
 Permission: read-only by default.

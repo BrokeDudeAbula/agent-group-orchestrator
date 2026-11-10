@@ -1,5 +1,11 @@
 # Task Ledger
 
+## Summary
+
+Research demo tasks are done through review. The user-facing prompt is in review. No older rows are archived.
+
+## Recent
+
 | Task ID | Title | Owner | Status | Risk | Latest Update |
 |---|---|---|---|---|---|
 | ELLM-20260616-01 | Map current edge LLM engine capabilities | repo-explorer | done | R0 | Defined the local discovery dimensions needed before competitor comparison. |

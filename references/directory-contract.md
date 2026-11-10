@@ -37,6 +37,7 @@ rules/WORKER_REGISTRY.md
 rules/ROUTING_POLICY.md
 rules/SUB_AGENT_EXECUTION.md
 rules/MEMORY_SYNC_SOP.md
+memory/LEDGER_INDEX.md
 memory/TASK_LEDGER.md
 memory/PROGRESS_LEDGER.md
 memory/DECISIONS.md
@@ -67,10 +68,11 @@ id,title,owner,status,risk,depends_on,inputs,outputs,notes
 
 Rules:
 
-- `rules/` stores durable operating policy.
-- `memory/` stores durable project memory and append-only ledgers.
+- `rules/` is the runtime policy. Do not also load the skill-pack `references/` copy of the same topic.
+- `memory/` stores durable project memory. `memory/LEDGER_INDEX.md` is the door to the ledgers. `memory/PROJECT_FACTS.md` stays compact enough to read on an orchestrate turn.
 - `current/` stores the active epic, active task list, hot state, and worker outputs.
 - `agents/` stores worker role definitions.
-- `archive/` stores compacted historical evidence.
+- `archive/` stores compacted `current/` evidence and rolled ledger tails under `archive/ledgers/`.
 - Skill pack templates must not contain live user project secrets or one-off local paths.
-- `main-orchestrator` must dispatch selected non-main workers through a compatible sub-agent backend. It supervises routing, gates, progress, memory, evidence spot checks, and reporting; it must not directly perform worker-scoped development, testing, benchmarking, research, architecture, or review work.
+- The default DAG is `repo-explorer`, then `kernel-dev` when a change is required. Other workers need a reason.
+- The main orchestrator may do cheap read-only R0/R1 lookups itself. Substantial non-main work goes to a sub-agent with a short upstream summary and file paths, not full upstream outputs.

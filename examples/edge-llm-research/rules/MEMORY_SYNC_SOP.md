@@ -13,31 +13,36 @@ owner: main-orchestrator
 
 # Memory Sync SOP
 
-Before compaction or epic handoff, apply the memory lifecycle rules:
+This file is the runtime memory procedure. Do not also read the skill-pack memory references. Open it when writing durable memory or closing a phase.
 
-- Sync reusable conclusions to `memory/` before moving hot state.
-- Keep durable project facts, decisions, risks, and ledgers in `memory/`; do not archive them with phase evidence.
-- Do not delete blockers or risks; close, mitigate, accept, or supersede them.
+## Hot set
 
-## Normal Update
+Update these first:
 
-1. Update `current/STATE.md`.
-2. Update `current/tasks.csv`.
-3. Append to `memory/TASK_LEDGER.md` when task status or scope changes.
-4. Append to `memory/PROGRESS_LEDGER.md` after meaningful progress.
-5. Append to `memory/DECISIONS.md` for durable decisions.
-6. Update `memory/RISKS.md` for active, mitigated, closed, or accepted risks.
-7. Update `memory/PROJECT_FACTS.md` for stable facts, important entrypoints, commands, dependencies, and environment assumptions.
-8. Keep worker evidence in `current/agent_outputs/`.
+1. `current/STATE.md`
+2. `current/tasks.csv`
+3. `memory/PROJECT_FACTS.md`, only when a stable fact changed
 
-## Compaction
+Keep `memory/PROJECT_FACTS.md` within 80 lines and 4000 characters. Keep `current/STATE.md` within 80 lines and 4000 characters.
 
-1. Confirm `current/STATE.md`, `current/tasks.csv`, worker outputs, and durable ledgers are synchronized.
+## Ledgers
+
+Open `memory/LEDGER_INDEX.md`, then `## Summary` and `## Recent` of the one ledger you will append to. Do not load the archive tail unless that summary is not enough.
+
+Append a short entry for a task change, a milestone, a decision, or a risk. Do not rewrite old decisions. Supersede them. Do not delete risks; mark them `mitigated`, `closed`, or `accepted`.
+
+Leave worker outputs in `current/agent_outputs/` until phase close.
+
+## Phase close
+
+When every active task is `done` or `dropped`, or the user closes the phase:
+
+1. Confirm the hot set and the ledger summaries mention the outcome.
 2. Run `compact_memory.py --target <agent-group-path> --archive-name <yyyymmdd_topic> --dry-run`.
-3. Review the move plan.
-4. Run without `--dry-run` when the archive should be applied.
-5. Confirm the script recreated concise `current/STATE.md`, `current/epic.md`, `current/acceptance.md`, and `current/tasks.csv`.
-6. Append the compaction event and archive path to `memory/PROGRESS_LEDGER.md`.
-7. Run `validate_agent_group.py --strict <agent-group-path>`.
+3. Apply the same command without `--dry-run`.
+4. Expect new concise files in `current/`, and ledger overflow under `archive/ledgers/`.
+5. Run `validate_agent_group.py --strict <agent-group-path>`.
 
-Use `--no-reset-current` only when another tool will immediately rebuild the required hot state files.
+`--no-reset-current` is only for a tool that immediately rebuilds the hot files. `--no-roll-ledgers` is only for a repair that must keep the hot ledger intact.
+
+Do not archive `rules/`, `agents/`, or `memory/PROJECT_FACTS.md` with the phase.

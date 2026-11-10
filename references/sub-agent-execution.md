@@ -1,90 +1,35 @@
 # Sub-Agent Execution Contract
 
-This contract applies whenever an agent group workflow selects a worker other than `main-orchestrator`.
+Runtime copy: the instance file `rules/SUB_AGENT_EXECUTION.md`.
+Load this reference only when that file does not exist. Do not load both.
 
 ## Core Rule
 
-The `main-orchestrator` is a supervisor, not a worker executor. It must coordinate the workflow, but it must not directly perform implementation, testing, benchmarking, code review, open-source research, or other worker-scoped tasks.
+Substantial work for a worker other than `main-orchestrator` goes to one sub-agent with that worker's role. If no sub-agent backend is available, report the workflow as blocked.
 
-Every selected worker task must be dispatched to a sub-agent that runs with the selected worker role and receives the relevant task id, scope, inputs, risk boundary, and output contract.
+The main orchestrator may do cheap read-only R0/R1 work itself: a few named-file lookups, a narrow question, evidence spot checks, and its own memory updates. That work is not a substitute for `repo-explorer`, `kernel-dev`, `perf-analyst`, `oss-scout`, `architect`, `runner`, or `reviewer`.
 
-If no compatible sub-agent backend is available, the main orchestrator must report the workflow as blocked or ask the user to switch to a backend that supports sub-agents. It must not silently complete worker tasks itself.
+The main orchestrator must not write implementation patches, run tests or benchmarks, produce the primary repository or design analysis, or act as the formal reviewer for its own result.
 
-## Main Orchestrator Duties
+## Prompt
 
-The main orchestrator may:
+Pass:
 
-- clarify the user goal and acceptance criteria;
-- classify risk and request R3/R4 gates;
-- select workers from the registry;
-- build and maintain the task DAG;
-- dispatch worker prompts to sub-agents;
-- monitor progress, retries, and blockers;
-- synchronize `current/` state and durable memory;
-- inspect a sample of worker evidence for plausibility;
-- compare worker outputs against the acceptance criteria;
-- summarize results, risks, and next steps for the user.
+- task id and title
+- worker name and the path `agents/<worker>.md`
+- scope, risk level, and permission boundary
+- a short summary of upstream results, plus file paths
+- output path under `current/agent_outputs/`
+- stop condition
 
-The main orchestrator must not:
+Do not paste full upstream outputs, role files, or policy documents into the prompt. The sub-agent reads the paths.
 
-- write implementation patches for a `kernel-dev` task;
-- run tests, benchmarks, profilers, or remote commands for a `runner` task;
-- produce the primary repository analysis for a `repo-explorer` task;
-- produce the primary performance analysis for a `perf-analyst` task;
-- produce the primary upstream research for an `oss-scout` task;
-- produce the primary design analysis for an `architect` task;
-- act as the final `reviewer` for its own orchestration result.
+## Backend
 
-Small read-only checks are allowed only for routing, progress supervision, memory synchronization, or evidence spot-checking. They must not replace the assigned worker output.
+Use the host's sub-agent mechanism. Claude Code, Codex, Cursor, OpenCode, Grok Build, and similar hosts each dispatch one sub-agent per selected worker task. Record the host name and any sub-agent reference the host provides.
 
-## Backend Adapter Requirements
+Respect `current/tasks.csv` dependencies. Independent tasks may run concurrently when the host supports it. Stop before R3/R4 work until the user grants the gate. On failure, mark the task `blocked` or retry with a narrower prompt.
 
-The execution model is backend-neutral. Each backend adapter must preserve the same worker contract and output shape.
+## Evidence
 
-### Claude Code CLI
-
-Use the available Claude Code CLI sub-agent mechanism to create one sub-agent per selected worker task. Pass the selected `agents/<worker>.md` role, task id, risk gate, inputs, expected output path, and output contract to the sub-agent.
-
-Record the Claude Code CLI sub-agent reference, such as a session id, agent id, transcript path, command log path, or other available handle, in the worker output or orchestrator report.
-
-### Codex
-
-Use the available Codex sub-agent or multi-agent primitive to create one sub-agent per selected worker task. Pass the same worker role, task id, risk gate, inputs, expected output path, and output contract.
-
-Record the Codex sub-agent reference, such as a thread id, run id, task id, or other available handle, in the worker output or orchestrator report.
-
-### Other hosts
-
-Cursor, OpenCode, Grok Build, and similar hosts use the same worker contract. Dispatch one sub-agent per selected worker task with that host's sub-agent mechanism. Pass the same role file, task id, risk gate, inputs, expected output path, and output contract. Record the host name and any sub-agent reference the host provides.
-
-## Scheduling Rules
-
-- Respect `current/tasks.csv` dependencies before dispatching a worker.
-- Dispatch independent workers concurrently when the backend supports parallel sub-agents.
-- If the backend only supports serialized sub-agents, execute the same DAG order serially while still using sub-agents.
-- Stop before R3/R4 work until the user grants the required gate.
-- On sub-agent failure, mark the task as `blocked` or retry with a narrowed prompt; record the reason and evidence path.
-
-## Worker Prompt Minimums
-
-Each sub-agent prompt must include:
-
-- task id and title;
-- selected worker name and `agents/<worker>.md` role file;
-- scope, inputs, and expected artifacts;
-- dependency outputs to read;
-- risk level and permission boundary;
-- required output path under `current/agent_outputs/`;
-- the output contract headings;
-- stop condition and escalation rule.
-
-## Evidence Requirements
-
-Each worker output should identify:
-
-- execution backend, for example `claude-code-cli`, `codex`, or another host name;
-- sub-agent reference, if the backend provides one;
-- whether the worker ran concurrently or serially;
-- inputs read, commands run, artifacts produced, blockers, and recommended next step.
-
-The main orchestrator final report should list workers selected, workers skipped, sub-agent references, evidence checked, memory updates, and remaining risks.
+Each worker output names the execution backend, the sub-agent reference when one exists, the inputs read, commands run, artifacts, blockers, and the next step. Keep it within 120 lines and 6000 characters.

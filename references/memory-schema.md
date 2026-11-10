@@ -23,6 +23,7 @@ Rules:
 - Keep it concise.
 - Store only current state, not full history.
 - Link to worker outputs or archive paths instead of pasting long logs.
+- Strict validation rejects a state file over 80 lines or 4000 characters.
 
 ## current/tasks.csv
 
@@ -92,6 +93,8 @@ Each output should include:
 - risks or blockers
 - recommended next step
 
+Strict and non-strict validation reject an output over 120 lines or 6000 characters. Link evidence instead of pasting logs.
+
 Strict validation expects these Markdown headings:
 
 ```text
@@ -108,11 +111,34 @@ Strict validation expects these Markdown headings:
 ## Recommended Next Step
 ```
 
+## memory/LEDGER_INDEX.md
+
+Purpose: the only door to durable ledgers on a normal turn.
+
+Rules:
+
+- Keep it within 40 lines and 2500 characters.
+- Name `TASK_LEDGER.md`, `PROGRESS_LEDGER.md`, `DECISIONS.md`, and `RISKS.md`.
+- Tell the reader which ledger to open, and to read `## Summary` and `## Recent` only.
+
 ## memory/TASK_LEDGER.md
 
 Purpose: durable task history.
 
-Recommended entry fields:
+Required heading: `## Summary`.
+
+Hot shape:
+
+```text
+## Summary
+## Recent
+```
+
+Strict validation rejects a ledger over 80 lines or 6000 characters. `compact_memory.py` rolls a ledger that passes 48 lines or 3500 characters. The hot file keeps a short summary and a recent tail. Older text is appended to `archive/ledgers/<ledger>.md`.
+
+The same summary, recent tail, and roll rule apply to `memory/PROGRESS_LEDGER.md`, `memory/DECISIONS.md`, and `memory/RISKS.md`.
+
+Recommended task entry fields:
 
 - task id
 - title
@@ -179,7 +205,9 @@ Rules:
 
 ## memory/PROJECT_FACTS.md
 
-Purpose: stable project facts.
+Purpose: stable project facts read on an orchestrate turn.
+
+Strict validation rejects this file over 80 lines or 4000 characters. Compaction does not archive it. Trim stale facts in place.
 
 Recommended sections:
 
@@ -209,3 +237,5 @@ acceptance.md
 tasks.csv
 agent_outputs/
 ```
+
+Rolled ledger tails are appended under `archive/ledgers/` and are not part of the phase directory.

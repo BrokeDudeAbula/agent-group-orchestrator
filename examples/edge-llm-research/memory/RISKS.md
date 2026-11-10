@@ -1,5 +1,11 @@
 # Risks
 
+## Summary
+
+Four active research risks: unsupported competitor claims, inconsistent timing windows, server strategies copied onto edge, and license reuse.
+
+## Recent
+
 | Risk ID | Status | Owner | Trigger | Impact | Mitigation | Latest Update |
 |---|---|---|---|---|---|---|
 | RISK-ELLM-01 | active | oss-scout | Competitor claims are copied from docs or marketing without source or benchmark evidence. | Roadmap may optimize for non-transferable assumptions. | Require source links, hardware config, model config, and timing definition for each claim. | Demo marks competitor findings as placeholders. |

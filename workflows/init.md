@@ -2,7 +2,7 @@
 
 Use this workflow to create a new agent group instance in a target repository.
 
-`<skill-root>` is the directory that contains `SKILL.md`. Script and reference paths below are relative to that directory. Run initialization against the target project so the instance is not created inside the skill pack.
+`<skill-root>` is the directory that contains `SKILL.md`. Script paths below are relative to that directory. Run initialization against the target project so the instance is not created inside the skill pack.
 
 ## Instance Path Resolution
 
@@ -46,15 +46,11 @@ Pass `--backend claude-code` on Claude Code and `--backend codex` on Codex. Pass
 python3 <skill-root>/scripts/validate_agent_group.py <target>
 ```
 
-6. Report created files and any follow-up project-specific fields the user should fill in.
-
-## Reference Loading
-
-- Read `<skill-root>/references/directory-contract.md` for required structure.
-- Read `<skill-root>/references/worker-registry.md` if custom workers are requested.
+6. Report created files and any follow-up project-specific fields the user should fill in. The new instance `rules/` are the runtime policy. Do not also read the skill-pack references for those topics.
 
 ## Guardrails
 
 - Do not overwrite an existing instance unless the user explicitly requests `--force`.
 - Keep project-specific goals in the target instance, not in `<skill-root>/assets/templates/`.
 - Do not use more than one live instance for the same project without an explicit user choice.
+- Do not preload routing, worker, or memory references during initialization. The template already contains the runtime rules.
