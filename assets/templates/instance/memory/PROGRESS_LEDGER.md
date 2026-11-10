@@ -1,4 +1,9 @@
 # Progress Ledger
 
-Append progress records here.
+## Summary
 
+No progress recorded yet.
+
+## Recent
+
+None.

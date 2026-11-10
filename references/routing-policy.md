@@ -1,41 +1,46 @@
 # Routing Policy
 
-Default mode is `auto-orchestrate`: when the user gives a goal, the main orchestrator chooses workers, builds a task DAG, dispatches selected non-main workers as sub-agents, gathers outputs, updates memory, and reports the result.
+Runtime copy: the instance file `rules/ROUTING_POLICY.md`.
+Load this reference only when that file does not exist. Do not load both.
 
-The main orchestrator is a supervisor only. It must not directly perform worker-scoped implementation, testing, benchmarking, repository discovery, upstream research, architecture analysis, or final review. See `references/sub-agent-execution.md`.
+Default mode is `auto-orchestrate`. The main orchestrator chooses a small DAG, dispatches substantial non-main work, updates the hot memory files, and reports the result.
 
-Common DAGs:
+## Default DAG
 
 ```text
-Read-only analysis:
-repo-explorer -> perf-analyst? -> oss-scout? -> architect? -> reviewer -> main-orchestrator
-
-Documentation or metadata:
-repo-explorer -> main-orchestrator or kernel-dev -> reviewer -> main-orchestrator
-
-Core implementation:
-repo-explorer -> perf-analyst? -> oss-scout? -> architect -> user gate -> kernel-dev -> reviewer -> validation gate -> runner -> reviewer -> main-orchestrator
-
-Remote or long validation:
-repo-explorer -> perf-analyst? -> user gate -> runner -> perf-analyst -> reviewer -> main-orchestrator
+repo-explorer -> kernel-dev
 ```
 
-Worker selection should be driven by `rules/WORKER_REGISTRY.md` in the target instance. Skip workers when their contribution is not relevant, but record the reason in the orchestrator output.
+A read-only goal stops after `repo-explorer`. The main orchestrator writes the user report.
 
-Each selected non-main worker must be executed by a compatible sub-agent backend. Backend adapters may expose different launch primitives, but each must receive the same worker role file, task id, scope, risk boundary, expected output path, and output contract. If sub-agents are unavailable, the workflow is blocked rather than reassigned to the main orchestrator.
+Add another worker only for a reason recorded in `current/tasks.csv` notes:
 
-Task IDs should be stable and sortable:
+| Worker | Add only when |
+| --- | --- |
+| `perf-analyst` | The goal is a measurement or performance claim |
+| `oss-scout` | The goal needs upstream or ecosystem comparison |
+| `architect` | Several designs must be compared before editing |
+| `reviewer` | The user asked for review, evidence is disputed, or the next step is R3/R4 |
+| `runner` | A gated build, test, or remote validation is required |
+
+## Inline work
+
+Cheap read-only R0/R1 lookups stay in the main session. Do not spawn a sub-agent to read a few named files. Broad discovery, implementation, benchmarks, upstream research, design comparison, and formal review are still worker tasks.
+
+## Dispatch
+
+Each substantial non-main task is one sub-agent. The prompt gets the role-file path, a short upstream summary, and file paths. It does not include full upstream outputs. If no sub-agent backend is available, mark the workflow blocked.
+
+Task ids:
 
 ```text
 AUTO-<yyyymmdd>-<nn>
 ```
 
-Worker outputs should go to:
+Worker outputs:
 
 ```text
 current/agent_outputs/<task_id>_<worker>.md
 ```
 
-Worker outputs should record the execution backend and sub-agent reference when the backend provides one.
-
-When tasks have ordering requirements, record dependencies in `current/tasks.csv` using a `depends_on` column. Use stable task ids and separate multiple dependencies with semicolons.
+Keep each output within 120 lines and 6000 characters. Record dependencies in `current/tasks.csv` with `depends_on`, separated by semicolons.

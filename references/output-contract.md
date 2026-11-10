@@ -1,31 +1,25 @@
 # Output Contract
 
-Every worker output should include:
+Every worker output stays within 120 lines and 6000 characters. Link files and reports instead of copying logs. Strict and non-strict validation both reject outputs over that cap.
 
-- task id
-- worker name
-- execution backend, for example `claude-code-cli` or `codex`
-- sub-agent reference, if the backend provides one
-- scope
-- inputs read
-- commands run, if any
-- conclusion
-- produced artifacts
-- risks or blockers
-- recommended next step
+Include these headings:
 
-The main orchestrator final report should include:
+```text
+## Task ID
+## Worker Name
+## Execution Backend
+## Sub-Agent Reference
+## Scope
+## Inputs Read
+## Commands Run
+## Conclusion
+## Artifacts
+## Risks or Blockers
+## Recommended Next Step
+```
 
-- whether the user goal is complete
-- workers selected and skipped
-- sub-agent backends and references for dispatched workers
-- files written
-- key findings
-- validation performed
-- evidence spot checks performed by the main orchestrator
-- remaining blockers or risks
-- next step
+A sub-agent prompt does not contain this file or the upstream outputs. It contains a short summary and the output path. The worker reads what it needs.
 
-Use concise evidence. Link files and reports rather than copying long logs.
+The main orchestrator report names goal status, workers used, workers skipped and why, sub-agent references, files written, blockers, and the next step. It does not paste worker logs.
 
-The main orchestrator must not write a worker output for a non-main worker unless it is recording a sub-agent failure or blocked dispatch. Worker-scoped conclusions should come from the selected sub-agent output.
+Cheap read-only R0/R1 lookups done in the main session are not written up as another worker's output.

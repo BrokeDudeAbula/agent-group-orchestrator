@@ -1,32 +1,19 @@
 # Worker Registry Contract
 
-Each worker entry should define:
+Runtime copy: the instance file `rules/WORKER_REGISTRY.md`.
+Load this reference only when that file does not exist. Do not load both.
 
-- worker name
-- `agent_file`
-- selection triggers
-- responsibilities
-- permission boundary
-- typical inputs
-- required output shape
-
-Worker names must match both the role file name and role frontmatter when frontmatter is present.
-
-Each non-main worker entry is a sub-agent role. The main orchestrator uses the registry to choose and dispatch workers, but it must not perform the worker task itself. The worker `agent_file` is the role prompt that must be passed to the configured sub-agent backend.
-
-Minimum recommended workers:
+The default DAG uses `repo-explorer` and `kernel-dev`. Other workers are optional and need a reason in the task notes.
 
 | Worker | Purpose |
-|---|---|
-| `main-orchestrator` | User-facing planner, task router, memory synchronizer |
-| `repo-explorer` | Read-only codebase and artifact discovery |
-| `perf-analyst` | Baseline, benchmark, profile, and evidence comparison |
-| `oss-scout` | Open-source and upstream implementation research |
-| `architect` or domain-specific architect | Design tradeoff analysis and implementation scope |
-| `kernel-dev` or implementation worker | Scoped edits after write gate |
-| `runner` or environment-specific runner | Builds, remote runs, profiling, or validation |
-| `reviewer` | Checks evidence, regressions, permissions, and missing tests |
+| --- | --- |
+| `main-orchestrator` | Plan, route, do cheap R0/R1 lookups, sync hot memory, report |
+| `repo-explorer` | Read-only discovery that is larger than a few named files |
+| `kernel-dev` | Scoped edits after the write gate |
+| `perf-analyst` | Measurement and evidence comparison |
+| `oss-scout` | Upstream and open-source research |
+| `architect` | Design comparison before editing |
+| `runner` | Gated builds, tests, profiling, or remote validation |
+| `reviewer` | Review when the user asked, evidence is disputed, or the next step is R3/R4 |
 
-Instances can rename or remove workers, but the routing policy must stay synchronized with the registry.
-
-The `main-orchestrator` supervises task assignment, progress, memory synchronization, evidence spot checks, and final reporting. It is not a fallback implementation, test, benchmark, research, architecture, or review worker.
+Worker names match `agents/<worker>.md`. The main orchestrator passes that path to the sub-agent. It does not perform a substantial worker task itself.

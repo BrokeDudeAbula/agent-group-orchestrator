@@ -17,4 +17,6 @@ current/prompt.md
 
 This demo intentionally uses placeholder findings. In a real repository, `oss-scout` should read upstream code, official docs, issues, benchmark scripts, and papers before turning any item into a factual claim.
 
+The default DAG is still `repo-explorer` then `kernel-dev`. This demo uses the wider research DAG because the goal is competitor comparison, benchmark design, and a roadmap. That exception is recorded in `rules/ROUTING_POLICY.md`.
+
 This tree is a skill-pack fixture, not a live workspace. Initialize a live instance in the target project at `.agent_group/`, `.claude/agent_group/`, or `.codex/agent_group/`.

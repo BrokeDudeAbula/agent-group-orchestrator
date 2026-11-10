@@ -1,5 +1,9 @@
 # Repo Memory Lifecycle
 
+Runtime sync uses the instance file `rules/MEMORY_SYNC_SOP.md`. Load this reference only when editing the lifecycle contract or when that rule file does not exist. Do not load both.
+
+Phase compaction archives `current/` only. Durable ledgers stay in `memory/` and are rolled into a short `## Summary` plus `## Recent` tail. Older ledger text goes to `archive/ledgers/`. `memory/PROJECT_FACTS.md` stays in place and must remain compact.
+
 本文定义项目本地 agent group 实例（`.agent_group/`、`.claude/agent_group/` 或 `.codex/agent_group/`）中 repo 记忆的生命周期，重点说明哪些任务记忆必须同步到长期记忆，哪些热记忆可以归档，以及哪些文件不能通过阶段归档移走。
 
 ## 核心原则
@@ -63,7 +67,7 @@ archive/<yyyymmdd_topic>/
 └── agent_outputs/
 ```
 
-`scripts/compact_memory.py` 当前只移动上述 `current/` 文件和 `current/agent_outputs/` 内容，并在非 dry-run 模式下默认重建空的 `current/STATE.md`、`current/epic.md`、`current/acceptance.md` 和 `current/tasks.csv`，以保持实例可校验。它不会自动更新长期 ledger，因此执行脚本前后仍需要人工或 agent 按 SOP 完成长期记忆同步。只有当另一个工具会立即重建 hot state 时，才使用 `--no-reset-current`。
+`scripts/compact_memory.py` 移动上述 `current/` 文件和 `current/agent_outputs/` 内容，并在非 dry-run 模式下默认重建空的 `current/STATE.md`、`current/epic.md`、`current/acceptance.md` 和 `current/tasks.csv`，以保持实例可校验。同一命令会把超过滚动阈值的耐久 ledger 收成 `## Summary` 加 `## Recent`，并把溢出追加到 `archive/ledgers/`。它不会把 `memory/PROJECT_FACTS.md`、`rules/` 或 `agents/` 移走。执行脚本前仍需要按 SOP 把可复用结论写进热状态和 ledger 摘要。只有当另一个工具会立即重建 hot state 时，才使用 `--no-reset-current`。修复热 ledger 本身时才使用 `--no-roll-ledgers`。
 
 ## 不应归档的记忆
 

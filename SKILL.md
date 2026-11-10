@@ -11,7 +11,7 @@ This skill pack coordinates project-local multi-agent work. Runtime state stays 
 
 ## Route by Intent
 
-Read the matching workflow before acting, then read every reference that workflow names. Paths below are relative to `<skill-root>`.
+Load one workflow, for the step you are about to do. Paths below are relative to `<skill-root>`.
 
 | User intent | Load |
 | --- | --- |
@@ -20,7 +20,18 @@ Read the matching workflow before acting, then read every reference that workflo
 | Update, compact, archive, or validate agent group memory | `workflows/memory-sync.md` |
 | Review worker output, routing, a memory update, or task evidence | `workflows/review.md` |
 
-When a request spans more than one workflow, load them in this order: init, orchestrate, memory-sync, review. Do not treat the workflow files as separate skills.
+Stop after that one workflow. Load another workflow only when its step is the work in front of you. Do not preload references named inside a workflow.
+
+## Startup reads
+
+When an instance already exists, the next files are only:
+
+- `rules/BOOTSTRAP.md`
+- `current/STATE.md`
+
+Both paths are inside the instance. The workflow and `rules/BOOTSTRAP.md` name any later file and the trigger for opening it. Do not open a file that has no matching trigger.
+
+Instance `rules/` are the runtime policy. Do not also open the skill-pack `references/` copy of the same topic.
 
 ## Instance Location
 

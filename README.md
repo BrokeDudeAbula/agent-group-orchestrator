@@ -17,21 +17,32 @@ Runtime state stays in the target project:
 
 ## Execution Model
 
-The default mode is `auto-orchestrate`. The `main-orchestrator` selects workers, manages the task DAG and risk gates, tracks progress, synchronizes memory, and reports results.
+The default mode is `auto-orchestrate`. A normal turn reads one workflow, `rules/BOOTSTRAP.md`, `current/STATE.md`, `current/tasks.csv`, and the compact `memory/PROJECT_FACTS.md`. Other workflows, skill-pack references, and durable ledgers stay closed until a trigger in `rules/BOOTSTRAP.md` matches.
 
-Every selected non-main worker must run through a compatible sub-agent backend. The main orchestrator does not perform worker-scoped implementation, testing, benchmarking, research, architecture, or review. If sub-agents are unavailable, the workflow is blocked.
+The default DAG is `repo-explorer`, then `kernel-dev` when a change is required. Review and other workers are added only for a recorded reason. Cheap read-only R0/R1 lookups stay in the main session. Substantial non-main work goes to a sub-agent with a short upstream summary and file paths. If sub-agents are unavailable, that substantial work is blocked.
 
 ## Installation
 
-Copy this checkout into a host skills directory and name that directory `agent-group`, matching the `name` in `SKILL.md`. The copy must include `SKILL.md`, `workflows/`, `scripts/`, `references/`, and `assets/`.
+Install the runtime skill with `scripts/install_skill.py`. The script copies `SKILL.md`, `workflows/`, `scripts/`, `references/`, and `assets/` into a directory named `agent-group`. It leaves `examples/`, `tests/`, `ROADMAP.html`, and the repository docs in the checkout.
 
 ```bash
 git clone https://github.com/BrokeDudeAbula/agent-group-orchestrator.git
-mkdir -p ~/.claude/skills
-cp -R agent-group-orchestrator ~/.claude/skills/agent-group
+cd agent-group-orchestrator
+python3 scripts/install_skill.py --dest ~/.claude/skills
 ```
 
-Claude Code also loads a project skill from `.claude/skills/agent-group/`. Use the same directory copy for the other hosts:
+The same command works for the other host skills directories below. Pass the skills directory, or a path that already ends in `agent-group`. Add `--force` to replace an existing install. Add `--dry-run` to print the copy plan.
+
+To copy by hand, copy only those five paths:
+
+```bash
+dest=~/.claude/skills/agent-group
+mkdir -p "$dest"
+cp SKILL.md "$dest/"
+cp -R workflows scripts references assets "$dest/"
+```
+
+Claude Code also loads a project skill from `.claude/skills/agent-group/`. Use the same install command for the other hosts:
 
 | Host | User skills path | Project skills path |
 | --- | --- | --- |
@@ -80,8 +91,8 @@ Review this agent group worker output and memory update.
 
 ## Project State
 
-- `current/`: active goal, tasks, and worker evidence.
-- `memory/`: durable task, progress, decision, risk, and project fact ledgers.
+- `current/`: active goal, tasks, and worker evidence. Archived at phase end.
+- `memory/`: compact project facts, a ledger index, and durable ledgers with a summary plus recent tail.
 - `rules/`: routing, execution, memory, and runbook policies.
 - `agents/`: worker role definitions.
 - `archive/`: compacted historical evidence.
@@ -103,7 +114,8 @@ Review this agent group worker output and memory update.
 | `init_agent_group.py` | Create a workspace from the template. |
 | `validate_agent_group.py` | Validate workspace structure and schemas. |
 | `render_task_dag.py` | Render `tasks.csv` as Mermaid. |
-| `compact_memory.py` | Archive current state and reset hot memory. |
+| `compact_memory.py` | Archive `current/` and roll durable ledgers. |
+| `install_skill.py` | Copy the runtime skill without examples, tests, or `ROADMAP.html`. |
 | `check_public_safety.py` | Scan content and Git history for sensitive data. |
 
 Run `compact_memory.py` with `--dry-run` before applying an archive operation.

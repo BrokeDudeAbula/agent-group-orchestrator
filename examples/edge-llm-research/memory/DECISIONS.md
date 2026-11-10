@@ -1,5 +1,11 @@
 # Decisions
 
+## Summary
+
+Three active decisions: research stays read-only until a gate, benchmark claims need comparable timing, and optimization directions live in `memory/ROADMAP.md`.
+
+## Recent
+
 | Decision ID | Date | Status | Decision | Rationale | Supersedes |
 |---|---|---|---|---|---|
 | DEC-20260616-ELLM-01 | 2026-06-16 | active | Treat competitor research as read-only until explicit benchmark or implementation gates are approved. | The workflow should not modify source or run remote jobs while gathering evidence. | |

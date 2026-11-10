@@ -1,34 +1,47 @@
 # Agent Group Orchestrate
 
-Use this workflow for project-local multi-agent coordination. Resolve the instance path with the same rules as `workflows/init.md`: explicit path, one existing standard instance (`.agent_group/`, `.claude/agent_group/`, or `.codex/agent_group/`), otherwise the host default. Ask the user when more than one standard instance exists and no path was chosen.
+Use this workflow for project-local multi-agent coordination. Resolve the instance with the same rules as `workflows/init.md`: explicit path, one existing standard instance (`.agent_group/`, `.claude/agent_group/`, or `.codex/agent_group/`), otherwise the host default. Ask the user when more than one standard instance exists and no path was chosen.
 
-`<skill-root>` is the directory that contains `SKILL.md`. Reference paths below are relative to that directory. `rules/`, `current/`, and `memory/` paths are inside the target instance.
+`<skill-root>` is the directory that contains `SKILL.md`. `rules/`, `current/`, and `memory/` paths are inside the target instance.
+
+## Policy source
+
+Instance `rules/` is the only runtime policy. Do not open skill-pack references for the same topic.
+
+## Working set
+
+Read these and stop:
+
+1. `rules/BOOTSTRAP.md`
+2. `current/STATE.md`
+3. `current/tasks.csv`
+4. `memory/PROJECT_FACTS.md`
+
+`memory/PROJECT_FACTS.md` stays compact. Read it whole. Open another file only when a BOOTSTRAP trigger matches the current step. History goes through `memory/LEDGER_INDEX.md`, then the summary and recent tail of the one ledger that index names. Do not load a ledger in full.
 
 ## Workflow
 
-1. Locate the agent group instance. If missing, suggest or run `python3 <skill-root>/scripts/init_agent_group.py` when the user wants initialization.
-2. Read `rules/BOOTSTRAP.md` and `current/STATE.md` first.
-3. Read `rules/SUB_AGENT_EXECUTION.md`, `rules/WORKER_REGISTRY.md`, and `rules/ROUTING_POLICY.md` when worker selection or DAG construction is needed.
-4. Classify risk using `<skill-root>/references/risk-policy.md`.
-5. Build a small task DAG and choose workers. Skip irrelevant workers explicitly.
-6. For R3/R4 work, ask for confirmation before edits or long/remote commands.
-7. Dispatch each selected non-main worker through the configured sub-agent backend. The main orchestrator supervises only; it must not directly perform worker-scoped development, testing, benchmarking, repository research, architecture, or review work.
-8. Write worker outputs to `current/agent_outputs/`.
-9. Update `current/tasks.csv`, `current/STATE.md`, and durable ledgers according to `<skill-root>/references/memory-sync-sop.md`.
-10. End with a compact report: goal status, workers used, sub-agent references, files written, evidence spot checks, blockers, next step.
+1. Locate the instance. If it is missing, suggest or run `python3 <skill-root>/scripts/init_agent_group.py` when the user wants initialization.
+2. Read the working set above.
+3. Do cheap read-only R0/R1 work in this session: a few named-file lookups, or a narrow question. Do not spawn a sub-agent for that. Agent-group metadata edits stay here too.
+4. Default DAG is `repo-explorer`, then `kernel-dev` when a change is required. A read-only goal stops after `repo-explorer`. Add `reviewer`, `perf-analyst`, `oss-scout`, `architect`, or `runner` only for a reason recorded in the task notes. Open `rules/ROUTING_POLICY.md` and `rules/WORKER_REGISTRY.md` only when adding a worker beyond that default.
+5. Classify risk from the BOOTSTRAP summary. R3/R4 wait for confirmation.
+6. Dispatch each substantial non-main task as one sub-agent. Open `rules/SUB_AGENT_EXECUTION.md` at the first dispatch of the turn. The prompt carries the role-file path, a short upstream summary, and file paths. Do not paste upstream outputs.
+7. Write worker outputs under `current/agent_outputs/`. Keep each output within 120 lines and 6000 characters. Link evidence instead of pasting logs.
+8. Update `current/STATE.md` and `current/tasks.csv`. Update `memory/PROJECT_FACTS.md` when a stable fact changed. Append a ledger line without rereading the ledger; use the index when prior context is required.
+9. When every active task is `done` or `dropped`, or the user closes the phase, archive hot state and roll ledgers:
 
-## Reference Loading
+```bash
+python3 <skill-root>/scripts/compact_memory.py --target <agent-group-path> --archive-name <yyyymmdd_topic> --dry-run
+```
 
-- Read `<skill-root>/references/routing-policy.md` for DAG patterns.
-- Read `<skill-root>/references/worker-registry.md` when creating or revising worker definitions.
-- Read `<skill-root>/references/sub-agent-execution.md` for host-neutral sub-agent dispatch requirements.
-- Read `<skill-root>/references/memory-sync-sop.md` before memory updates.
-- Read `<skill-root>/references/output-contract.md` before writing worker outputs.
+Apply the same command without `--dry-run` when the dry run only archives `current/` and rolls ledgers.
+
+10. Report goal status, workers used, workers skipped and why, sub-agent references, files written, blockers, and the next step.
 
 ## Guardrails
 
 - Do not treat `<skill-root>/examples/` as live project state.
-- Do not run remote, destructive, or long profiling tasks without an explicit gate.
-- Do not perform non-main worker work directly; dispatch it to a compatible sub-agent backend.
+- Do not run remote, destructive, or long tasks without an explicit gate.
 - Preserve user changes in dirty worktrees.
-- Prefer structured updates over free-form state drift.
+- Keep `current/STATE.md` short enough to re-read next turn.

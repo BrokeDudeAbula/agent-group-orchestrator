@@ -13,90 +13,52 @@ owner: main-orchestrator
 
 # Routing Policy
 
-Default mode is `auto-orchestrate`. When the user gives a goal, the main orchestrator chooses workers, splits tasks, applies risk gates, dispatches selected non-main workers as sub-agents, collects outputs, updates memory, and reports the result.
+This file is the runtime routing policy. Do not also read the skill-pack routing reference.
 
-The main orchestrator is a supervisor only. It must not directly perform worker-scoped implementation, testing, benchmarking, repository discovery, upstream research, architecture analysis, or final review. Follow `rules/SUB_AGENT_EXECUTION.md`.
+Open it only when the default DAG is not enough.
 
-## Worker Selection
-
-Read `rules/SUB_AGENT_EXECUTION.md` and `rules/WORKER_REGISTRY.md` before selecting workers. Use this file for DAG patterns and risk gates.
-
-Each selected non-main worker must be executed by a compatible sub-agent backend. If sub-agents are unavailable, mark the workflow blocked or ask the user to switch backend; do not reassign worker work to the main orchestrator.
-
-## Default DAGs
-
-### Read-only analysis
+## Default DAG
 
 ```text
-repo-explorer
-  -> perf-analyst?       # include only for performance or measurement claims
-  -> oss-scout?          # include for planning, upstream comparison, or ecosystem research
-  -> architect?          # include when a design decision or implementation plan is needed
-  -> reviewer
-  -> main-orchestrator
+repo-explorer -> kernel-dev
 ```
 
-### Documentation or metadata task
+A read-only goal stops after `repo-explorer`. The main orchestrator writes the report.
 
-```text
-repo-explorer
-  -> main-orchestrator or kernel-dev
-  -> reviewer
-  -> main-orchestrator
-```
+## Extra workers
 
-### Core implementation task
+Add one of these only with a reason in the task notes:
 
-```text
-repo-explorer
-  -> perf-analyst?
-  -> oss-scout?
-  -> architect
-  -> user confirms write scope
-  -> kernel-dev
-  -> reviewer
-  -> validation gate
-  -> runner?
-  -> reviewer
-  -> main-orchestrator
-```
+| Worker | Reason |
+| --- | --- |
+| `perf-analyst` | The goal is a measurement or performance claim |
+| `oss-scout` | The goal needs upstream or ecosystem comparison |
+| `architect` | Several designs must be compared before editing |
+| `reviewer` | The user asked for review, evidence is disputed, or the next step is R3/R4 |
+| `runner` | A gated build, test, or remote validation is required |
 
-### Long, remote, or expensive validation
+Cheap read-only R0/R1 lookups stay in the main session. Do not spawn a sub-agent to read a few named files.
 
-```text
-repo-explorer
-  -> perf-analyst?
-  -> user confirms command, target, duration, output path, and stop condition
-  -> runner
-  -> perf-analyst?
-  -> reviewer
-  -> main-orchestrator
-```
+## Dispatch
 
-## Risk Levels
+A substantial non-main task is one sub-agent. Open `rules/SUB_AGENT_EXECUTION.md` for the prompt shape. Pass a short upstream summary and file paths, not full upstream outputs. If sub-agents are unavailable, mark the workflow blocked.
 
-- R0: read-only inspection.
-- R1: agent-group metadata or documentation writes.
-- R2: non-core project docs, scripts, or reports.
-- R3: core source, build, deployment, database, CUDA, or production behavior changes.
-- R4: remote machines, long jobs, profiling, destructive operations, or cost-incurring actions.
+## Risk
 
-R3 and R4 require an explicit user gate before execution.
+Use the risk summary in `rules/BOOTSTRAP.md`. R3 and R4 wait for an explicit user gate.
 
-## Task Naming
-
-Use stable task ids:
+## Task naming
 
 ```text
 AUTO-<yyyymmdd>-<nn>
 ```
 
-## Worker Outputs
+Record dependencies in `current/tasks.csv` with `depends_on`, separated by semicolons.
 
-Default path:
+## Worker outputs
 
 ```text
 current/agent_outputs/<task_id>_<worker>.md
 ```
 
-Each worker output must include execution backend, sub-agent reference when available, scope, inputs read, commands run, conclusion, artifacts, risks or blockers, and recommended next step.
+Keep each output within 120 lines and 6000 characters. Link evidence instead of pasting logs.
