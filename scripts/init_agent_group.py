@@ -9,8 +9,6 @@ import sys
 from pathlib import Path
 
 
-PLUGIN_ROOT = Path(__file__).resolve().parents[1]
-TEMPLATE_ROOT = PLUGIN_ROOT / "assets" / "templates" / "instance"
 SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
@@ -19,12 +17,19 @@ from agent_group_paths import (  # noqa: E402
     KNOWN_BACKENDS,
     default_instance_relpath,
     detect_backend,
+    skill_root,
 )
+
+
+TEMPLATE_ROOT = skill_root() / "assets" / "templates" / "instance"
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="初始化项目本地 agent_group 实例（支持 .claude/agent_group 与 .codex/agent_group）"
+        description=(
+            "初始化项目本地 agent_group 实例"
+            "（支持 .agent_group、.claude/agent_group 与 .codex/agent_group）"
+        )
     )
     parser.add_argument(
         "--target",
@@ -34,7 +39,7 @@ def parse_args() -> argparse.Namespace:
         "--backend",
         default="auto",
         choices=list(KNOWN_BACKENDS),
-        help="执行后端：auto / codex / claude-code；影响默认路径与 config.yml",
+        help="执行后端：auto / neutral / codex / claude-code；影响默认路径与 config.yml",
     )
     parser.add_argument("--project-name", default="example", help="项目名称")
     parser.add_argument("--force", action="store_true", help="允许覆盖已有目录")

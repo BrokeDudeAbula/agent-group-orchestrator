@@ -53,6 +53,10 @@ Use the available Codex sub-agent or multi-agent primitive to create one sub-age
 
 Record the Codex sub-agent reference, such as a thread id, run id, task id, or other available handle, in the worker output or orchestrator report.
 
+### Other hosts
+
+Cursor, OpenCode, Grok Build, and similar hosts use the same worker contract. Dispatch one sub-agent per selected worker task with that host's sub-agent mechanism. Pass the same role file, task id, risk gate, inputs, expected output path, and output contract. Record the host name and any sub-agent reference the host provides.
+
 ## Scheduling Rules
 
 - Respect `current/tasks.csv` dependencies before dispatching a worker.
@@ -78,7 +82,7 @@ Each sub-agent prompt must include:
 
 Each worker output should identify:
 
-- execution backend, for example `claude-code-cli` or `codex`;
+- execution backend, for example `claude-code-cli`, `codex`, or another host name;
 - sub-agent reference, if the backend provides one;
 - whether the worker ran concurrently or serially;
 - inputs read, commands run, artifacts produced, blockers, and recommended next step.

@@ -10,6 +10,6 @@ dist/
 build/
 *.egg-info/
 
-# Project-local private artifacts must stay outside the plugin repository.
+# Project-local private artifacts must stay outside the skill pack.
 /.private/
 /test_fp*.md

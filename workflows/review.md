@@ -1,16 +1,13 @@
----
-name: agent-group-review
-description: Use when the host agent should review an agent group workflow, worker output, routing decision, memory update, or task evidence for correctness, missing validation, and risk.
----
-
 # Agent Group Review
 
-Use this skill for review gates inside an agent group workflow.
+Use this workflow for review gates inside an agent group workflow.
+
+`<skill-root>` is the directory that contains `SKILL.md`. The output contract path below is relative to that directory. Task files and worker outputs are inside the target instance.
 
 ## Workflow
 
 1. Identify the task id and relevant worker outputs.
-2. Check the output against `references/output-contract.md`.
+2. Check the output against `<skill-root>/references/output-contract.md`.
 3. Verify that conclusions are supported by files, commands, or reports.
 4. Verify that each non-main worker output was produced by a sub-agent and records the execution backend and sub-agent reference when available.
 5. Check that the main orchestrator stayed in a supervisory role and did not directly perform worker-scoped implementation, testing, benchmarking, research, architecture, or review work.

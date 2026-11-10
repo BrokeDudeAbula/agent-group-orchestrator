@@ -29,6 +29,7 @@ The workflow is backend-neutral and must support the host's available sub-agent 
 
 - Claude Code CLI: create one sub-agent per selected worker task using the available Claude Code CLI sub-agent mechanism.
 - Codex: create one sub-agent per selected worker task using the available Codex sub-agent or multi-agent primitive.
+- Cursor, OpenCode, Grok Build, and similar hosts: create one sub-agent per selected worker task with that host's sub-agent mechanism, and record the host name.
 
 Every backend must receive the same worker role file, task id, scope, dependency outputs, risk boundary, expected output path, and output contract.
 
@@ -80,7 +81,7 @@ Each sub-agent prompt must include:
 
 Each worker output should identify:
 
-- execution backend, for example `claude-code-cli` or `codex`;
+- execution backend, for example `claude-code-cli`, `codex`, or another host name;
 - sub-agent reference, if the backend provides one;
 - whether the worker ran concurrently or serially;
 - inputs read, commands run, artifacts produced, blockers, and recommended next step.
