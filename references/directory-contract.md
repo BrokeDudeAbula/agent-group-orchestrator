@@ -3,16 +3,17 @@
 An agent group instance is a project-local coordination workspace. Supported standard target paths are:
 
 ```text
-.claude/agent_group/    # preferred default for Claude Code
-.codex/agent_group/     # preferred default for Codex
+.agent_group/           # host-neutral default for Cursor, OpenCode, Grok Build, and similar hosts
+.claude/agent_group/    # Claude Code
+.codex/agent_group/     # Codex
 ```
 
 Resolve the active instance in this order:
 
 1. Explicit path from the user or CLI `--target`.
 2. An existing standard instance under the project root.
-3. Host-backend default when no instance exists yet.
-4. Ask the user if both standard instances exist and no path was specified.
+3. Host default when no instance exists yet.
+4. Ask the user if more than one standard instance exists and no path was specified.
 
 The instance body is backend-neutral. Only the parent directory differs by host.
 
@@ -71,5 +72,5 @@ Rules:
 - `current/` stores the active epic, active task list, hot state, and worker outputs.
 - `agents/` stores worker role definitions.
 - `archive/` stores compacted historical evidence.
-- Plugin templates must not contain live user project secrets or one-off local paths.
+- Skill pack templates must not contain live user project secrets or one-off local paths.
 - `main-orchestrator` must dispatch selected non-main workers through a compatible sub-agent backend. It supervises routing, gates, progress, memory, evidence spot checks, and reporting; it must not directly perform worker-scoped development, testing, benchmarking, research, architecture, or review work.

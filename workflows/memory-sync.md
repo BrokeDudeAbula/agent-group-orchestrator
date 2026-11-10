@@ -1,25 +1,22 @@
----
-name: agent-group-memory-sync
-description: Use when the host agent should update, compact, archive, or validate an agent group current state, task ledger, progress ledger, decisions, risks, and worker outputs.
----
-
 # Agent Group Memory Sync
 
-Use this skill for maintaining agent group memory after work completes or before a context handoff.
+Use this workflow for maintaining agent group memory after work completes or before a context handoff.
+
+`<skill-root>` is the directory that contains `SKILL.md`. Reference and script paths below are relative to that directory. Instance files are inside the target project.
 
 ## Workflow
 
-1. Locate the target agent group instance using explicit path, existing `.claude/agent_group/` or `.codex/agent_group/`, or the host-backend default.
-2. Read `references/directory-contract.md` and confirm the target has the required memory shape.
-3. Read `references/memory-sync-sop.md`.
-4. Read `references/memory-lifecycle.md` before compaction or before deciding whether a task memory belongs in `current/`, `memory/`, or `archive/`.
-5. Read `references/memory-schema.md` when creating files, changing file structure, repairing memory, or doing strict validation.
+1. Locate the target agent group instance using an explicit path, an existing `.agent_group/`, `.claude/agent_group/`, or `.codex/agent_group/`, or the host default from `workflows/init.md`.
+2. Read `<skill-root>/references/directory-contract.md` and confirm the target has the required memory shape.
+3. Read `<skill-root>/references/memory-sync-sop.md`.
+4. Read `<skill-root>/references/memory-lifecycle.md` before compaction or before deciding whether a task memory belongs in `current/`, `memory/`, or `archive/`.
+5. Read `<skill-root>/references/memory-schema.md` when creating files, changing file structure, repairing memory, or doing strict validation.
 6. Read `current/STATE.md`, `current/tasks.csv`, and recent `current/agent_outputs/`.
 7. Update hot state first, durable ledgers second.
 8. If cleaning a completed phase, run:
 
 ```bash
-python3 scripts/compact_memory.py --target <agent-group-path> --archive-name <yyyymmdd_topic> --dry-run
+python3 <skill-root>/scripts/compact_memory.py --target <agent-group-path> --archive-name <yyyymmdd_topic> --dry-run
 ```
 
 9. Review the dry run, then run without `--dry-run` only when the user wants the archive applied.
@@ -27,7 +24,7 @@ python3 scripts/compact_memory.py --target <agent-group-path> --archive-name <yy
 11. Validate the instance afterward:
 
 ```bash
-python3 scripts/validate_agent_group.py --strict <agent-group-path>
+python3 <skill-root>/scripts/validate_agent_group.py --strict <agent-group-path>
 ```
 
 ## Memory Shape Contract

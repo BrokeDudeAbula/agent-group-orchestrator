@@ -16,3 +16,5 @@ current/prompt.md
 ```
 
 This demo intentionally uses placeholder findings. In a real repository, `oss-scout` should read upstream code, official docs, issues, benchmark scripts, and papers before turning any item into a factual claim.
+
+This tree is a skill-pack fixture, not a live workspace. Initialize a live instance in the target project at `.agent_group/`, `.claude/agent_group/`, or `.codex/agent_group/`.
